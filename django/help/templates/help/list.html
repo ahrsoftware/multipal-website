@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% load settings_value %}
+
+{% block main %}
+
+<section class="main-banner">
+    <div class="container">
+        <h2>Help</h2>
+        <hr>
+        <p>
+            To assist the users and students with learning the difficult skill of Hebrew palaeography, various useful links and guidelines can be accessed here. They include links to other databases of Hebrew manuscripts and catalogues, specially designed palaeographical guidelines and short films in which a contemporary scribe, Jen Taylor, experimentally reconstructs the way medieval scribes traced the Hebrew letters.
+        </p>
+    </div>
+</section>
+
+<section id="help-list-head" class="container">
+    {% if object_list %}
+        <input type="text" id="help-list-head-search" title="search" name="search" class="quicksearch-input" placeholder="Search help">
+    {% endif %}
+</section>
+
+<section id="help-list-items" class="list-body list-body-type-text container">
+    {% for object in object_list  %}
+        <a href="{{ object.url_detail }}" class="list-body-item">
+            <div class="list-body-item-text-title">{{ object.list_title }}</div>
+            <div class="list-body-item-text-details" data-description="{{ object.description }}">{{ object.list_details | safe }}</div>
+        </a>
+    {% empty %}
+        <div class="list-body-empty">
+            <div class="list-body-empty-title">No help items</div>
+            <div class="list-body-empty-details">
+                There are no help items to show yet. Please check back soon or <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">contact us</a> if you have a question.
+            </div>
+        </div>
+    {% endfor %}
+</section>
+
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<section class="main-banner">
+    <div class="container">
+        <h2>Account Updated</h2>
+        <hr>
+        <p>
+            Your account details have been updated successfully
+        </p>
+    </div>
+</section>
+
+<section class="container">
+    <p>
+        Go back to view your <a href="{% url 'account:account' %}">Account</a> or jump into the <a href="{% url 'palaeography:item-list' %}">Database</a>.
+    </p>
+</section>
+
+{% endblock %}

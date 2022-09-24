@@ -1,0 +1,450 @@
+
+/* ---------- General ---------- */
+
+/* 
+
+Colour scheme:
+
+    #373C8E - Primary
+    #4C509A - Primary (light)
+    #9093d6 - Primary (very light)
+    #2D2F5A - Primary (dark)
+
+    #EBA82D - Secondary
+    #EEB347 - Secondary (light)
+
+    #FFF - white (e.g. background, text)
+    #131313 - dark grey (e.g. text, borders)
+
+*/
+
+html, body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: white;
+    color: black;
+    margin: 0;
+    font-weight: 400;
+}
+
+a {
+    color: #373C8E;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #4C509A;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+    line-height: 1em;
+    font-weight: bold;
+    color: white;
+}
+
+h1 span {
+    font-weight: normal;
+    color: #EBA82D;
+}
+
+h1 img {
+    height: 0.9em;
+    margin-right: 0.3rem;
+}
+
+h2 {
+    font-size: 2.7em;
+    font-weight: bold;
+    color: #373C8E;
+    padding-bottom: 0.5em;
+    line-height: 1em;
+}
+
+h2:not(:first-of-type) {
+    padding-top: 2em;
+}
+
+h3 {
+    padding: 1.7em 0 0.5em 0;
+    text-align: left;
+    font-size: 1.7em;
+    font-weight: bold;
+    color: #373C8E;
+    line-height: 1em;
+}
+
+h4 {
+    font-weight: bold;
+    color: #373C8E;
+    line-height: 1em;
+    font-size: 1.2em;
+    padding: 0.8em 0 0.1em 0;
+}
+
+hr {
+    border-top: 0.4rem solid #EBA82D;
+    width: 9rem;
+    margin: 0.2em 0 1.3em 0;
+}
+
+table,
+td,
+th {
+    border: 1px solid #AAA;
+    padding: 0.2em;
+}
+
+p {
+    margin: 0.5em 0;
+    line-height: 1.7em;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border-radius: 0;
+    padding: 0.3em 1.3em 0.3em 0.3em;
+    margin: 0;
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    cursor: inherit;
+    line-height: inherit;
+    display: block;
+    border: 1px solid #BBB;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 100%;
+    background-position-y: 5px;
+    background-color: white;
+}
+
+strong {
+    font-weight: bold;
+}
+
+em {
+    font-style: italic;
+}
+
+.clearfloat {
+    clear: both;
+}
+
+.warning,
+.warning a,
+.warning a:hover {
+    color: #E74C3C;
+}
+
+.warning a {
+    text-decoration: underline;
+}
+
+.image-circle {
+    border: 0.3rem solid rgba(255,255,255,0.6);
+    border-radius: 100%;
+    width: 13em;
+    max-width: 90%;
+    display: block;
+    margin: 1em auto;
+}
+
+.hidden {
+    display: none;
+}
+
+.draggable {
+    cursor: move;
+}
+
+.drawable {
+    cursor: crosshair;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    padding-top: 0;
+    height: 0;
+    margin: 7em auto;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.pdf-viewer-full {
+    width: 95%;
+    height: calc(100vh - 4em);
+    display: block;
+    margin: 1em auto;
+    overflow: auto;
+}
+
+.pdf-viewer-download {
+    clear: both;
+    background: #373C8E;
+    color: white;
+    padding: 0.5em 1em;
+    border-radius: 0.2em;
+    display: block;
+    width: fit-content;
+    margin: 1em auto 2em auto;
+}
+
+.pdf-viewer-download:hover {
+    color: white;
+    background: #4C509A;
+}
+
+/* ---------- Bubble Links (anchor links with rounded border) ---------- */
+
+.bubblelink,
+.bubblelink-invert {
+    padding: 0.5em 1em;
+    margin: 1em 0;
+    display: inline-block;
+    width: fit-content;
+    max-width: 100%;
+    cursor: pointer;
+    border-radius: 1em;
+    background: white;
+    color: #373C8E;
+}
+
+.bubblelink-invert {
+    background: #373C8E;
+    color: white;
+}
+
+.bubblelink:hover,
+.bubblelink-invert:hover {
+    color: #EBA82D;
+}
+
+.bubblelink i,
+.bubblelink-invert i {
+    margin-left: 0.3em;
+}
+
+/* ---------- Forms ---------- */
+
+form.full-form p {
+    margin: 1em 0 2em 0;
+}
+
+form.full-form label,
+form.full-form textarea,
+form.full-form input[type=text],
+form.full-form input[type=url],
+form.full-form input[type=email],
+form.full-form input[type=password],
+form.full-form input[type=number] {
+    display: block;
+    width: 100%;
+}
+
+form.full-form textarea {
+    height: 4em;
+}
+
+form.full-form label {
+    margin-bottom: 0;
+}
+
+form.full-form ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+form.full-form .helptext {
+    color: #505050;
+    font-size: 0.85em;
+    font-style: italic;
+    margin: 0.2em;
+    display: block;
+}
+
+form.full-form .errorlist {
+    color: #C0392B;
+}
+
+button {
+    border-radius: 0.4em;
+}
+
+form.full-form button[type=submit] {
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    border: none;
+    padding: 0.7em;
+    margin: 1em auto;
+    background: #373C8E;
+    color: white;
+    width: 100%;
+}
+
+form.full-form button[type=submit]:hover {
+    opacity: 0.9;
+}
+
+.full-form-footer-links a {
+    display: block;
+    padding: 0.5em;
+    margin: 2em auto;
+    text-align: center;
+    background: #DDD;
+    border-radius: 0.4em;
+    color: #404040;
+}
+
+.full-form-footer-links a:hover {
+    opacity: 0.85;
+}
+
+form.full-form button[type=submit].button-danger {
+    background: #C23616;
+}
+
+.field-required.field-invalid {
+    border: 2px solid #E74C3C;
+}
+
+.validationmsg {
+    color: #E74C3C;
+    font-size: 0.9em;
+}
+
+/* ---------- Navigation ---------- */
+
+nav.navbar {
+    background: #373C8E;
+    vertical-align: middle;
+    color: white;
+    z-index: 950;
+}
+
+.navbar-brand {
+    display: inline-block;
+    font-size: 1rem;
+}
+
+.navbar-brand h1 {
+    color: #EBA82D;
+    font-weight: normal;
+}
+
+.navbar-brand h1 strong {
+    color: white;
+    font-weight: bold;
+}
+
+.nav-link {
+    font-weight: 400;
+    font-size: 1.05rem;
+    color: white;
+    padding: 0.3em;
+}
+
+.dropdown-menu {
+    background: #4C509A;
+    color: white;
+    font-size: 1.09em;
+}
+
+.dropdown-item {
+    font-weight: 400;
+    color: white;
+    padding: 0.5em 1em;
+    margin: 0.4em 0;
+}
+
+.dropdown-item:hover {
+    background: none;
+    color: white;
+}
+
+.dropdown-item:active {
+    background: #4C509A;
+}
+
+nav a:hover,
+.dropdown-item:hover {
+    color: #EBA82D;
+}
+
+/* ---------- Main ---------- */
+
+main {
+    overflow-x: hidden;
+    min-height: 100vh;
+    background: white;
+    padding-bottom: 6em;
+}
+
+.main-banner {
+    background: #373C8E;
+    background: linear-gradient(to top, #4C509A, #373C8E);
+    color: white;
+}
+
+.main-banner h2 {
+    color: white;
+    padding-bottom: 0.2rem;
+}
+
+.main-banner hr {
+    border-top: 0.5rem solid #EBA82D;
+    width: 13rem;
+    margin: 1.3rem 0 2.7rem 0;
+}
+
+/* ---------- Help ---------- */
+
+#help-list-head-search {
+    margin: 3em auto;
+    text-align: center;
+}
+
+#help-detail-link {
+    text-align: center;
+    font-size: 1.3em;
+    display: block;
+    margin: 3em 0;
+}
+
+#help-detail-link a {
+    font-weight: bold;
+}
+
+#help-detail-image {
+    max-width: 100%;
+    margin: 3em auto;
+}
+
+/* ---------- Account ---------- */
+
+#account-login-help {
+    margin-top: 2em;
+}
+
+/* ---------- Error Pages ---------- */
+
+.errorpage-path {
+    font-weight: bold;
+}
+
+.errorpage-code {
+    margin-top: 3em;
+    font-size: 0.8em;
+}

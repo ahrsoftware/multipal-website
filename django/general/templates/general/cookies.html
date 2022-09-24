@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<section class="main-banner">
+    <div class="container">
+        <h2>Website Cookies</h2>
+        <hr>
+        <p>
+            Cookies are small blocks of data created by a web server while a user is browsing a website and placed on the user's device by the user's web browser. We use cookies responsibly. Full details of the cookies we use are shown below.
+        </p>
+    </div>
+</section>
+
+<section class="container">
+    <table>
+        <tr>
+            <th>Provider</th>
+            <th>Cookie</th>
+            <th>Purpose</th>
+            <th>Expiry</th>
+        </tr>
+        <tr>
+            <td>This website</td>
+            <td>cookie_msg_hide</td>
+            <td>
+                Used to know if you've previously hidden the cookies information messages on our site
+            </td>
+            <td>
+                1000 days
+            </td>
+        </tr>
+        <tr>
+            <td>This website</td>
+            <td>csrftoken</td>
+            <td>
+                A token used to enhance the security of the site by preventing Cross-Site Request Forgery (CSRF) attacks
+            </td>
+            <td>
+                1 year
+            </td>
+        </tr>
+        <tr>
+            <td>This website</td>
+            <td>sessionid</td>
+            <td>
+                Used to maintain your session when you're logged into your account on the website
+            </td>
+            <td>
+                2 weeks
+            </td>
+        </tr>
+        <tr>
+            <td>This website</td>
+            <td>database_nav_collapsed</td>
+            <td>
+                Used to set the navigation menu as collapsed or expanded
+            </td>
+            <td>
+                Mon, 31 Dec 2050 23:59:59 GMT
+            </td>
+        </tr>
+    </table>
+</section>
+
+{% endblock %}
