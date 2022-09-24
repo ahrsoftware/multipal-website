@@ -19,6 +19,10 @@
 
     /* ---------- Navigation ---------- */
 
+    .navbar-brand .tagline {
+        display: none;
+    }
+
     .nav-item {
         margin-top: 1em;
     }
@@ -28,7 +32,7 @@
     }
 
     .navbar-toggler {
-        color: white;
+        color: #121d29;
         font-size: 1.7em;
         padding-right: 0.35em;
     }
@@ -40,16 +44,7 @@
 
     .nav-link.active {
         padding-left: 0.5em;
-        border-left: 3px solid #EBA82D;
-    }
-
-    .dropdown-menu {
-        background: #4C509A;
-        color: white;
-    }
-
-    .dropdown-item {
-        padding: 0.5em;
+        border-left: 3px solid #121d29;
     }
 
     /* ---------- Main ---------- */
@@ -57,11 +52,6 @@
     main {
         margin-top: 3.3rem;
         min-height: calc(100vh - 3.3rem);
-    }
-
-    .main-banner {
-        padding: 2em 1em;
-        margin-bottom: 1.3em;
     }
 
 }

@@ -50,11 +50,9 @@
         <!-- Navigation bar -->
         <nav class="navbar fixed-top navbar-expand-lg">
             <!-- Logo -->
-            <a class="navbar-brand" href="{% url 'general:about' %}">
-                <h1>
-                    <img src="{% static 'images/logos/jbc-icon-gold.svg' %}" alt="MultiPal icon">
-                    <strong>MultiPal</strong>
-                </h1>
+            <a class="navbar-brand" href="{% url 'general:welcome' %}">
+                <h1>MultiPal</h1>
+                <div class="tagline">Online interactive palaeography tutorial</div>
             </a>
             <!-- Nav toggle button (for small screens) -->
             <button class="navbar-toggler" type="button" title="navbartoggle" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false">
@@ -63,31 +61,35 @@
             <!-- Nav list -->
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav ml-auto">
+                    <!-- Welcome -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.path == "/" %} active{% endif %}" href="{% url 'general:welcome' %}">
+                            <i class="far fa-smile-beam"></i> Welcome
+                        </a>
+                    </li>
+                    <!-- Search -->
+                    <li class="nav-item">
+                        <a class="nav-link{% if "/palaeography/" in request.path %} active{% endif %}" href="{% url 'general:about' %}">
+                            <i class="fas fa-search"></i> Search
+                        </a>
+                    </li>
                     <!-- About -->
                     <li class="nav-item">
-                        <a class="nav-link{% if request.path == "/" %} active{% endif %}" href="{% url 'general:about' %}">
-                            About
+                        <a class="nav-link{% if "/about/" in request.path %} active{% endif %}" href="{% url 'general:about' %}">
+                            <i class="fas fa-info"></i> About
                         </a>
                     </li>
                     <!-- Help -->
                     <li class="nav-item">
                         <a class="nav-link{% if "/help/" in request.path %} active{% endif %}" href="{% url 'help:list' %}">
-                            Help
-                        </a>
-                    </li>
-                    <!-- Login/Account -->
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/account/' in request.path %} active{% endif %}" href="{% if user.is_authenticated %}{% url 'account:account' %}{% else %}{% url 'login' %}{% endif %}">
-                            {% if user.is_authenticated %}Account
-                            {% else %}Login
-                            {% endif %}
+                            <i class="far fa-question-circle"></i> Help
                         </a>
                     </li>
                     {% if user.is_staff %}
                         <!-- Admin Dashboard -->
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin:index' %}">
-                                Dashboard
+                                <i class="fas fa-cog"></i> Admin
                             </a>
                         </li>
                     {% endif %}

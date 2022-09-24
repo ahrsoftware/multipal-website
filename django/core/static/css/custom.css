@@ -5,60 +5,47 @@
 
 Colour scheme:
 
-    #373C8E - Primary
-    #4C509A - Primary (light)
-    #9093d6 - Primary (very light)
-    #2D2F5A - Primary (dark)
+    #0E1620 - old navy background
+    #121d29 - new navy background
 
-    #EBA82D - Secondary
-    #EEB347 - Secondary (light)
+    #2f4256 - light navy
 
-    #FFF - white (e.g. background, text)
-    #131313 - dark grey (e.g. text, borders)
+    #696969 - grey text on white
 
 */
 
 html, body {
     font-family: 'Be Vietnam Pro', sans-serif;
-    background: white;
-    color: black;
+    background: #121d29;
+    color: white;
     margin: 0;
-    font-weight: 400;
+    font-weight: 300;
 }
 
 a {
-    color: #373C8E;
+    color: white;
     text-decoration: none;
 }
 
 a:hover {
-    color: #4C509A;
+    color: white;
     text-decoration: none;
 }
 
 h1 {
-    font-size: 1.5em;
+    font-size: 2em;
     margin: 0;
     padding: 0;
     line-height: 1em;
     font-weight: bold;
-    color: white;
-}
-
-h1 span {
-    font-weight: normal;
-    color: #EBA82D;
-}
-
-h1 img {
-    height: 0.9em;
-    margin-right: 0.3rem;
+    color: #121d29;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 h2 {
     font-size: 2.7em;
     font-weight: bold;
-    color: #373C8E;
     padding-bottom: 0.5em;
     line-height: 1em;
 }
@@ -72,20 +59,18 @@ h3 {
     text-align: left;
     font-size: 1.7em;
     font-weight: bold;
-    color: #373C8E;
     line-height: 1em;
 }
 
 h4 {
     font-weight: bold;
-    color: #373C8E;
     line-height: 1em;
     font-size: 1.2em;
     padding: 0.8em 0 0.1em 0;
 }
 
 hr {
-    border-top: 0.4rem solid #EBA82D;
+    border-top: 0.4rem solid #121d29;
     width: 9rem;
     margin: 0.2em 0 1.3em 0;
 }
@@ -192,8 +177,8 @@ em {
 
 .pdf-viewer-download {
     clear: both;
-    background: #373C8E;
-    color: white;
+    background: white;
+    color: #121d29;
     padding: 0.5em 1em;
     border-radius: 0.2em;
     display: block;
@@ -228,7 +213,7 @@ em {
 
 .bubblelink:hover,
 .bubblelink-invert:hover {
-    color: #EBA82D;
+    color: #2f4256;
 }
 
 .bubblelink i,
@@ -328,9 +313,9 @@ form.full-form button[type=submit].button-danger {
 /* ---------- Navigation ---------- */
 
 nav.navbar {
-    background: #373C8E;
+    background: white;
     vertical-align: middle;
-    color: white;
+    color: #121d29;
     z-index: 950;
 }
 
@@ -339,48 +324,19 @@ nav.navbar {
     font-size: 1rem;
 }
 
-.navbar-brand h1 {
-    color: #EBA82D;
-    font-weight: normal;
-}
-
-.navbar-brand h1 strong {
-    color: white;
-    font-weight: bold;
-}
-
 .nav-link {
     font-weight: 400;
     font-size: 1.05rem;
-    color: white;
-    padding: 0.3em;
+    color: #121d29;
+    padding: 0.2em;
 }
 
-.dropdown-menu {
-    background: #4C509A;
-    color: white;
-    font-size: 1.09em;
+.nav-link i {
+    margin-right: 0.2em;
 }
 
-.dropdown-item {
-    font-weight: 400;
-    color: white;
-    padding: 0.5em 1em;
-    margin: 0.4em 0;
-}
-
-.dropdown-item:hover {
-    background: none;
-    color: white;
-}
-
-.dropdown-item:active {
-    background: #4C509A;
-}
-
-nav a:hover,
-.dropdown-item:hover {
-    color: #EBA82D;
+nav a:hover {
+    color: #2f4256;
 }
 
 /* ---------- Main ---------- */
@@ -388,25 +344,15 @@ nav a:hover,
 main {
     overflow-x: hidden;
     min-height: 100vh;
-    background: white;
-    padding-bottom: 6em;
+    padding: 2.7em 0 6.4em 0;
 }
 
-.main-banner {
-    background: #373C8E;
-    background: linear-gradient(to top, #4C509A, #373C8E);
-    color: white;
-}
+/* ---------- Welcome ---------- */
 
-.main-banner h2 {
-    color: white;
-    padding-bottom: 0.2rem;
-}
-
-.main-banner hr {
-    border-top: 0.5rem solid #EBA82D;
-    width: 13rem;
-    margin: 1.3rem 0 2.7rem 0;
+#welcome-content p {
+    font-size: 1.5em;
+    line-height: 1.5em;
+    font-weight: 300;
 }
 
 /* ---------- Help ---------- */

@@ -9,6 +9,14 @@
         padding-left: 0.3em;
     }
 
+    .navbar-brand .tagline {
+        color: #696969;
+        font-weight: 300;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 2em;
+    }
+
     .nav-link {
         margin-left: 0.7em;
         margin-right: 0.7em;
@@ -16,7 +24,7 @@
     }
 
     .nav-link.active {
-        border-bottom: 4px solid #EBA82D;
+        border-bottom: 3px solid #121d29;
     }
 
     /* ---------- Main ---------- */
@@ -24,11 +32,6 @@
     main {
         margin-top: 3.5rem;
         min-height: calc(100vh - 3.5rem);
-    }
-
-    .main-banner {
-        padding: 3em;
-        margin-bottom: 2.7em;
     }
 
 }
