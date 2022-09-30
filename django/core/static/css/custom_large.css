@@ -24,7 +24,7 @@
     }
 
     .nav-link.active {
-        border-bottom: 3px solid #121d29;
+        font-weight: bold;
     }
 
     /* ---------- Main ---------- */

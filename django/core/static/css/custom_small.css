@@ -38,13 +38,11 @@
     }
 
     .nav-link {
-        padding-left: 0.5em;
-        border-left: 3px solid transparent;
+        padding-left: 1em;
     }
 
     .nav-link.active {
-        padding-left: 0.5em;
-        border-left: 3px solid #121d29;
+        font-weight: bold;
     }
 
     /* ---------- Main ---------- */

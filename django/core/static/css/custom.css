@@ -325,14 +325,10 @@ nav.navbar {
 }
 
 .nav-link {
-    font-weight: 400;
-    font-size: 1.05rem;
+    font-weight: 300;
+    font-size: 1.1rem;
     color: #121d29;
     padding: 0.2em;
-}
-
-.nav-link i {
-    margin-right: 0.2em;
 }
 
 nav a:hover {
@@ -382,6 +378,29 @@ main {
 
 #account-login-help {
     margin-top: 2em;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+    background: white;
+    padding: 5em 0;
+    text-align: center;
+    color: #121d29;
+}
+
+#footer-content-text {
+    margin-top: 2em;
+}
+
+footer a {
+    color: #2f4256;
+    opacity: 1;
+}
+
+footer a:hover {
+    color: #2f4256;
+    opacity: 1;
 }
 
 /* ---------- Error Pages ---------- */

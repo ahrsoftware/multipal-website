@@ -1,0 +1,38 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-30 16:16+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: core/settings.py:116
+msgid "English"
+msgstr "Anglais"
+
+#: core/settings.py:117
+msgid "French"
+msgstr "Français"
+
+#: core/templates/base.html:67
+msgid "Welcome"
+msgstr ""
+
+#: core/templates/base.html:73
+msgid "Palaeography"
+msgstr ""
+
+#: core/templates/base.html:79
+msgid "About"
+msgstr ""
+
+#: core/templates/base.html:85
+msgid "Help"
+msgstr ""
