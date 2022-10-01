@@ -103,6 +103,20 @@
                 {% block main %}
                 {% endblock %}
             </div>
+
+            <!-- Language -->
+            <div id="language-show"><i class="fas fa-globe-americas"></i></div>
+            <div id="language-popup">
+                <p>{% translate 'Choose a language:' %}</p>
+                <div id="lang-options">
+                    {% get_available_languages as languages %}
+                    {% for lang_code, lang_name in languages %}
+                        <a data-langcode="{{ lang_code }}" href="#">
+                            <img src="{% static 'images/flags/' %}{{ lang_code }}.svg" alt="flag for language {{ lang_code }}"> {{ lang_name }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
         </main>
 
         <!-- Footer -->
@@ -153,6 +167,7 @@
 
         <!-- Custom JavaScript -->
         <script src="{% static 'js/cookiesmsg.js' %}"></script>
+        <script src="{% static 'js/main.js' %}"></script>
 
     </body>
 

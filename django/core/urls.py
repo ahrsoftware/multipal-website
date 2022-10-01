@@ -57,7 +57,4 @@ urlpatterns = i18n_patterns(
     # Sitemap
     # path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
 
-    # Don't show the default language in the URL
-    prefix_default_language=False
-
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

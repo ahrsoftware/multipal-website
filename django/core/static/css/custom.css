@@ -380,6 +380,68 @@ main {
     margin-top: 2em;
 }
 
+/* ---------- Translation / Languages / i18n ---------- */
+
+#language-show {
+    z-index: 1000;
+    position: fixed;
+    bottom: 1em;
+    left: 0;
+    width: 1.5em;
+    height: 1.5em;
+    text-align: center;
+    font-size: 2.5em;
+    border-radius: 0 100% 100% 0;
+    background: #2f4256;
+    cursor: pointer;
+    padding-top: 0.25em;
+}
+
+#language-show:hover {
+    opacity: 0.9;
+}
+
+#language-popup {
+    position: fixed;
+    bottom: 0.8em;
+    left: -15em;
+    width: 15em;
+    background: #2f4256;
+    color: white;
+    padding: 1em;
+    z-index: 1000;
+    text-align: center;
+}
+
+#lang-options {
+    list-style: none;
+}
+
+#lang-options a {
+    display: block;
+    width: 80%;
+    padding: 0.5em 1em;
+    margin: 0.5em auto;
+    background: white;
+    color: #2f4256;
+    opacity: 0.9;
+}
+
+#lang-options a:hover {
+    opacity: 1;
+}
+
+#lang-options a.active {
+    font-weight: bold;
+}
+
+#lang-options a img {
+    width: 2em;
+    margin-right: 0.5em;
+    display: inline-block;
+    vertical-align: middle;
+}
+
 /* ---------- Footer ---------- */
 
 footer {
