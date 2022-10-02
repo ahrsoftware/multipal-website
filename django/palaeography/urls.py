@@ -1,9 +1,9 @@
 from django.urls import path
-# from .views.item import ItemListView, ItemDetailView
+from .views.document import DocumentListView, DocumentDetailView
 
 app_name = 'palaeography'
 
 urlpatterns = [
-    # path('items/', ItemListView.as_view(), name='item-list'),
-    # path('items/<pk>/', ItemDetailView.as_view(), name='item-detail'),
+    path('documents/', DocumentListView.as_view(), name='document-list'),
+    path('documents/<pk>/', DocumentDetailView.as_view(), name='document-detail'),
 ]

@@ -34,4 +34,19 @@
         min-height: calc(100vh - 3.5rem);
     }
 
+    /* ---------- Welcome ---------- */
+
+    .welcome-howtouse-step p {
+        display: inline-block;
+        width: 60%;
+        vertical-align: middle;
+    }
+    
+    .welcome-howtouse-step img {
+        display: inline-block;
+        width: 30%;
+        margin-left: 7%;
+        vertical-align: middle;
+    }
+
 }

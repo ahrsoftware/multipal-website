@@ -174,7 +174,7 @@ class ItemListSitemap(Sitemap):
     priority = 0.9
 
     def items(self):
-        return ['palaeography:item-list']
+        return ['palaeography:document-list']
 
     def lastmod(self, obj):
         try:

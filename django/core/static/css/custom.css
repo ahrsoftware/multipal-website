@@ -37,7 +37,7 @@ h1 {
     margin: 0;
     padding: 0;
     line-height: 1em;
-    font-weight: bold;
+    font-weight: 900;
     color: #121d29;
     display: inline-block;
     vertical-align: middle;
@@ -188,26 +188,26 @@ em {
 
 .pdf-viewer-download:hover {
     color: white;
-    background: #4C509A;
+    background: #2f4256;
 }
 
 /* ---------- Bubble Links (anchor links with rounded border) ---------- */
 
 .bubblelink,
 .bubblelink-invert {
-    padding: 0.5em 1em;
+    padding: 0.64em 1.3em;
     margin: 1em 0;
     display: inline-block;
     width: fit-content;
     max-width: 100%;
     cursor: pointer;
-    border-radius: 1em;
+    border-radius: 1.3em;
     background: white;
-    color: #373C8E;
+    color: #2f4256;
 }
 
 .bubblelink-invert {
-    background: #373C8E;
+    background: #2f4256;
     color: white;
 }
 
@@ -274,7 +274,7 @@ form.full-form button[type=submit] {
     border: none;
     padding: 0.7em;
     margin: 1em auto;
-    background: #373C8E;
+    background: #2f4256;
     color: white;
     width: 100%;
 }
@@ -340,15 +340,79 @@ nav a:hover {
 main {
     overflow-x: hidden;
     min-height: 100vh;
-    padding: 2.7em 0 6.4em 0;
+    padding: 2.7rem 0 6.4rem 0;
 }
 
 /* ---------- Welcome ---------- */
 
-#welcome-content p {
-    font-size: 1.5em;
+#welcome-intro {
+    background: #4f667d;
+    margin: -3.5rem 0 3.5rem 0;
+    padding: 4em 0;
+}
+
+#welcome-intro-p1 {
+    font-size: 1.7em;
+    line-height: 1.7em;
+}
+
+#welcome-intro-p2 {
+    font-size: 1.3em;
     line-height: 1.5em;
-    font-weight: 300;
+    margin: 2em 0;
+}
+
+.welcomebubblelinks {
+    text-align: center;
+}
+
+.welcomebubblelinks a {
+    margin: 1em;
+    font-size: 1.2em;
+    color: #696969;
+}
+
+#welcome-howtouse {
+    position: relative;
+}
+
+#welcome-howtouse-bg {
+    content: "";
+    background-image: url('../images/welcome/ecritures.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 0.13;
+    z-index: 0;
+}
+
+#welcome-howtouse-fg {
+    z-index: 1;
+    position: relative;
+}
+
+.welcome-howtouse-step {
+    margin: 6em auto;
+    clear: both;
+}
+
+.welcome-howtouse-step strong {
+    font-size: 2.3em;
+    display: block;
+    margin-bottom: 1em;
+    line-height: 1em;
+}
+
+/* ---------- Palaeography: List ---------- */
+
+#list-options {
+    background: #4f667d;
+    margin: -3.5rem 0 3.5rem 0;
+    padding: 4em 0;
 }
 
 /* ---------- Help ---------- */
@@ -446,9 +510,14 @@ main {
 
 footer {
     background: white;
-    padding: 5em 0;
+    padding: 3em 0;
     text-align: center;
     color: #121d29;
+}
+
+footer img {
+    width: 23em;
+    max-width: 90%;
 }
 
 #footer-content-text {
@@ -458,11 +527,19 @@ footer {
 footer a {
     color: #2f4256;
     opacity: 1;
+    text-decoration: underline;
 }
 
 footer a:hover {
     color: #2f4256;
     opacity: 1;
+    text-decoration: underline;
+}
+
+#footer-projectlogo {
+    font-weight: 900;
+    font-size: 1.7em;
+    margin: 1em 0;
 }
 
 /* ---------- Error Pages ---------- */

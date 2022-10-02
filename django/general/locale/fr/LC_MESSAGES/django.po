@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-02 22:17+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: general/templates/general/welcome.html:9
+msgid "welcome-intro-p1"
+msgstr ""
+"<strong>MultiPal</strong> est un tutoriel interactif en paléographie "
+"accessible en ligne. Il sert à apprendre à déchiffrer les manuscrits, "
+"documents et inscriptions originaux dans toute la gamme des écritures et "
+"langues de l’Antiquité et du Moyen-Âge. MultiPal a été développé par un "
+"groupe de spécialistes de l'École Pratique des Hautes Études, de l'École "
+"Nationale des Chartes et du Collège de France, dans le cadre de l'Université "
+"Paris Sciences Lettres (PSL)."
+
+#: general/templates/general/welcome.html:12
+msgid "welcome-intro-p2"
+msgstr ""
+"<strong>MultiPal</strong> propose des exercices de lecture en latin, grec, "
+"égyptien, copte, arabe, hébreu, araméen, syriaque, chinois, sanscrit et "
+"cyrillique. Des exercices dans d'autres systèmes d'écriture seront "
+"disponibles sous peu."
+
+#: general/templates/general/welcome.html:16
+msgid "Read more"
+msgstr "Lire la suite"
+
+#: general/templates/general/welcome.html:19
+#: general/templates/general/welcome.html:65
+msgid "Palaeography"
+msgstr "Paléographie"
+
+#: general/templates/general/welcome.html:62
+msgid "More help"
+msgstr "Aide supplémentaire"

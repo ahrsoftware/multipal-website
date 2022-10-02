@@ -22,7 +22,7 @@
         <!-- Google Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,200;0,400;0,700;1,200;1,400;1,700&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,200;0,400;0,700;0,900;1,200;1,400;1,700&display=swap" rel="stylesheet"> 
 
         <!-- Font Awesome -->
         <link rel="stylesheet"
@@ -52,7 +52,9 @@
             <!-- Logo -->
             <a class="navbar-brand" href="{% url 'general:welcome' %}">
                 <h1>MultiPal</h1>
-                <div class="tagline">Online interactive palaeography tutorial</div>
+                <div class="tagline">
+                    {% translate 'tagline' %}
+                </div>
             </a>
             <!-- Nav toggle button (for small screens) -->
             <button class="navbar-toggler" type="button" title="navbartoggle" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false">
@@ -63,13 +65,13 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Welcome -->
                     <li class="nav-item">
-                        <a class="nav-link{% if request.path == "/" %} active{% endif %}" href="{% url 'general:welcome' %}">
+                        <a class="nav-link{% if "/welcome/" in request.path %} active{% endif %}" href="{% url 'general:welcome' %}">
                             {% translate 'Welcome' %}
                         </a>
                     </li>
                     <!-- Palaeography -->
                     <li class="nav-item">
-                        <a class="nav-link{% if "/palaeography/" in request.path %} active{% endif %}" href="{% url 'general:about' %}">
+                        <a class="nav-link{% if "/palaeography/" in request.path %} active{% endif %}" href="{% url 'palaeography:document-list' %}">
                             {% translate 'Palaeography' %}
                         </a>
                     </li>
@@ -89,7 +91,7 @@
                         <!-- Admin Dashboard -->
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin:index' %}">
-                                Admin
+                                {% translate 'Admin' %}
                             </a>
                         </li>
                     {% endif %}
@@ -125,33 +127,26 @@
             <div id="footer-content" class="container">
 
                 <div id="footer-content-logos">
-                    TODO <a href="https://www.ox.ac.uk/"><img src="{% static 'images/logos/oxford.png' %}" alt="University of Oxford logo"></a>
+                    <a href="https://www.ephe.psl.eu/"><img src="{% static 'images/ephe-psl-logo.svg' %}" alt="Ecole Pratique des Hautes Etudes logo"></a>
                 </div>
 
                 <div id="footer-content-text">
+                    <div id="footer-projectlogo">
+                        MultiPal
+                    </div>
                     <p>
-                        This website has been developed for the MultiPal project...
+                        {% translate 'Contact us' %}: <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}?subject=LINGUINDIC website">{% settings_value 'ADMIN_EMAIL' %}</a>
                     </p>
                     <p>
-                        The MultiPal project has received funding from...
+                        {% translate 'Website developed by' %} <a href="https://ahrsoftware.co.uk" target="_blank">AHR Software</a>
                     </p>
                     <p>
-                        If you'd like to discuss the MultiPal project or this website with us, you can email us at <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}?subject=LINGUINDIC website">{% settings_value 'ADMIN_EMAIL' %}</a>
-                    </p>
-                    <p>
-                        This website was developed by <a href="https://ahrsoftware.co.uk">AHR Software</a>
-                    </p>
-                    <p>
-                        <a href="TODO" target="_blank">Privacy</a>
+                        <a href="{% url 'general:cookies' %}">{% translate 'Cookies' %}</a>
                         |
-                        <a href="TODO" target="_blank">Legal</a>
-                        |
-                        <a href="{% url 'general:cookies' %}">Cookies</a>
-                        |
-                        <a href="{% url 'general:accessibility' %}">Accessibility</a>
+                        <a href="{% url 'general:accessibility' %}">{% translate 'Accessibility' %}</a>
                     </p>
                     <p>
-                        © MultiPal {% now "Y" %} - All rights reserved
+                        © MultiPal {% now "Y" %}
                     </p>
                 </div>
 

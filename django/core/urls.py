@@ -9,29 +9,11 @@ from . import sitemaps
 # sitemaps = {
 #     'static-pages': sitemaps.StaticPagesSitemap,
 
-#     'about:newitem-list': sitemaps.AboutNewsItemListSitemap,
-#     'about:newsitem-detail': sitemaps.AboutNewsItemDetailSitemap,
-
-#     'about:teammember-list': sitemaps.AboutTeamMemberListSitemap,
-#     'about:teammember-detail': sitemaps.AboutTeamMemberDetailSitemap,
-
 #     'help:list': sitemaps.HelpItemListSitemap,
 #     'help:detail': sitemaps.HelpItemDetailSitemap,
 
-#     'palaeography:graphicelement-list': sitemaps.GraphicElementListSitemap,
-#     'palaeography:graphicelement-detail': sitemaps.GraphicElementDetailSitemap,
-
-#     'palaeography:itemimage-list': sitemaps.ItemImageListSitemap,
-#     'palaeography:itemimage-detail': sitemaps.ItemImageDetailSitemap,
-
-#     'palaeography:item-list': sitemaps.ItemListSitemap,
-#     'palaeography:item-detail': sitemaps.ItemDetailSitemap,
-
-#     'palaeography:hand-list': sitemaps.HandListSitemap,
-#     'palaeography:hand-detail': sitemaps.HandDetailSitemap,
-
-#     'palaeography:scribe-list': sitemaps.ScribeListSitemap,
-#     'palaeography:scribe-detail': sitemaps.ScribeDetailSitemap,
+#     'palaeography:document-list': sitemaps.ItemListSitemap,
+#     'palaeography:document-detail': sitemaps.ItemDetailSitemap,
 # }
 
 

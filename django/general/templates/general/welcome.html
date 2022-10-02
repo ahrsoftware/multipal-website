@@ -1,25 +1,72 @@
 {% extends "base.html" %}
-{% load static %}
-{% load settings_value %}
+{% load static settings_value i18n %}
 
 {% block main %}
 
-<section id="welcome">
-    <div id="welcome-content" class="container">
-        <p>
-            MultiPal is an online interactive tutorial in palaeography. It helps learning to decipher original manuscripts, documents and inscriptions in a range of ancient and medieval scripts and languages. MultiPal was developed by a group of specialists of the École Pratique des Hautes Études, École Nationale des Chartes end Collège de France, in the framework of the University Paris Sciences Lettres (PSL).
+<section id="welcome-intro">
+    <div class="container">
+        <p id="welcome-intro-p1">
+            {% translate 'welcome-intro-p1' %}
         </p>
-        <p>
-            MultiPal offers reading exercices in Latin, Greek, Egyptian, Coptic, Arabic, Hebrew, Aramaic, Syriac, Chinese, Sanskrit and Cyrillic. Exercises in other writing systems will be available shortly.
+        <p id="welcome-intro-p2">
+            {% translate 'welcome-intro-p2' %}
         </p>
+        <div class="welcomebubblelinks">
+            <a href="{% url 'general:about' %}" class="bubblelink">
+                {% translate 'Read more' %}
+            </a>
+            <a href="{% url 'palaeography:document-list' %}" class="bubblelink">
+                {% translate 'Palaeography' %}
+            </a>
+        </div>
     </div>
 </section>
 
-<section id="welcome" class="container">
+<section id="welcome-howtouse" class="container">
     <h2>How to use MultiPal</h2>
-    <p>
-        Intro help image...
-    </p>
+
+    <!-- Background -->
+    <div id="welcome-howtouse-bg"></div>
+
+    <!-- Foreground -->
+    <div id="welcome-howtouse-fg">
+        <!-- Step 1 -->
+        <div class="welcome-howtouse-step">
+            <strong>1. Browse and choose a historical document</strong>
+            <p>
+                You can browse the tutorial according to the language / script you require, and by the date of the historical document. Select your category. A list of historical documents with a short identification will appear. Choose your document.
+            </p>
+            <img src="{% static 'images/welcome/howtouse-step-1.svg' %}" alt="Step 1">
+        </div>
+
+        <!-- Step 2 -->
+        <div class="welcome-howtouse-step">
+            <strong>2. Work your transcription</strong>
+            <p>
+                By clicking on the icon of the document of your choice, you access the exercise. The enlarged high-quality image of your chosen document appears on screen. Below, there are boxes one for each word in the text. By clicking on the box, the corresponding word is highlighted in the text. By clicking on the particular place on the image, the corresponding box is highlighted. You can now transcribe the text word by word or sign by sign, according to the language/script.
+            </p>
+            <img src="{% static 'images/welcome/howtouse-step-2.svg' %}" alt="Step 2">
+        </div>
+
+        <!-- Step 3 -->
+        <div class="welcome-howtouse-step">
+            <strong>3. Check your work</strong>
+            <p>
+                The box containing a correct transcription will turn green. If you made a mistake, the box will turn red. You can try again as many times as you wish. In case of a difficult reading or ambiguous abbreviation, try different possibilities. You can also consult a correct transcription, and read about the document by clicking the box.
+            </p>
+            <img src="{% static 'images/welcome/howtouse-step-3.svg' %}" alt="Step 3">
+        </div>
+
+        <div class="welcomebubblelinks">
+            <a href="{% url 'help:list' %}" class="bubblelink">
+                {% translate 'More help' %}
+            </a>
+            <a href="{% url 'palaeography:document-list' %}" class="bubblelink">
+                {% translate 'Palaeography' %}
+            </a>
+        </div>
+    </div>
+
 </section>
 
 {% endblock %}

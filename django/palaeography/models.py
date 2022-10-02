@@ -52,7 +52,7 @@ def image_is_wider_than_tall(image_field):
         - True, if the image is wider than it is tall (height > width)
         - False, if the image is taller than it is wide (width > height)
         - None, if imagefield has no image
-    Called by certain models below that have images, e.g. ItemImage
+    Called by certain models below that have images, e.g. DocumentImage
     """
 
     if image_field:
@@ -67,7 +67,7 @@ def image_is_wider_than_tall(image_field):
 
 def queryset_as_string(queryset, separator=", "):
     """
-    Return a queryset as a string with the specified separator. E.g. "Item 1, Item 2, Item 3"
+    Return a queryset as a string with the specified separator. E.g. "Document 1, Document 2, Document 3"
     """
     return separator.join([str(obj) for obj in queryset]) if len(queryset) else None
 
@@ -81,7 +81,7 @@ class SlAbstract(models.Model):
     name = models.CharField(max_length=1000, db_index=True)
 
     @property
-    def html_details_list_item_text(self):
+    def html_details_list_document_text(self):
         return self.name
 
     def __str__(self):
@@ -98,7 +98,7 @@ class SlAbstract(models.Model):
 
 
 # class SlDateCentury(SlAbstract):
-#     "Select List model used by Item and Work models - A century in CE e.g. 1st Century CE"
+#     "Select List model used by Document and Work models - A century in CE e.g. 1st Century CE"
 
 #     century_number = models.IntegerField(validators=[MaxValueValidator(21), MinValueValidator(1)])
 
@@ -142,7 +142,7 @@ class SlAbstract(models.Model):
 
 
 # class SlLibrary(SlAbstract):
-#     "Select List model used by Item model - A library in which the item exists"
+#     "Select List model used by Document model - A library in which the document exists"
 
 #     town = models.ForeignKey(SlTown, on_delete=models.SET_NULL, blank=True, null=True)
 
@@ -166,20 +166,20 @@ class SlAbstract(models.Model):
 #         verbose_name_plural = 'Libraries'
 
 
-# class SlItemShelfmark(SlAbstract):
-#     "Select List model used by Item model - A shelfmark (aka name, identifier) of the item, which can be used to group similar items"
+# class SlDocumentShelfmark(SlAbstract):
+#     "Select List model used by Document model - A shelfmark (aka name, identifier) of the document, which can be used to group similar documents"
 
 
-# class SlItemCategory(SlAbstract):
-#     "Select List model used by Item model - A category of item (e.g. a manuscript book, document, etc.)"
+# class SlDocumentCategory(SlAbstract):
+#     "Select List model used by Document model - A category of document (e.g. a manuscript book, document, etc.)"
 
 
-# class SlItemCodicologicalDefinition(SlAbstract):
-#     "Select List model used by Item model - Codicological definition"
+# class SlDocumentCodicologicalDefinition(SlAbstract):
+#     "Select List model used by Document model - Codicological definition"
 
 
-# class SlItemFormat(SlAbstract):
-#     "Select List model used by Item model - Format"
+# class SlDocumentFormat(SlAbstract):
+#     "Select List model used by Document model - Format"
 
 
 
@@ -188,27 +188,28 @@ class SlAbstract(models.Model):
 #
 
 
-# class Item(models.Model):
-#     """
-#     An item (e.g. a manuscript, document, etc.)
-#     """
+class Document(models.Model):
+    """
+    A document (e.g. a manuscript, document, etc.)
+    """
 
-#     m2m_related_name = 'items'
+    m2m_related_name = 'documents'
 
-#     shelfmark = models.ForeignKey(SlItemShelfmark, on_delete=models.RESTRICT)
-#     name = models.CharField(max_length=1000, blank=True, help_text='(Optional) will be appended to the shelfmark to form the title of this Item')
+    name = models.CharField(max_length=1000, blank=True)
+
+#     shelfmark = models.ForeignKey(SlDocumentShelfmark, on_delete=models.RESTRICT)
 #     library = models.ForeignKey(SlLibrary, on_delete=models.SET_NULL, blank=True, null=True)
-#     category = models.ForeignKey(SlItemCategory, on_delete=models.RESTRICT, verbose_name='item category')
+#     category = models.ForeignKey(SlDocumentCategory, on_delete=models.RESTRICT, verbose_name='document category')
 #     description = models.TextField(blank=True, null=True)
 #     keywords = models.ManyToManyField(SlKeyword, blank=True, related_name=m2m_related_name, db_index=True)
 
 #     # Codicological/Document Definition
-#     codicological_definition = models.ForeignKey(SlItemCodicologicalDefinition, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Codicological definition")
-#     format = models.ForeignKey(SlItemFormat, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Format")
+#     codicological_definition = models.ForeignKey(SlDocumentCodicologicalDefinition, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Codicological definition")
+#     format = models.ForeignKey(SlDocumentFormat, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Format")
 #     format_other = models.CharField(max_length=1000, blank=True, verbose_name="Format (other)")
-#     type_of_manuscript = models.ForeignKey(SlItemTypeOfManuscript, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Type of manuscript")
+#     type_of_manuscript = models.ForeignKey(SlDocumentTypeOfManuscript, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Type of manuscript")
 #     codicological_definition_observations = models.TextField(blank=True, null=True, verbose_name="Codicological definition observations")
-#     document_definition = models.ForeignKey(SlItemDocumentDefinition, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Document definition")
+#     document_definition = models.ForeignKey(SlDocumentDocumentDefinition, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Document definition")
 #     document_definition_observations = models.TextField(blank=True, null=True, verbose_name="Document definition observations")
 
 #     # Miscellaneous
@@ -228,21 +229,21 @@ class SlAbstract(models.Model):
 #                                                related_name=m2m_related_name + '_contributors',
 #                                                blank=True,
 #                                                verbose_name='contributors')
-#     meta_created_by = models.ForeignKey(User, related_name="item_created_by",
+#     meta_created_by = models.ForeignKey(User, related_name="document_created_by",
 #                                         on_delete=models.PROTECT, blank=True, null=True, verbose_name="created by")
 #     meta_created_datetime = models.DateTimeField(default=timezone.now, verbose_name="created")
-#     meta_lastupdated_by = models.ForeignKey(User, related_name="item_lastupdated_by",
+#     meta_lastupdated_by = models.ForeignKey(User, related_name="document_lastupdated_by",
 #                                             on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
 #     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 #     meta_firstpublished_datetime = models.DateTimeField(blank=True, null=True, verbose_name="first published")
 
 #     @property
-#     def itemimages(self):
-#         return self.itemimage_set.filter(admin_published=True)
+#     def documentimages(self):
+#         return self.documentimage_set.filter(admin_published=True)
 
 #     @property
-#     def count_itemimages(self):
-#         return self.itemimages.count()
+#     def count_documentimages(self):
+#         return self.documentimages.count()
 
 #     @property
 #     def url_detail(self):
@@ -254,7 +255,7 @@ class SlAbstract(models.Model):
 
 #     @property
 #     def list_details(self):
-#         details = f"{singular_plural(self.count_itemimages, 'image')}"
+#         details = f"{singular_plural(self.count_documentimages, 'image')}"
 #         details += f" | Category: {self.category}" if self.category else ""
 #         details += f" | Date: {self.date_century}" if self.date_century else ""
 #         details += f" | Located in: {self.library}" if self.library else ""
@@ -264,7 +265,7 @@ class SlAbstract(models.Model):
 #         return f'{self.shelfmark.name} ({self.name})' if self.name else self.shelfmark.name
 
 #     def get_absolute_url(self):
-#         return reverse('palaeography:item-detail', args=[str(self.id)])
+#         return reverse('palaeography:document-detail', args=[str(self.id)])
 
 #     class Meta:
 #         ordering = [Upper('shelfmark__name'), Upper('name'), 'id']
@@ -275,8 +276,8 @@ class SlAbstract(models.Model):
 #
 
 
-# Item
-search_fields_item = ['shelfmark__name',
+# Document
+search_fields_document = ['shelfmark__name',
                       'name',
                       'category__name',
                       'library__name',
@@ -288,7 +289,7 @@ search_fields_item = ['shelfmark__name',
                       'format__name',
                       'type_of_manuscript__name',
                       'document_definition__name',
-                      'state_of_item__name',
+                      'state_of_document__name',
                       'state_of_material__name',
                       'state_of_writing__name',
                       'palimpsest__name',

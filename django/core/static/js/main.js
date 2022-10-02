@@ -25,9 +25,6 @@ $(document).ready(function() {
         var urlCurrent = window.location.pathname.split('/');
         langCode = $(this).attr('data-langcode');
         // Add 'active' class if this is the current language
-        console.log(urlCurrent[1])
-        console.log(langCode)
-        console.log('----')
         if(urlCurrent[1] === langCode) $(this).addClass('active');
         // Set href for this language code
         urlCurrent[1] = langCode;

@@ -119,6 +119,8 @@ LANGUAGES = (
 
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'core/locale'),
+    os.path.join(BASE_DIR, 'general/locale'),
+    os.path.join(BASE_DIR, 'palaeography/locale'),
 )
 
 

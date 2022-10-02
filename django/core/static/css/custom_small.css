@@ -52,4 +52,17 @@
         min-height: calc(100vh - 3.3rem);
     }
 
+    /* ---------- Welcome ---------- */
+
+    .welcome-howtouse-step p {
+        display: block;
+        width: 100%;
+    }
+    
+    .welcome-howtouse-step img {
+        display: block;
+        width: 80%;
+        margin: 2em auto;
+    }
+
 }

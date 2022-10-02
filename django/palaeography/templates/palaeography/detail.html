@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block main %}
+
+<section>
+    {% include "researchdata/snippets/viewinadmindashboard.html" with admin_url=admin_url %}
+
+    <h2>{{ object }}</h2>
+
+    <ul class="tabs">
+        <!-- Image tab (if relevant) -->
+        {% if object.image %}<li id="image">Image</li>{% endif %}
+        <!-- Details tab -->
+        <li id="details">Details</li>
+        <!-- Related Data tabs -->
+        {% for related_data in related_data_list %}
+            <li id="{{ related_data.id }}">{{ related_data.title }} ({{ related_data.objects | length }})</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<!-- Image section (if relevant) -->
+{% if object.image %}
+    <section class="tabbed" id="tabbed-image">
+        <div class="tabbed-title">Image</div>
+
+        <!-- Item Image Viewer -->
+        <div id="itemimage-controls">
+            <!-- Full Screen -->
+            <div id="itemimage-controls-fullscreen" class="itemimage-controls-item" title="Fullscreen"><i class="fas fa-expand"></i></div>
+            <!-- Reset Viewer -->
+            <div id="itemimage-controls-resetviewer" class="itemimage-controls-item" title="Reset Viewer"><i class="fas fa-redo-alt"></i></div>
+            <!-- Download High Resolution Image -->
+            <div id="itemimage-controls-downloadoriginal" class="itemimage-controls-item" title="Download high-resolution version of Image"><a href="{{ object.image_original.url }}" target="_blank"><i class="fas fa-download"></i></a></div>
+            <!-- Zoom -->
+            <div id="itemimage-controls-zoom">
+                <!-- Zoom: Out -->
+                <div id="itemimage-controls-zoom-out" class="itemimage-controls-item" title="Zoom Out"><i class="fas fa-search-minus"></i></div>
+                <!-- Zoom: Slider -->
+                <div id="itemimage-controls-zoom-range" class="itemimage-controls-item" title="Zoom">
+                    <input type="range" id="itemimage-controls-zoom-range-slider" title="itemimage-controls-zoom-range-slider" min="10" max="1000" value="100">
+                </div>
+                <!-- Zoom: In -->
+                <div id="itemimage-controls-zoom-in" class="itemimage-controls-item" title="Zoom In"><i class="fas fa-search-plus"></i></div>
+            </div>
+        </div>
+        <div id="itemimage">
+            <div id="itemimage-container" class="draggable">
+                <!-- Item Image -->
+                <img id="itemimage-image" src="{{ object.image.url }}" alt="Image of item, e.g. a manuscript page">
+            </div>
+        </div>
+        {% if object.copyright %}
+            <div id="itemimage-copyright">{{ object.copyright }}</div>
+        {% endif %}
+    </section>
+
+    <!-- JavaScript for ImageView -->
+    <script>
+        $(document).ready(function(){
+
+            // Get cookie value
+            function getCookie(name) {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return parts.pop().split(';').shift();
+            }
+
+            {% include "researchdata/snippets/detail-itemimage-itemimageviewer.js" %}
+
+        });
+        </script>
+{% endif %}
+
+<!-- Details section -->
+<section class="tabbed" id="tabbed-details">
+    <div class="tabbed-title">Details</div>
+    {% include "researchdata/snippets/details-detail.html" with details=details %}
+    {% include "researchdata/snippets/details-detail-metadata.html" with object=object %}
+</section>
+
+<!-- Related Data sections -->
+{% for related_data in related_data_list %}
+    <section class="tabbed" id="tabbed-{{ related_data.id }}">
+        <div class="tabbed-title">{{ related_data.title }}</div>
+        {% include "researchdata/snippets/detail-list-quicksearch.html" with object_list=related_data.objects %}
+        {% include "researchdata/snippets/list-body.html" with object_list=related_data.objects list_type=related_data.list_type %}
+    </section>
+{% endfor %}
+
+
+{% endblock %}
