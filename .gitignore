@@ -8,6 +8,7 @@ django/static/
 private_testdata_*.py
 django/general/migrations/
 django/sent_emails/
+django/palaeography/migrations/old_data/
 
 
 ###################### Django Templated gitignore paths  ######################

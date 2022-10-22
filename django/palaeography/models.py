@@ -1,15 +1,13 @@
 from django.db import models
 from django.urls import reverse
-from PIL import Image
+from PIL import Image, ImageOps
 from django.core.files import File
 from io import BytesIO
-from .apps import app_name
 from account.models import User
 from django.utils import timezone
 from django.db.models.functions import Upper
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 import os
-import json
 import textwrap
 
 
@@ -17,19 +15,11 @@ import textwrap
 # 1. Reusable code
 # 2. Select List Models
 # 3. Main models
-# 4. Search Fields
 
 
 #
 # 1. Reusable code
 #
-
-
-def url_detail(object):
-    """
-    Return a URL for the detail page of the passed object
-    """
-    return reverse(f'{app_name}:{object.__class__.__name__.lower()}-detail', kwargs={'pk': object.id})
 
 
 def singular_plural(count, word_singular, word_plural=None):
@@ -65,13 +55,6 @@ def image_is_wider_than_tall(image_field):
         return None
 
 
-def queryset_as_string(queryset, separator=", "):
-    """
-    Return a queryset as a string with the specified separator. E.g. "Document 1, Document 2, Document 3"
-    """
-    return separator.join([str(obj) for obj in queryset]) if len(queryset) else None
-
-
 class SlAbstract(models.Model):
     """
     An abstract model for Select List models
@@ -96,91 +79,20 @@ class SlAbstract(models.Model):
 # 2. Select List models
 #
 
-
-# class SlDateCentury(SlAbstract):
-#     "Select List model used by Document and Work models - A century in CE e.g. 1st Century CE"
-
-#     century_number = models.IntegerField(validators=[MaxValueValidator(21), MinValueValidator(1)])
-
-#     @property
-#     def html_select_value_field(self):
-#         "Field to use as value in <option value=''> for select html elements (default = 'id')"
-#         return self.century_number
-
-#     class Meta:
-#         ordering = ['century_number']
+class SlDocumentLanguage(SlAbstract):
+    "The language/script of a document"
 
 
-# class SlCountry(SlAbstract):
-#     "Select List model used by SlTown model - A country in which a town (from SlTown) exists"
-
-#     class Meta:
-#         verbose_name = 'Country'
-#         verbose_name_plural = 'Countries'
+class SlDocumentType(SlAbstract):
+    "The type of document. E.g. book"
 
 
-# class SlTown(SlAbstract):
-#     "Select List model used by SlLibrary model - A town/city in which a library (from SlLibrary) exists"
-
-#     country = models.ForeignKey(SlCountry, on_delete=models.SET_NULL, blank=True, null=True)
-
-#     @property
-#     def data_hierarchy_parents_ids(self):
-#         """
-#         Used to determine parent options in filter select lists in list.html
-#         E.g. when a parent option is selected, this object will be shown in the child list
-#         Also see 'Data hierarchy properties' in views for related code
-#         """
-#         return str(json.dumps({'country': self.country.id}))
-
-#     def __str__(self):
-#         return f"{self.name}, {self.country}" if self.country else self.name
-
-#     class Meta:
-#         verbose_name = 'Town/City'
-#         verbose_name_plural = 'Towns/Cities'
+class SlDocumentInk(SlAbstract):
+    "The ink used within a document"
 
 
-# class SlLibrary(SlAbstract):
-#     "Select List model used by Document model - A library in which the document exists"
-
-#     town = models.ForeignKey(SlTown, on_delete=models.SET_NULL, blank=True, null=True)
-
-#     @property
-#     def data_hierarchy_parents_ids(self):
-#         """
-#         Used to determine parent options in filter select lists in list.html
-#         E.g. when a parent option is selected, this object will be shown in the child list
-#         Also see 'Data hierarchy properties' in views for related code
-#         """
-#         return str(json.dumps({
-#             'country': self.town.country.id,
-#             'town': self.town.id
-#         }))
-
-#     def __str__(self):
-#         return f"{self.name} ({self.town})" if self.town else self.name
-
-#     class Meta:
-#         verbose_name = 'Library'
-#         verbose_name_plural = 'Libraries'
-
-
-# class SlDocumentShelfmark(SlAbstract):
-#     "Select List model used by Document model - A shelfmark (aka name, identifier) of the document, which can be used to group similar documents"
-
-
-# class SlDocumentCategory(SlAbstract):
-#     "Select List model used by Document model - A category of document (e.g. a manuscript book, document, etc.)"
-
-
-# class SlDocumentCodicologicalDefinition(SlAbstract):
-#     "Select List model used by Document model - Codicological definition"
-
-
-# class SlDocumentFormat(SlAbstract):
-#     "Select List model used by Document model - Format"
-
+class SlDocumentRepository(SlAbstract):
+    "The repository/location of the document. E.g. Cambridge University Library"
 
 
 #
@@ -190,122 +102,236 @@ class SlAbstract(models.Model):
 
 class Document(models.Model):
     """
-    A document (e.g. a manuscript, document, etc.)
+    A historical document (e.g. a book, a coin, etc.)
     """
 
     m2m_related_name = 'documents'
 
-    name = models.CharField(max_length=1000, blank=True)
+    name = models.CharField(max_length=1000)
+    repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
+    shelfmark = models.CharField(max_length=1000, blank=True, null=True)
+    type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
+    languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
+    ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
+    difficulty = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
+    information = models.TextField(blank=True, null=True)
+    custom_instructions = models.TextField(blank=True, null=True, help_text="If the default instructions are insufficient, please provide custom instructions to the user")
 
-#     shelfmark = models.ForeignKey(SlDocumentShelfmark, on_delete=models.RESTRICT)
-#     library = models.ForeignKey(SlLibrary, on_delete=models.SET_NULL, blank=True, null=True)
-#     category = models.ForeignKey(SlDocumentCategory, on_delete=models.RESTRICT, verbose_name='document category')
-#     description = models.TextField(blank=True, null=True)
-#     keywords = models.ManyToManyField(SlKeyword, blank=True, related_name=m2m_related_name, db_index=True)
+    # Partial Date Range
+    partial_date_range_from = models.IntegerField(blank=True, null=True)
+    partial_date_range_to = models.IntegerField(blank=True, null=True)
 
-#     # Codicological/Document Definition
-#     codicological_definition = models.ForeignKey(SlDocumentCodicologicalDefinition, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Codicological definition")
-#     format = models.ForeignKey(SlDocumentFormat, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Format")
-#     format_other = models.CharField(max_length=1000, blank=True, verbose_name="Format (other)")
-#     type_of_manuscript = models.ForeignKey(SlDocumentTypeOfManuscript, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Type of manuscript")
-#     codicological_definition_observations = models.TextField(blank=True, null=True, verbose_name="Codicological definition observations")
-#     document_definition = models.ForeignKey(SlDocumentDocumentDefinition, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Document definition")
-#     document_definition_observations = models.TextField(blank=True, null=True, verbose_name="Document definition observations")
+    # Date
+    date_year = models.IntegerField(blank=True, null=True)
+    date_month = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(12)])
+    date_day = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(31)])
 
-#     # Miscellaneous
-#     manuscript_history = models.TextField(blank=True, null=True, verbose_name="Manuscript history")
-#     bibliography = models.TextField(blank=True, null=True, verbose_name="Bibliography")
+    # Time
+    time_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(24)])
+    time_minute = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(60)])
+    time_second = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(60)])
 
-#     # Admin
-#     admin_published = models.BooleanField(default=False, verbose_name='published')
-#     admin_notes = models.TextField(blank=True, null=True)
+    # Admin
+    admin_published = models.BooleanField(default=False, verbose_name='published')
+    admin_notes = models.TextField(blank=True, null=True)
 
-#     # Metadata
-#     meta_editors = models.ManyToManyField(User,
-#                                           related_name=m2m_related_name + '_editors',
-#                                           blank=True,
-#                                           verbose_name='editors')
-#     meta_contributors = models.ManyToManyField(User,
-#                                                related_name=m2m_related_name + '_contributors',
-#                                                blank=True,
-#                                                verbose_name='contributors')
-#     meta_created_by = models.ForeignKey(User, related_name="document_created_by",
-#                                         on_delete=models.PROTECT, blank=True, null=True, verbose_name="created by")
-#     meta_created_datetime = models.DateTimeField(default=timezone.now, verbose_name="created")
-#     meta_lastupdated_by = models.ForeignKey(User, related_name="document_lastupdated_by",
-#                                             on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
-#     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
-#     meta_firstpublished_datetime = models.DateTimeField(blank=True, null=True, verbose_name="first published")
+    # Metadata
+    meta_created_by = models.ForeignKey(User, related_name="document_created_by",
+                                        on_delete=models.PROTECT, blank=True, null=True, verbose_name="created by")
+    meta_created_datetime = models.DateTimeField(default=timezone.now, verbose_name="created")
+    meta_lastupdated_by = models.ForeignKey(User, related_name="document_lastupdated_by",
+                                            on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
+    meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
 
-#     @property
-#     def documentimages(self):
-#         return self.documentimage_set.filter(admin_published=True)
+    @property
+    def instructions(self):
+        default_instructions = """XXX
+        xxx
+        """
+        return self.custom_instructions if self.custom_instructions else default_instructions
 
-#     @property
-#     def count_documentimages(self):
-#         return self.documentimages.count()
+    @property
+    def count_documentimages(self):
+        return self.documentimage_set.count()
 
-#     @property
-#     def url_detail(self):
-#         return url_detail(self)
+    @property
+    def default_image(self):
+        return self.documentimage_set.first()
 
-#     @property
-#     def list_title(self):
-#         return textwrap.shorten(str(self), width=90, placeholder="...")
+    @property
+    def list_title(self):
+        return textwrap.shorten(str(self), width=90, placeholder="...")
 
-#     @property
-#     def list_details(self):
-#         details = f"{singular_plural(self.count_documentimages, 'image')}"
-#         details += f" | Category: {self.category}" if self.category else ""
-#         details += f" | Date: {self.date_century}" if self.date_century else ""
-#         details += f" | Located in: {self.library}" if self.library else ""
-#         return textwrap.shorten(details, width=200, placeholder="...")
+    @property
+    def list_details(self):
+        details = f"{singular_plural(self.count_documentimages, 'image')}"
+        details += f" | Type: {self.type}" if self.type else ""
+        details += f" | Shelfmark: {self.shelfmark}" if self.shelfmark else ""
+        details += f" | Difficulty: {self.difficulty}" if self.difficulty else ""
+        return textwrap.shorten(details, width=200, placeholder="...")
 
-#     def __str__(self):
-#         return f'{self.shelfmark.name} ({self.name})' if self.name else self.shelfmark.name
+    def __str__(self):
+        return self.name
 
-#     def get_absolute_url(self):
-#         return reverse('palaeography:document-detail', args=[str(self.id)])
+    def get_absolute_url(self):
+        return reverse('palaeography:document-detail', args=[str(self.id)])
 
-#     class Meta:
-#         ordering = [Upper('shelfmark__name'), Upper('name'), 'id']
+    class Meta:
+        ordering = [Upper('name'), 'id']
 
 
-#
-# 4. Search fields: Fields used in search (used in admin.py, views, etc)
-#
+class DocumentImage(models.Model):
+    """
+    An image belonging to a document, e.g. an image of a page in a book
+    """
+
+    m2m_related_name = 'documentimages'
+
+    media_root = 'palaeography/'
+    media_dir = media_root + 'documentimages/'
+    media_dir_originals = media_dir[:-1] + '-originals/'
+    media_dir_thumbnails = media_dir[:-1] + '-thumbnails/'
+
+    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    order_in_document = models.IntegerField(blank=True, null=True)
+
+    image = models.ImageField(upload_to=media_dir)
+    image_original = models.ImageField(upload_to=media_dir_originals, blank=True, null=True)  # Created via save() method below
+    image_thumbnail = models.ImageField(upload_to=media_dir_thumbnails, blank=True, null=True)  # Created via save() method below
+    right_to_left = models.BooleanField(default=False)
+
+    # Metadata fields
+    meta_created_by = models.ForeignKey(User, related_name="documentimage_created_by",
+                                        on_delete=models.PROTECT, blank=True, null=True, verbose_name="created by")
+    meta_created_datetime = models.DateTimeField(default=timezone.now, verbose_name="created")
+    meta_lastupdated_by = models.ForeignKey(User, related_name="documentimage_lastupdated_by",
+                                            on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
+    meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
+
+    @property
+    def other_images_in_document(self):
+        return DocumentImage.objects.filter(document=self.document).exclude(id=self.id)
+
+    @property
+    def name(self):
+        return f"{self.document.name} - Image #{self.order_in_document}"
+
+    @property
+    def image_is_wider_than_tall(self):
+        return image_is_wider_than_tall(self.image)
+
+    @property
+    def alternative_text(self):
+        return f"Image of {self.document.name}"
+
+    @property
+    def correct_transcription(self):
+        return "TODO - need to set this to ImagePartials combined"
+
+    @property
+    def correct_transcription_words(self):
+        """
+        Returns a matrix (list of lists) of words from correct transcription string
+        Each new line in string = a new list within the matrix.
+        """
+        
+        words = []
+        for correct_transcription_line in self.correct_transcription.splitlines():
+            if len(correct_transcription_line.strip()):
+                line = []
+                for word in correct_transcription_line.split(' '):
+                    line.append({'word': word, 'length': len(word)})
+                words.append(line)
+        return words
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        """
+        When an DocumentImage is saved (created or updated):
+        - Set its order in the parent document
+        - Compress the image (if needed)
+        - Retain the original image
+        - Create the DocumentImage thumbnail
+        """
+
+        # Set the order_in_document with an expected value if it's not been set
+        if not self.order_in_document:
+            self.order_in_document = self.other_images_in_document.count()
+
+        # Manage image file (compress, thumbnail, etc.)
+        super().save(*args, **kwargs)  # Must save now, so image is saved before working with it
+
+        file_extension = self.image.name.split('.')[-1].lower()
+        file_format = 'PNG' if file_extension == 'png' else 'JPEG'
+
+        # Retain original high quality copy of image
+        if self.image_original:
+            self.image_original.delete(save=False)
+        img_original = Image.open(self.image.path)
+        img_original = img_original.convert('RGB')
+        img_original = ImageOps.exif_transpose(img_original)  # Rotate to correct orientation
+        blob_original = BytesIO()
+        img_original.save(blob_original, file_format, optimize=True, quality=90)
+        self.image_original.save(os.path.basename(self.image.name), File(blob_original), save=False)
+
+        # Shrink image (if too large)
+        img_to_shrink = Image.open(self.image.path)
+        img_to_shrink_width, img_to_shrink_height = img_to_shrink.size
+        max_size = 2000  # images shouldn't be larger than this in width or height
+        if img_to_shrink_width > max_size or img_to_shrink_height > max_size:
+            img_to_shrink.thumbnail((max_size, max_size))
+            img_to_shrink = ImageOps.exif_transpose(img_to_shrink)  # Rotate to correct orientation
+            img_to_shrink.save(self.image.path)
+
+        # Create a thumbnail of image (e.g. for use in list views, where many images loaded at once)
+        if self.image_thumbnail:
+            self.image_thumbnail.delete(save=False)
+        img_thumbnail = Image.open(self.image.path)
+        img_thumbnail.thumbnail((640, 640))
+        img_thumbnail = ImageOps.exif_transpose(img_thumbnail)  # Rotate to correct orientation
+        blob_thumbnail = BytesIO()
+        img_thumbnail.save(blob_thumbnail, file_format, optimize=True, quality=80)
+        name = os.path.basename(self.image.name).rsplit('.', 1)[0]  # removes extension from main image name
+        self.image_thumbnail.save(f'{name}_thumbnail.{file_extension}', File(blob_thumbnail), save=False)
+
+        # Update the object (must use update() not save() to avoid unique ID error)
+        DocumentImage.objects.filter(id=self.id).update(
+            image_original=f'{self.media_dir_originals}/{name}.{file_extension}',
+            image_thumbnail=f'{self.media_dir_thumbnails}/{name}_thumbnail.{file_extension}'
+        )
+
+    class Meta:
+        ordering = [Upper('document__name'), 'id']
 
 
-# Document
-search_fields_document = ['shelfmark__name',
-                      'name',
-                      'category__name',
-                      'library__name',
-                      'library__town__name',
-                      'library__town__country__name',
-                      'keywords__name',
-                      'date_century__name',
-                      'codicological_definition__name',
-                      'format__name',
-                      'type_of_manuscript__name',
-                      'document_definition__name',
-                      'state_of_document__name',
-                      'state_of_material__name',
-                      'state_of_writing__name',
-                      'palimpsest__name',
-                      'pricking__name',
-                      'pricking_instrument__name',
-                      'pricking_pattern__name',
-                      'ruling__name',
-                      'ruling_method__name',
-                      'ruling_pattern__name',
-                      'script_type__name',
-                      'script_mode__name',
-                      'script_quality__name',
-                      'script_function__name',
-                      'script_style__name',
-                      'vocalization__name',
-                      'abbreviations__name',
-                      'invocation__name',
-                      'binding__name',
-                      'type_of_sewing__name']
+class DocumentImagePart(models.Model):
+    """
+    A part of an image belonging to a document, e.g. a cut out of a word to be transcribed
+    """
+
+    document_image = models.ForeignKey(DocumentImage, on_delete=models.CASCADE)
+
+    # Cropped image measurements
+    # left and top are the x,y coordinates of the top-left starting point of the part
+    image_cropped_left = models.FloatField(blank=True, null=True)
+    image_cropped_top = models.FloatField(blank=True, null=True)
+    image_cropped_width = models.FloatField(blank=True, null=True)
+    image_cropped_height = models.FloatField(blank=True, null=True)
+
+    w = models.CharField(max_length=1000, blank=True, null=True)
+    pw = models.CharField(max_length=1000, blank=True, null=True)
+    sw = models.CharField(max_length=1000, blank=True, null=True)
+    cw = models.CharField(max_length=1000, blank=True, null=True)
+    cew = models.CharField(max_length=1000, blank=True, null=True)
+    l = models.CharField(max_length=1000, blank=True, null=True)
+    c = models.CharField(max_length=1000, blank=True, null=True)
+
+    # Metadata fields
+    meta_created_by = models.ForeignKey(User, related_name="documentimagepart_created_by",
+                                        on_delete=models.PROTECT, blank=True, null=True, verbose_name="created by")
+    meta_created_datetime = models.DateTimeField(default=timezone.now, verbose_name="created")
+    meta_lastupdated_by = models.ForeignKey(User, related_name="documentimagepart_lastupdated_by",
+                                            on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
+    meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")

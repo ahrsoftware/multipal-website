@@ -16,12 +16,6 @@ def publish(modeladmin, request, queryset):
     """
     for object in queryset:
         object.admin_published = True
-        # Set first published datetime, if applicable
-        try:
-            if object.meta_firstpublished_datetime is None:
-                object.meta_firstpublished_datetime = timezone.now()
-        except Exception:
-            pass
         object.save()
 
 
@@ -71,32 +65,6 @@ def get_model_perms_dict(self, request):
     }
 
 
-def custom_permission(self, request):
-    """
-    If specific, custom permissions are needed (e.g. user can only change/delete their own object)
-    then call this function via the following methods on a ModelAdmin below:
-    - has_change_permission(self, request, obj=None)
-    - has_delete_permission(self, request, obj=None)
-
-    self = the ModelAdmin class (or inherited class), which calls this during a method
-    request = the request in the ModelAdmin, which contains info about user, path, etc.
-    """
-    path = request.path.split('/')  # path example: '/dashboard/palaeography/item/1/change/'
-
-    # Ensure it only checks for the current model, as specified in request path,
-    # as (for some reason) it triggers multiple times for other models, causing errors
-    if len(path) > 3 and self.model._meta.model_name == path[3]:
-        # If an object is being changed or deleted, as specified in request path
-        if path[-2] in ['change', 'delete']:
-            # Admins can change/delete all
-            if request.user.role.name == 'admin':
-                return True
-            # Collaborators can change/delete if it's their own (i.e. if they created it)
-            elif request.user.role.name == 'collaborator' and self.model.objects.get(id=int(path[-3])).meta_created_by == request.user:
-                return True
-        return False  # Deny access if no above condition has been met
-
-
 class GenericAdminView(admin.ModelAdmin):
     """
     This is a generic class that can be applied to most models to customise their inclusion in the Django admin.
@@ -112,20 +80,13 @@ class GenericAdminView(admin.ModelAdmin):
     list_filter = ('admin_published', 'meta_created_by')
     search_fields = ('name', 'admin_notes')
     actions = (publish, unpublish)
-    readonly_fields = ['admin_published',
-                       'meta_created_by',
+    readonly_fields = ['meta_created_by',
                        'meta_created_datetime',
                        'meta_lastupdated_by',
-                       'meta_lastupdated_datetime',
-                       'meta_firstpublished_datetime']
+                       'meta_lastupdated_datetime']
 
     def get_actions(self, request):
         actions = super().get_actions(request)
-
-        # Collaborators can't publish/unpublish objects
-        if request.user.role.name == 'collaborator':
-            del actions['publish']
-            del actions['unpublish']
 
         return actions
 
@@ -137,9 +98,6 @@ class GenericAdminView(admin.ModelAdmin):
         else:
             obj.meta_lastupdated_by = request.user
             obj.meta_lastupdated_datetime = timezone.now()
-        # Meta: first published datetime
-        if obj.admin_published and obj.meta_firstpublished_datetime is None:
-            obj.meta_firstpublished_datetime = timezone.now()
         obj.save()
 
     def save_related(self, request, form, formsets, change):
@@ -149,12 +107,6 @@ class GenericAdminView(admin.ModelAdmin):
             form.instance.meta_contributors.add(request.user)
         except Exception:
             pass
-
-    def has_change_permission(self, request, obj=None):
-        return custom_permission(self, request)
-
-    def has_delete_permission(self, request, obj=None):
-        return custom_permission(self, request)
 
 
 class GenericSlAdminView(admin.ModelAdmin):
@@ -182,10 +134,10 @@ class GenericSlAdminView(admin.ModelAdmin):
             return {}
 
     def has_change_permission(self, request, obj=None):
-        return custom_permission(self, request)
+        return False
 
     def has_delete_permission(self, request, obj=None):
-        return custom_permission(self, request)
+        return False
 
 
 # Inlines
@@ -203,9 +155,9 @@ class GenericSlAdminView(admin.ModelAdmin):
 #     classes = ['collapse']
 
 
-# class ItemHandInline(GenericStackedInline):
-#     """A subform/inline form for ItemHand to be used in ItemAdmin"""
-#     model = models.ItemHand
+# class DocumentHandInline(GenericStackedInline):
+#     """A subform/inline form for DocumentHand to be used in DocumentAdmin"""
+#     model = models.DocumentHand
 
 
 
@@ -213,246 +165,38 @@ class GenericSlAdminView(admin.ModelAdmin):
 # Admin views for main models
 
 
-# class ItemAdminView(GenericAdminView):
-#     """Customise the admin interface for Item model"""
-#     list_display = ('shelfmark',
-#                     'name',
-#                     'library',
-#                     'category',
-#                     'number_of_hands',
-#                     'admin_published',
-#                     'meta_created_by',
-#                     'meta_created_datetime',
-#                     'meta_lastupdated_by',
-#                     'meta_lastupdated_datetime')
-#     list_select_related = ('library__town__country',
-#                            'category',
-#                            'meta_created_by',
-#                            'meta_lastupdated_by')
-#     list_display_links = ('shelfmark',)
-#     list_filter = ('admin_published', 'category', 'languages')
-#     search_fields = models.search_fields_item
-#     filter_horizontal = ('subject_fields',)
-#     inlines = (
-#         ItemHandInline,
-#         ItemHistoricalInformationInline,
-#         ItemJudeoArabicDiacriticsInline,
-#         ItemOrderingQuiresInline,
-#         ItemPaperInline,
-#         ItemParatextInline
-#     )
-#     autocomplete_fields = ('library',
-#                            'codicological_definition',
-#                            'format',
-#                            'type_of_manuscript',
-#                            'document_definition',
-#                            'state_of_item',
-#                            'state_of_material',
-#                            'state_of_writing',
-#                            'palimpsest',
-#                            'pricking',
-#                            'pricking_instrument',
-#                            'pricking_pattern',
-#                            'ruling',
-#                            'ruling_method',
-#                            'ruling_pattern',
-#                            'script_type',
-#                            'script_mode',
-#                            'script_quality',
-#                            'script_function',
-#                            'script_style',
-#                            'vocalization',
-#                            'abbreviations',
-#                            'invocation',
-#                            'binding',
-#                            'type_of_sewing')
-#     fieldsets = (
-#         ('General', {
-#             'fields': (
-#                 'shelfmark',
-#                 'name',
-#                 'library',
-#                 'category',
-#                 'description',
-#                 'keywords',
-#                 'keywords_observations'
-#             )
-#         }),
-#         ('Codicological/Document definition', {
-#             'fields': (
-#                 'codicological_definition',
-#                 'document_definition',
-#                 ('format', 'format_other'),
-#                 'type_of_manuscript',
-#                 'codicological_definition_observations',
-#                 'document_definition_observations',
-#             )
-#         }),
-#         ('Content Description', {
-#             'fields': (
-#                 'subject_fields',
-#                 ('fields', 'fields_other'),
-#                 'fields_observations',
-#                 'languages', 'languages_observations',
-#                 'edition',
-#                 'translation',
-#                 ('author_name_in_manuscript', 'author_uniform_name', 'author_dates_and_places'),
-#                 'author_observations',
-#                 'title_in_manuscript',
-#                 'uniform_title',
-#                 'title_observations',
-#                 'incipit',
-#                 'explicit',
-#                 'section_titles',
-#                 'date_mentioned',
-#                 'date_ce',
-#                 'date_century',
-#                 'date_observations',
-#                 'locality_of_writing',
-#                 'locality_mentioned',
-#                 'estimated_geographical_areas',
-#                 'estimated_locality',
-#                 'locality_observations',
-#                 'incodicated_documents_observations',
-#                 # Historical Information inline here via JS
-#                 # Paratext inline here via JS
-#             )
-#         }),
-#         ('Physical Description', {
-#             'fields': (
-#                 ('height', 'width'),
-#                 ('height_of_written_area', 'width_of_written_area'),
-#                 ('height_of_outer_cover', 'width_of_outer_cover'),
-#                 'dimensions_observations',
-#                 'number_of_folios',
-#                 'state_of_item',
-#                 'state_of_item_observations',
-#                 'state_of_material',
-#                 'state_of_material_observations',
-#                 'state_of_writing',
-#                 'state_of_writing_observations',
-#                 'palimpsest',
-#                 'palimpsest_underscript',
-#                 'writing_materials',
-#                 # Paper inline here via JS
-#                 'writing_materials_colour',
-#                 'writing_materials_thickness',
-#                 'writing_materials_translucency',
-#                 'writing_materials_observations',
-#                 'inks',
-#                 'inks_observations',
-#                 'formula_for_the_quires',
-#                 'parchment_quires_hair_or_flesh_distribution',
-#                 # Ordering Quires inline here via JS
-#                 'quires_observations',
-#                 'pricking',
-#                 'pricking_instrument',
-#                 'pricking_pattern',
-#                 'pricking_observations',
-#                 'ruling',
-#                 'ruling_method',
-#                 'ruling_pattern',
-#                 'number_of_ruled_lines',
-#                 'ruling_observations',
-#                 'page_layouts',
-#                 'number_of_collumns_per_page_or_sheet',
-#                 'cul_de_lampe',
-#                 'tables',
-#                 'number_of_leaves',
-#                 'number_of_written_lines',
-#                 ('justifications', 'justifications_other'),
-#                 'justifications_observations',
-#                 'text_layouts',
-#                 'paragraph_marks_and_textual_dividers',
-#                 'text_layouts_other',
-#                 'text_layouts_observations',
-#                 'graphic_systems',
-#                 'script_type',
-#                 'script_mode',
-#                 'script_quality',
-#                 ('script_function', 'script_function_other'),
-#                 ('script_style', 'script_style_other'),
-#                 'script_observations',
-#                 'number_of_hands',
-#                 # Hands inline here via JS
-#                 'vocalization',
-#                 'vocalization_types',
-#                 'vocalization_observations',
-#                 'names_of_god',
-#                 'abbreviations',
-#                 # Judeo-Arabic Diacritics inline here via JS
-#                 'special_signs_for_vernacular_words',
-#                 ('invocation', 'invocation_other'),
-#                 'graphic_signs_observations',
-#                 'decorations',
-#                 'decorations_observations',
-#                 'glosses',
-#                 'glosses_observations',
-#                 'binding',
-#                 'binding_materials',
-#                 'binding_type',
-#                 'outer_cover_decoration',
-#                 'inner_cover',
-#                 'endbands',
-#                 'spine',
-#                 'sewing',
-#                 'number_of_sewing_stations',
-#                 'thread',
-#                 'type_of_sewing',
-#                 'binding_observations',
-#             )
-#         }),
-#         ('Miscellaneous', {
-#             'fields': (
-#                 'manuscript_history',
-#                 'bibliography'
-#             )
-#         }),
-#         ('Admin', {
-#             'fields': (
-#                 'admin_published',
-#                 'admin_notes',
-#                 'meta_editors',
-#                 'meta_contributors',
-#                 'meta_created_by',
-#                 'meta_created_datetime',
-#                 'meta_lastupdated_by',
-#                 'meta_lastupdated_datetime',
-#                 'meta_firstpublished_datetime',
-#             )
-#         }),
-#     )
-
-#     class Media:
-#         # This AdminView requires custom JS (which uses jQuery)
-#         js = (
-#             'https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js',
-#             'js/admin_item.js'
-#         )
+class DocumentAdminView(GenericAdminView):
+    """Customise the admin interface for Document model"""
+    list_display = ('name',
+                    'type',
+                    'admin_published',
+                    'meta_created_by',
+                    'meta_created_datetime',
+                    'meta_lastupdated_by',
+                    'meta_lastupdated_datetime')
 
 
-# class ItemImageAdminView(GenericAdminView):
-#     """Customise the admin interface for ItemImage model"""
-#     list_display = ('name',
-#                     'image',
-#                     'category',
-#                     'admin_published',
-#                     'meta_created_by',
-#                     'meta_created_datetime',
-#                     'meta_lastupdated_by',
-#                     'meta_lastupdated_datetime')
-#     list_select_related = ('item',
-#                            'category',
-#                            'meta_created_by',
-#                            'meta_lastupdated_by')
-#     list_filter = ('admin_published', 'category', 'item__category', 'item__languages')
-#     search_fields = models.search_fields_itemimage
-#     autocomplete_fields = ('item',)
-#     exclude = ('image_original', 'image_thumbnail')
+
+
+class DocumentImageAdminView(GenericAdminView):
+    """Customise the admin interface for DocumentImage model"""
+    list_display = ('id',
+                    'image',
+                    'meta_created_by',
+                    'meta_created_datetime',
+                    'meta_lastupdated_by',
+                    'meta_lastupdated_datetime')
+    list_display_links = ('id',)
+    list_select_related = ('document',
+                           'meta_created_by',
+                           'meta_lastupdated_by')
+    list_filter = ('document__type', 'document__languages')
+    autocomplete_fields = ('document',)
+    exclude = ('image_original', 'image_thumbnail')
 
 
 # Register admin views
 
 # Main tables
-# admin.site.register(models.Item, ItemAdminView)
-# admin.site.register(models.ItemImage, ItemImageAdminView)
+admin.site.register(models.Document, DocumentAdminView)
+admin.site.register(models.DocumentImage, DocumentImageAdminView)

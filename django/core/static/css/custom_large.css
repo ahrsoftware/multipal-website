@@ -34,6 +34,42 @@
         min-height: calc(100vh - 3.5rem);
     }
 
+    /* ---------- List ---------- */
+
+    /* ---------- Detail ---------- */
+
+    #detail-image,
+    #detail-details {
+        margin-top: -2.7rem;
+        width: 49.5%;
+        display: inline-block;
+        vertical-align: top;
+        overflow: hidden;
+        height: calc(100vh - 3.5rem);
+    }
+
+    /* ---------- Tabs ---------- */
+
+    .tabs {
+        border-bottom: 0.3em solid #4f667d;
+        margin: 1em 0 2em 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        white-space: nowrap;
+    }
+
+    .tabs li {
+        display: inline-block;
+        vertical-align: bottom;
+        width: auto;
+        padding: 1em 1.5em;
+    }
+
+    .tabs li:not(.active):hover {
+        background: rgba(255, 255, 255, 0.27);
+        color: white;
+    }
+
     /* ---------- Welcome ---------- */
 
     .welcome-howtouse-step p {

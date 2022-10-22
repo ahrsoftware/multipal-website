@@ -52,6 +52,28 @@
         min-height: calc(100vh - 3.3rem);
     }
 
+    /* ---------- List ---------- */
+
+    /* ---------- Detail ---------- */
+
+    #detail-image,
+    #detail-details {
+        width: 100%;
+        display: block;
+    }
+
+    /* ---------- Tabs ---------- */
+
+    .tabs {
+        margin: 2em 0;
+    }
+
+    .tabs li {
+        display: block;
+        width: 100%;
+        padding: 0.5em;
+    }
+
     /* ---------- Welcome ---------- */
 
     .welcome-howtouse-step p {

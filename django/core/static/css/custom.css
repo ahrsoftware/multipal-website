@@ -5,10 +5,10 @@
 
 Colour scheme:
 
-    #0E1620 - old navy background
-    #121d29 - new navy background
-
+    #121d29 - navy
     #2f4256 - light navy
+
+    #4f667d - light blue
 
     #696969 - grey text on white
 
@@ -413,6 +413,123 @@ main {
     background: #4f667d;
     margin: -3.5rem 0 3.5rem 0;
     padding: 4em 0;
+}
+
+.list-body-item {
+    width: 27em;
+    background: white;
+    display: inline-block;
+    color: black;
+    margin: 1em;
+    outline-style: solid;
+    outline-color: transparent;
+    outline-width: 0.3em;
+}
+
+.list-body-item:hover {
+    color: black;
+    outline-style: solid;
+    outline-color: #4f667d;
+    outline-width: 0.3em;
+}
+
+.list-body-item-image {
+    display: inline-block;
+    vertical-align: top;
+    width: 13rem;
+    height: 13rem;
+    margin-right: 0.64em;
+}
+
+.list-body-item-text {
+    display: inline-block;
+    vertical-align: top;
+    width: 13rem;
+    padding: 0.5em;
+}
+
+.list-body-item-text label {
+    font-weight: bold;
+    border-bottom: 2px solid black;
+    display: block;
+    font-size: 1.2em;
+}
+
+.list-body-item-text p {
+    font-size: 0.9em;
+}
+
+/* ---------- Detail ---------- */
+
+#detail-image,
+#detail-details {
+    padding: 1rem;
+}
+
+#detail-image img {
+    width: 100%;
+}
+
+#detail-details-header-meta {
+    text-align: right;
+}
+
+#detail-details-header-meta div {
+    font-size: 0.8em;
+    margin: 0.5em 0 0.5em 3em;
+    display: inline-block;
+}
+
+#detail-details-header-meta div span {
+    font-weight: bold;
+    margin-left: 0.2rem;
+}
+
+#detail-details-header-title {
+    font-size: 2.4em;
+    font-weight: 900;
+    margin: 0.4em 0 0.7em 0;
+    line-height: 1.3em;
+}
+
+.transcription-item-input-line-word {
+    padding: 0.3em;
+    margin: 0.5em;
+    opacity: 0.7;
+    border: none;
+}
+
+.transcription-item-input-line-word:active,
+.transcription-item-input-line-word:focus {
+    opacity: 1;
+    outline: none;
+}
+
+/* ---------- Tabs ---------- */
+
+.tabs {
+    display: block;
+    padding-left: 0;
+    list-style: none;
+}
+
+.tabbed-title {
+    display: none;
+}
+
+.tabs li {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    cursor: pointer;
+}
+
+.tabs li.active {
+    background: #4f667d;
+    color: white;
+}
+
+section.tabbed {
+    display: none;
 }
 
 /* ---------- Help ---------- */

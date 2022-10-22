@@ -24,3 +24,4 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         # Username to be same as email
         self.username = self.email
+        super().save(*args, **kwargs)
