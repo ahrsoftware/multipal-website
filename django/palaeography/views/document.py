@@ -1,4 +1,5 @@
 from django.views.generic import (DetailView, ListView)
+from django.db.models import Q
 from django.urls import reverse
 from .. import models
 from . import common
@@ -50,144 +51,76 @@ class DocumentListView(ListView):
     """
     template_name = 'palaeography/list.html'
     model = models.Document
-    paginate_by = common.PAGINATE_COUNT
+    paginate_by = 60
 
-#     def get_queryset(self):
-#         # Initially filter by the current user's role's permissions
-#         queryset = common.filter_by_user_role_permissions_view(self, self.model.objects.filter(admin_published=True))
-#         # Select related (FK) fields
-#         queryset = queryset.select_related('shelfmark', 'category', 'date_century', 'library__town__country',)
-#         # Search
-#         queryset = common.search(self.request, queryset, models.search_fields_item)
-#         # Filter
-#         queryset = common.filter(self.request, queryset)
-#         # Sort
-#         queryset = common.sort(self.request, queryset)
-#         # Remove any possible duplicates
-#         return queryset.distinct()
+    def get_queryset(self):
+        queryset = self.model.objects.all()
+        # Only show unpublished items to admins
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(admin_published=True)
+        # Select related (FK) fields
+        queryset = queryset.select_related('type', 'ink')
+        # Prefetch related (FK) fields
+        queryset = queryset.prefetch_related('languages', 'repositories', 'documentimage_set')
+        # Search
+        search = self.request.GET.get('search', '')
+        if search != '':
+            queryset = queryset.filter(
+                Q(name__icontains=search) |
+                Q(shelfmark__icontains=search)
+            )
+        # Filter
+        queryset = common.filter(self.request, queryset)
+        # Sort
+        queryset = common.sort(self.request, queryset)
+        # Remove any possible duplicates
+        return queryset.distinct()
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-#         context['title'] = 'Documents'
-#         context['filter_pre'] = common.filter_pre
-#         context['filter_pre_gt'] = common.filter_pre_gt
-#         context['filter_pre_lt'] = common.filter_pre_lt
-#         context['list_type'] = 'text'
+        context['title'] = 'Documents'
+        context['filter_pre'] = common.filter_pre
+        context['filter_pre_gt'] = common.filter_pre_gt
+        context['filter_pre_lt'] = common.filter_pre_lt
+        context['list_type'] = 'text'
 
-#         # Options: Sort By
-#         context['options_sortby'] = [
-#             # Alphabetical
-#             {
-#                 'value': 'shelfmark__name',
-#                 'label': 'Shelfmark'
-#             },
-#             # Numerical
-#             {
-#                 'value': f'{common.sort_pre_count_value}itemimage',
-#                 'label': f'{common.sort_pre_count_label}Document Images'
-#             },
-#         ]
+        # Options: Sort By
+        context['options_sortby'] = [
+            # Alphabetical
+            {
+                'value': 'shelfmark',
+                'label': 'Shelfmark'
+            },
+            # Numerical
+            {
+                'value': f'{common.sort_pre_count_value}documentimage',
+                'label': f'{common.sort_pre_count_label}Document Images'
+            },
+        ]
 
-#         # Options: Filters
-#         context['options_filters'] = [
+        # Options: Filters
+        context['options_filters'] = [
+            {
+                'filter_id': f'{common.filter_pre_mm}languages',
+                'filter_name': 'Language',
+                'filter_options': models.SlDocumentLanguage.objects.all()
+            },
+            {
+                'filter_id': f'{common.filter_pre_mm}repositories',
+                'filter_name': 'Repository',
+                'filter_options': models.SlDocumentRepository.objects.all()
+            },
+            {
+                'filter_id': f'{common.filter_pre_fk}type',
+                'filter_name': 'Type',
+                'filter_options': models.SlDocumentType.objects.all()
+            },
+            {
+                'filter_id': f'{common.filter_pre_fk}ink',
+                'filter_name': 'Ink',
+                'filter_options': models.SlDocumentInk.objects.all()
+            },
+        ]
 
-#             # General
-#             [
-#                 {
-#                     'filter_id': f'{common.filter_pre_mm}keywords',
-#                     'filter_name': 'Keyword',
-#                     'filter_options': models.SlKeyword.objects.all()
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}shelfmark',
-#                     'filter_name': 'Shelfmark',
-#                     'filter_options': models.SlDocumentShelfmark.objects.all()
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}category',
-#                     'filter_name': 'Document Category',
-#                     'filter_options': models.SlDocumentCategory.objects.all()
-#                 },
-#             ],
-
-#             # Codicological/Document definition
-#             [
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}format',
-#                     'filter_name': 'Document Format',
-#                     'filter_options': models.SlDocumentFormat.objects.all()
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}type_of_manuscript',
-#                     'filter_name': 'Type of Manuscript',
-#                     'filter_options': models.SlDocumentTypeOfManuscript.objects.all()
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}document_definition',
-#                     'filter_name': 'Document Definition',
-#                     'filter_options': models.SlDocumentDocumentDefinition.objects.all()
-#                 },
-#             ],
-
-#             # Date
-#             [
-#                 {
-#                     'filter_id': f'{common.filter_pre_gt}date_century__century_number',
-#                     'filter_classes': common.filter_pre_gt,
-#                     'filter_name': 'Date (from)',
-#                     'filter_options': models.SlDateCentury.objects.all()
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_lt}date_century__century_number',
-#                     'filter_classes': common.filter_pre_lt,
-#                     'filter_name': 'Date (to)',
-#                     'filter_options': models.SlDateCentury.objects.all()
-#                 }
-#             ],
-
-#             # Document: Location & Language
-#             [
-#                 {
-#                     'filter_id': f'{common.filter_pre_mm}estimated_geographical_areas',
-#                     'filter_name': 'Estimated Geographical Area',
-#                     'filter_options': models.SlDocumentEstimatedGeographicalArea.objects.all()
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_mm}languages',
-#                     'filter_name': 'Language',
-#                     'filter_options': models.SlDocumentLanguage.objects.all()
-#                 }
-#             ],
-
-#             # Country > Town > Library
-#             [
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}library__town__country',
-#                     'filter_name': 'Repository Country',
-#                     'filter_options': models.SlCountry.objects.all(),
-#                     # Data hierarchy properties
-#                     'data_hierarchy_id': 'country',
-#                     'data_hierarchy_children': 'town library'
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}library__town',
-#                     'filter_name': 'Repository Town/City',
-#                     'filter_options': models.SlTown.objects.all().select_related('country'),
-#                     # Data hierarchy properties
-#                     'data_hierarchy_id': 'town',
-#                     'data_hierarchy_children': 'library',
-#                     'data_hierarchy_parents': 'country'
-#                 },
-#                 {
-#                     'filter_id': f'{common.filter_pre_fk}library',
-#                     'filter_name': 'Library',
-#                     'filter_options': models.SlLibrary.objects.all().select_related('town__country'),
-#                     # Data hierarchy properties
-#                     'data_hierarchy_id': 'library',
-#                     'data_hierarchy_parents': 'country town'
-#                 }
-#             ]
-#         ]
-
-#         return context
+        return context

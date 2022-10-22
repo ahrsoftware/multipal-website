@@ -14,27 +14,12 @@
     </div>
 </section>
 
+{% if my_recent_documents %}
 <section class="container" id="account-recentactivity">
     <h3>Recent Activity</h3>
-    {% if my_recent_graphic_elements or my_recent_item_images or my_recent_items or my_recent_hands or my_recent_scribes %}
-
-        {% if my_recent_item_images %}
-            <h4>My Recent Item Images</h4>
-            {% include "palaeography/snippets/list-body.html" with object_list=my_recent_item_images list_type='image' %}
-        {% endif %}
-
-        {% if my_recent_items %}
-            <h4>My Recent Items</h4>
-            {% include "palaeography/snippets/list-body.html" with object_list=my_recent_items list_type='text' %}
-        {% endif %}
-
-    {% else %}
-        <p>
-            No recent activity to show yet. When you start creating content, it will be visible here.
-        </p>
-    {% endif %}
-
+    {% include "palaeography/snippets/list-body.html" with object_list=my_recent_documents list_type='text' %}
 </section>
+{% endif %}
 
 <section class="container" id="account-mydetails">
     <h3>My Details</h3>

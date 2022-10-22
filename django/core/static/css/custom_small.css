@@ -54,6 +54,32 @@
 
     /* ---------- List ---------- */
 
+    #list-options-links {
+        display: inline-block;
+        width: 49%;
+        margin: 1em 0;
+        text-align: left;
+    }
+
+    #list-options-searchby,
+    #list-options-sort,
+    #list-options-sort-by,
+    #list-options-sort-direction {
+        display: block;
+        width: 100%;
+        margin-bottom: 0.5em;
+        border-radius: 0.3em;
+    }
+
+    #list-options-search-input {
+        border-radius: 0.3em 0 0 0.3em;
+    }
+
+    .list-pagination-section {
+        width: 100%;
+        display: block;
+    }
+
     /* ---------- Detail ---------- */
 
     #detail-image,

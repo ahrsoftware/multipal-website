@@ -36,6 +36,32 @@
 
     /* ---------- List ---------- */
 
+    #list-options-sort {
+        display: inline-block;
+        width: 50%;
+    }
+
+    #list-options-sort-by,
+    #list-options-sort-direction {
+        display: inline-block;
+        width: fit-content;
+    }
+
+    #list-options-links {
+        float: right;
+    }
+
+    #list-pagination {
+        white-space: nowrap;
+    }
+
+    .list-pagination-section {
+        white-space: normal;
+        width: 33%;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
     /* ---------- Detail ---------- */
 
     #detail-image,

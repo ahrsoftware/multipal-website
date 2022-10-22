@@ -6,37 +6,6 @@ from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField)
 from functools import reduce
 from operator import (or_, and_)
-from .. import models
-import json
-
-
-PAGINATE_COUNT = 64  # specified here to establish same pagination count throughout all views
-
-
-def html_anchor_tag(self, object, label=None, url_parameters=''):
-    """
-    Returns a HTML anchor tag <a href="...">...</a> for a given object
-    The object must have a valid 'url_detail' dynamic property in its model
-
-    Optional label, otherwise object __str__ will be used as the label
-
-    Optional url parameters can be passed, e.g. tab=image in www.myurl.com?tab=image
-    """
-
-    # Add a ? to start of url_parameters, if ? not already included
-    url_parameters = f'?{url_parameters}' if len(url_parameters) > 1 and url_parameters[0] != '?' else url_parameters
-
-    # If object exists
-    if object:
-        # Return an anchor link if user has permission to view linked object
-        if object in filter_by_user_role_permissions_view(self, object.__class__.objects.all()):
-            return f'<a href="{object.url_detail}{url_parameters}">{label if label else object}</a>'
-        # If user doesn't have permission to view linked object, just show its name as text
-        else:
-            return f'<span>{label if label else object}</span>'
-    # If object doesn't exist
-    else:
-        return False
 
 
 def html_details_list_items(object_list):
@@ -72,19 +41,6 @@ def details_section_visibility(details_list):
     return details_list
 
 
-def set_metadata(obj, request):
-    """
-    Set metadata fields that need the user info, e.g. Created By
-    """
-    # Meta: created by
-    if getattr(obj, 'meta_created_by', None) is None:
-        obj.meta_created_by = request.user
-    # Meta: last updated by
-        obj.meta_lastupdated_by = request.user
-    # Save
-    obj.save()
-
-
 def get_field_type(field_name, queryset):
     """
     Return the type of a field
@@ -97,100 +53,6 @@ def get_field_type(field_name, queryset):
         return queryset.model._meta.get_field(stripped_field_name)
     except Exception:
         return CharField  # If it fails, assume it's a CharField by default
-
-
-def filter_by_user_role_permissions_view(self, queryset):
-    """
-    self = self from the view calling this function
-    queryset = queryset to be filtered
-
-    Return a filtered queryset containing objects the current user can VIEW based on permissions of their role:
-    - Admins: view all objects
-    - Collaborator: show all published objects and objects created by current user
-    - General users (no account): show published objects only
-    """
-
-    # Admin (don't filter, return original queryset)
-    if self.request.user.is_authenticated and self.request.user.role.name == 'admin':
-        return queryset
-
-    # If not an admin (i.e. not logged in or a collaborator) then must filter further (e.g. based on admin_published, etc.)
-    else:
-        # Build initial query
-        query = Q(admin_published=True)
-
-        # Add to query, based on model of current queryset
-        # Certain models are dependent on parent object's admin_published status
-        # E.g. if an ItemImage is published but its parent Item is not, then it shouldn't show as it's parent isn't published
-
-        # ItemImage
-        if queryset.model is models.ItemImage:
-            query.add(Q(item__admin_published=True), Q.AND)
-        # WorkQuotation
-        elif queryset.model is models.WorkQuotation:
-            query.add(Q(work__admin_published=True), Q.AND)
-
-        # Add to query, based on user's role
-
-        # Collaborator
-        if self.request.user.is_authenticated and self.request.user.role.name == 'collaborator':
-            # Collaborators can see all content that they created
-            query.add(Q(meta_created_by=self.request.user), Q.OR)
-
-        # Use finished query to filter queryset
-        return queryset.filter(query)
-
-
-def user_can_edit_object(self, object):
-    """
-    self = self from the view calling this function
-    object = a Django model object
-
-    Return True if the current user has permission to EDIT specified object:
-    - Admins: edit all objects
-    - Collaborator: edit objects created by current user
-    - General users (no account): cannot edit any
-    """
-
-    # Admin (don't filter, return original queryset)
-    if self.request.user.is_authenticated and self.request.user.role.name == 'admin':
-        return True
-
-    # Collaborator
-    elif self.request.user.is_authenticated and self.request.user.role.name == 'collaborator':
-        return True if object.meta_created_by == self.request.user else False
-
-    # General users (no account)
-    elif not self.request.user.is_authenticated:
-        return False
-
-
-def search(request, queryset, field_names_to_search):
-    """
-    request = http request object, e.g. self.request
-    queryset = the Django queryset to be searched
-    field_names_to_search = list of names of the fields to include in search
-
-    Returns a filtered/searched Django queryset, allowing for multiple search criteria and operator (or_ / and_)
-    """
-
-    # Search
-    searches = json.loads(request.GET.get('search', '[]'))
-
-    # Set list of search options
-    if searches not in [[''], []]:
-        operator = or_ if request.GET.get('search_operator', '') == 'or' else and_
-        queries = []
-        for search in searches:
-            # Uses 'or_' as the search term could appear in any field, so 'and_' wouldn't be suitable
-            queries.append(reduce(or_, (Q((f'{field_name}__icontains', search)) for field_name in field_names_to_search)))
-        # Connect the individual search queries via the user-defined operator (or_ / and_)
-        queries = reduce(operator, queries)
-        # Filter the queryset using the completed search query
-        return queryset.filter(queries)
-
-    # If no search criteria provided, simply return the unfiltered queryset
-    return queryset
 
 
 # Special starts to the values & labels of options in 'filter' select lists, used in below filter() function and within views scripts

@@ -19,84 +19,66 @@ Sections of this template:
 {% endcomment %}
 
 
-<!-- List Options  -->
+<!-- List Options -->
 <section id="list-options">
 
-    <form method="GET" id="list-options-form" class="sidebar">
+    <!-- Form element has no action attribute, so that it submits to the same page -->
+    <form method="GET" class="form-group container" id="list-options-form">
+        <!-- Search -->
+        <div class="list-options-search row">
+            <div class="col-12">
+                <div class="input-group">
+                    <!-- Search textbox -->
+                    <input type="text" class="form-control" name="search" title="search" id="list-options-search-input" placeholder="Search text">
+                    <!-- Search button -->
+                    <div class="input-group-append">
+                        <button type="submit" value="Search" class="btn btn-primary" title="search-btn" id="list-options-search-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <!-- Search (allows for multiple search criteria) -->
-        <div class="sidebar-subtitle">Search</div>
-        <!-- A hidden field that will have value determined in JS -->
-        <input type="hidden" id="list-options-search-values" name="search">
-        <input type="hidden" id="list-options-search-operator" name="search_operator">
-        <div id="list-options-search-fields"><!-- Dynamically filled via JS --></div>
-        <div id="list-options-search-fields-add"><i class="fas fa-plus"></i> Add search box</div>
+        <!-- Filters -->
+        <div id="list-options-filters">
+            <div>Filters:</div>
+            {% for f in options_filters %}
+                <div class="list-options-filters-filter">
+                    <label for="{{ f.filter_id }}">{{ f.filter_name }}</label>
+                    <select id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}">
+                        {% include 'snippets/select-default.html' %}
+                        {% for o in f.filter_options %}
+                            <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endfor %}
+        </div>
 
         <!-- Sort -->
-        <div class="sidebar-subtitle">Sort</div>
-        <!-- Sort by -->
-        <label for="list-options-sort-by">Sort by:</label>
-        <select id="list-options-sort-by" name="sort_by">
-            {% block list_options_sortby %}{% endblock %}
-            <!-- Alphabetical sorts (options defined in view) -->
-            {% if options_sortby|length > 0 %}
-                {% for sort_option in options_sortby %}
-                    <option value="{{ sort_option.value }}">{{ sort_option.label }}</option>
+        <div id="list-options-sort">
+            <label>Sort by:</label>
+            <!-- Sort by -->
+            <select id="list-options-sort-by" name="sort_by">
+                {% for option in options_sortby %}
+                    <option value="{{ option.value }}">{{ option.label }}</option>
                 {% endfor %}
-            {% endif %}
-        </select>
-        <!-- Sort direction -->
-        <label for="list-options-sort-direction">Sort direction:</label>
-        <select id="list-options-sort-direction" name="sort_direction">
-            <option value="">Ascending (A-Z, 0-9)</option>
-            <option value="-">Descending (Z-A, 9-0)</option>
-        </select>
-
-        <!-- Filter -->
-        {% if options_filters|length > 0 %}
-            <div class="sidebar-subtitle">Filters</div>
-            <div class="list-options-filters">
-                {% for filter_group in options_filters %}
-                    <div class="list-options-filters-group">
-                        {% for f in filter_group %}
-                            <div class="list-options-filters-group-filter">
-                                <label for="{{ f.filter_id }}">
-                                    {{ f.filter_name }}
-                                </label>
-                                <span class="input-clear"><i class="fas fa-times-circle"></i></span>
-                                <select id="{{ f.filter_id }}"
-                                    class="list-options-filters-group-filter{% if f.filter_classes %} {{ f.filter_classes }}{% endif %}"
-                                    title="{{ f.filter_id }}"
-                                    name="{{ f.filter_id }}"
-
-                                    {# Filter Dependencies #}
-                                    {% if f.filter_dependencies %}data-dependencies="{{ f.filter_dependencies }}" {% endif %}
-
-                                    {# Data Hierarchy #}
-                                    {% if f.data_hierarchy_id %}data-hierarchy-id="{{ f.data_hierarchy_id }}" {% endif %}
-                                    {% if f.data_hierarchy_parents %}data-hierarchy-parents="{{ f.data_hierarchy_parents }}" {% endif %}
-                                    {% if f.data_hierarchy_children %}data-hierarchy-children="{{ f.data_hierarchy_children }}" {% endif %}>
-                                    {% include 'snippets/select-default.html' %}
-                                    {% for o in f.filter_options %}
-                                        <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        <div class="sidebar-submitbuttons">
-            <button id="list-options-submit" class="sidebar-submitbuttons-primary">
-                <i class="fas fa-search"></i> Search
-            </button><!--
-            --><button id="list-options-reset" title="Reset search" class="sidebar-submitbuttons-secondary">
-                <i class="fas fa-redo-alt"></i>
-            </button>
+            </select>
+            <!-- Sort direction -->
+            <select id="list-options-sort-direction" name="sort_direction">
+                <option value="">Asc (A-Z, 0-9)</option>
+                <option value="-">Desc (Z-A, 9-0)</option>
+            </select>
         </div>
+
+        <!-- Links -->
+        <div id="list-options-links">
+            <span id="list-options-links-reset" class="reset-form"><i class="fas fa-redo"></i> Reset</span>
+        </div>
+
     </form>
+
 </section>
 
 <!-- List Body -->
@@ -116,7 +98,7 @@ Sections of this template:
 
 <!-- List Pagination, if there are multiple pages -->
 {% if page_obj.paginator.num_pages > 1 %}
-    <section id="list-pagination">
+    <section id="list-pagination" class="container">
 
         <div class="list-pagination-section{% if page_obj.has_previous == False %} disabled{% endif %}">
             <!-- First Page -->
@@ -157,10 +139,38 @@ Sections of this template:
 {% endif %}
 
 
+
 <!-- JS -->
 <script>
 $(document).ready(function() {
-    console.log(1)
+
+    // Reset form
+    $('.reset-form').on('click', function(){
+        // Go to the current URL but without any parameters (remove everything after ? in url)
+        window.location.replace(window.location.href.split('?')[0]);
+    });
+
+    // Submit list options form on change of certain inputs
+    $('#list-options-sort-by, #list-options-sort-direction, #list-options-filters select').on('change', function(){
+        $('#list-options-form').submit();
+    });
+
+    // Fill form values from URL parameters
+    function setFieldValueFromUrl(formItemID, urlParameter) {
+        var value = new URL(window.location.href).searchParams.get(urlParameter);
+        if (value) $('#' + formItemID).val(value);
+    }
+    // Apply above function to all form fields:
+    // Search
+    setFieldValueFromUrl("list-options-search-input", "search");
+    // Sort
+    setFieldValueFromUrl("list-options-sort-by", "sort_by");
+    setFieldValueFromUrl("list-options-sort-direction", "sort_direction");
+    new URL(window.location.href).searchParams.forEach(function(value, key){
+        console.log(1)
+        // If key starts with 'filter_pre' (as defined in view get_context_data()) then it's a filter
+        if (key.startsWith('{{ filter_pre }}')) setFieldValueFromUrl(key, key);
+    });
 });
 </script>
 
