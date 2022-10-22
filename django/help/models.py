@@ -19,7 +19,7 @@ class HelpItem(models.Model):
     visible_only_to_admins = models.BooleanField(default=False)
 
     # Admin
-    admin_published = models.BooleanField(default=False, verbose_name='published')
+    admin_published = models.BooleanField(default=True, verbose_name='published')
     admin_notes = models.TextField(blank=True, null=True)
 
     @property
