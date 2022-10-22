@@ -1,5 +1,4 @@
 from django.views.generic import (DetailView, ListView)
-from django.db.models import Q
 from . import models
 
 
@@ -12,7 +11,10 @@ def help_queryset(self):
     # Only ever show published objects
     queryset = self.model.objects.filter(admin_published=True)
 
-    # TODO - set visible_only_to_admins rules here to filter accordingly
+    # If user is not an admin
+    if not self.request.user.is_staff:
+        # Hide help item marked as visible_only_to_admins
+        queryset = queryset.exclude(visible_only_to_admins=True)
 
     return queryset
 
