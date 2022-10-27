@@ -191,6 +191,14 @@ em {
     background: #2f4256;
 }
 
+.dir-rtl {
+    text-align: right;
+}
+
+.dir-ltr {
+    text-align: left;
+}
+
 /* ---------- Bubble Links (anchor links with rounded border) ---------- */
 
 .bubblelink,
@@ -647,48 +655,199 @@ main {
 
 /* ---------- Detail ---------- */
 
-#detail-image,
+#detail-images,
 #detail-details {
     padding: 1rem;
 }
 
-#detail-image img {
-    width: 100%;
+.detail-images-image {
+    position: relative;
+    display: none;
 }
 
-#detail-details-header-meta {
+.detail-images-image.active {
+    display: block;
+}
+
+.detail-images-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.detail-images-image-parts {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.detail-images-image-parts-part {
+    display: block;
+    border: 2px solid transparent;
+    z-index: 10000;
+    position: absolute;
+    cursor: pointer;
+}
+
+.detail-images-image-parts-part.reveal {
+    border: 2px dashed orange;
+}
+
+.detail-images-image-parts-part.active {
+    border: 2px solid orange;
+}
+
+#detail-navigation {
     text-align: right;
 }
 
-#detail-details-header-meta div {
+#detail-navigation a {
+    font-size: 0.9em;
+    margin: 0.5em 0 0.5em 2.7em;
+    display: inline-block;
+    font-weight: bold;
+}
+
+#transcription-exercise-meta {
+    text-align: right;
+}
+
+#transcription-exercise-meta div {
     font-size: 0.8em;
     margin: 0.5em 0 0.5em 3em;
     display: inline-block;
 }
 
-#detail-details-header-meta div span {
+#transcription-exercise-meta div span {
     font-weight: bold;
     margin-left: 0.2rem;
 }
 
-#detail-details-header-title {
+#transcription-exercise-title {
     font-size: 2.4em;
     font-weight: 900;
     margin: 0.4em 0 0.7em 0;
     line-height: 1.3em;
 }
 
-.transcription-item-input-line-word {
-    padding: 0.3em;
-    margin: 0.5em;
-    opacity: 0.7;
-    border: none;
+#transcription-chooseimage {
+    display: block;
+    margin: 1em auto;
+    width: fit-content;
+    list-style: none;
+    padding: 0;
 }
 
-.transcription-item-input-line-word:active,
-.transcription-item-input-line-word:focus {
+#transcription-chooseimage li {
+    display: inline-block;
+    padding: 0.5em 1em;
+    cursor: pointer;
+    background: #4f667d;
+}
+
+.transcription-exercise {
+    display: none;
+}
+
+.transcription-exercise.active {
+    display: block;
+}
+
+.transcription-exercise-input-line {
+    white-space: nowrap;
+    overflow-x: auto;
+    width: 100%;
+}
+
+.transcription-exercise-input-line-part {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.transcription-exercise-input-line-word {
+    padding: 0.3em;
+    margin: 0.5em;
+    opacity: 0.8;
+    border: none;
+    cursor: pointer;
+}
+
+.transcription-exercise-input-line-word.correct {
+    background: green;
+    color: white;
+}
+
+.transcription-exercise-input-line-word.wrong {
+    background: red;
+    color: white;
+}
+
+.transcription-exercise-input-line-word.reveal {
     opacity: 1;
-    outline: none;
+}
+
+.transcription-exercise-input-line-word:active,
+.transcription-exercise-input-line-word:focus {
+    opacity: 1;
+    outline: 2px solid orange;
+    cursor: text;
+}
+
+.transcription-exercise-input-line-word-answer {
+    margin: 0 0.5em;
+    width: calc(100% - 1em);
+    background: orange;
+    color: black;
+    padding: 0.5em;
+    display: none;
+}
+
+.transcription-exercise-input-line-word-answer.active {
+    display: block;
+}
+
+.transcription-exercise-input-line-afterpart {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.transcription-exercise-input-line-word-afterpart {
+    margin: 0.5em 0;
+    padding: 0.3em 0;
+    display: block;
+}
+
+.transcription-exercise-input-line-word-answer-afterpart {
+    padding: 0.5em 0;
+    display: none;
+}
+
+.transcription-exercise-input-line-word-answer-afterpart.active {
+    display: block;
+}
+
+#transcription-exercise-imagepartpreview {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background: white;
+    color: black;
+}
+
+#transcription-exercise-imagepartpreview-image {
+    width: 100%;
+}
+
+#information-content div {
+    margin-bottom: 2em;
+}
+
+#information-content div label {
+    margin-right: 0.3em;
+    display: inline-block;
+    font-weight: bold;
 }
 
 /* ---------- Tabs ---------- */

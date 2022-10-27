@@ -3,13 +3,46 @@
 
 {% block main %}
 
+<div id="detail-images">
+    {% for document_image in object.documentimage_set.all %}
+        <div id="detail-images-image-{{ document_image.id }}" class="detail-images-image">
+            <img src="{{ document_image.image.url }}" alt="{{ document_image.alternative_text }}">
+            <div class="detail-images-image-parts">
+                {% for document_image_part in document_image.documentimagepart_set.all %}
+                    <div id="detail-images-image-parts-part-{{ document_image_part.id }}" class="detail-images-image-parts-part" style="top: {{ document_image_part.image_cropped_top }}px; left: {{ document_image_part.image_cropped_left }}px; width: {{ document_image_part.image_cropped_width }}px; height: {{ document_image_part.image_cropped_height }}px;"></div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
 <div id="detail-details">
 
-    <section id="detail-details-header">
+    <section id="transcription-exercise">
+        <!-- Navigation -->
+        <div id="detail-navigation">
+            <a href="{{ navigate_all_url }}"><i class="fas fa-th"></i> All</a>
+            <a href="{{ navigate_previous_url }}"><i class="fas fa-chevron-left"></i> Previous</a>
+            <a href="{{ navigate_next_url }}">Next <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <!-- Title -->
+        <div id="transcription-exercise-title">{{ object }}</div>
+        <!-- Tabs -->
+        <ul class="tabs">
+            <li id="transcription">Transcription</li><!--
+            --><li id="instructions">Instructions</li><!--
+            --><li id="information">Information</li><!--
+            --><li id="comments">Comments</li><!--
+            -->{% if request.user.is_staff %}<li id="admin">Admin</li>{% endif %}
+        </ul>
+    </section>
+
+    <section class="tabbed" id="tabbed-transcription">
+        <div class="tabbed-title">Transcription</div>
         <!-- Meta -->
-        <div id="detail-details-header-meta">
+        <div id="transcription-exercise-meta">
             <div>
-                <label>Exercise Author</label>
+                <label>Author</label>
                 <span>{{ object.meta_created_by }}</span>
             </div>
             <div>
@@ -17,36 +50,51 @@
                 <span>{{ object.difficulty }}</span>
             </div>
         </div>
-        <!-- Title -->
-        <div id="detail-details-header-title">{{ object }}</div>
-        <!-- Tabs -->
-        <ul class="tabs">
-            <li id="transcription">Transcription</li><!--
-            --><li id="instructions">Instructions</li><!--
-            --><li id="information">Information</li><!--
-            --><li id="comments">Comments</li>
+        <!-- Choose Image -->
+        <ul id="transcription-chooseimage">
+            {% for document_image in object.documentimage_set.all %}
+                <li data-imageid="{{ document_image.id }}">Image {{ forloop.counter }}</li>
+            {% endfor %}
         </ul>
-    </section>
-
-    <section class="tabbed" id="tabbed-transcription">
-        <div class="tabbed-title">Transcription</div>
+        <!-- Exercises -->
         {% for document_image in object.documentimage_set.all %}
-            <div class="transcription-item">
+            <div id="transcription-exercise-{{ document_image.id }}" class="transcription-exercise{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
                 <!-- Input -->
-                <div class="transcription-item-input">
-                    {% for line in document_image.correct_transcription_words %}
-                        <div class="transcription-item-input-line">
-                            {% for word in line %}
-                                <input class="transcription-item-input-line-word" type="text" size="{{ word.length }}" title="Transcribe the section of the image">
-                            {% endfor %}
+                <div class="transcription-exercise-input">
+                    {% for document_image_part in document_image.documentimagepart_set.all %}
+                        {% if document_image_part.is_first_in_line %}
+                            {% if not document_image_part.is_first_in_image %}</div>{% endif %}
+                            <div class="transcription-exercise-input-line">
+                        {% endif %}
+                        <!-- Part -->
+                        <div class="transcription-exercise-input-line-part">
+                            <!-- Part - Input -->
+                            <input id="transcription-exercise-input-line-word-{{ document_image_part.id }}" class="transcription-exercise-input-line-word" type="text" size="{{ document_image_part.word_length }}" title="Transcribe this part of the image" data-correctanswer="{{ document_image_part.w }}">
+                            <!-- Part - Answer -->
+                            <div id="transcription-exercise-input-line-word-answer-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-answer">{{ document_image_part.w }}</div>
                         </div>
+                        <!-- After part -->
+                        {% if document_image_part.sw %}
+                            <div class="transcription-exercise-input-line-afterpart">
+                                <div id="transcription-exercise-input-line-word-afterpart-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-afterpart">
+                                    {{ document_image_part.sw }}
+                                </div>
+                                <div id="transcription-exercise-input-line-word-answer-afterpart-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-answer-afterpart">
+                                    {{ document_image_part.sw }}
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endfor %}
+                    </div>
                 </div>
                 <!-- Solution -->
-                <div id="transcription-item-solution">
-                    Solution:
-                    <br>
-                    {{ document_image.correct_transcription | linebreaks }}
+                <div class="transcription-exercise-solution">
+                    <div class="transcription-exercise-solution-toggle">
+                        Solution
+                    </div>
+                    <div class="transcription-exercise-solution">
+                        {{ document_image.correct_transcription | linebreaksbr }}
+                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -60,17 +108,67 @@
 
     <section class="tabbed" id="tabbed-information">
         <div class="tabbed-title">Information</div>
-        Information
 
-        Language/Script: {{ object.language }}
-
-        Repository: {{ object.repository }}
-
-        Shelf Mark: {{ object.shelfmark }}
-
-        Type: {{ object.type }}
-
-        Information: {{ object.information | safe | linebreaks }}
+        <div id="information-content">
+            <div>
+                <label>Name:</label>
+                <span>{{ object.name }}</span>
+            </div>
+            {% if object.m2m_as_text_repositories %}
+                <div>
+                    <label>Repository:</label>
+                    <span>{{ object.m2m_as_text_repositories }}</span>
+                </div>
+            {% endif %}
+            {% if object.shelfmark %}
+                <div>
+                    <label>Shelf Mark:</label>
+                    <span>{{ object.shelfmark }}</span>
+                </div>
+            {% endif %}
+            {% if object.type %}
+                <div>
+                    <label>Type:</label>
+                    <span>{{ object.type }}</span>
+                </div>
+            {% endif %}
+            {% if object.difficulty %}
+                <div>
+                    <label>Tutorial Difficulty:</label>
+                    <span>{{ object.difficulty }}</span>
+                </div>
+            {% endif %}
+            {% if object.m2m_as_text_languages %}
+                <div>
+                    <label>Language/Script:</label>
+                    <span>{{ object.m2m_as_text_languages }}</span>
+                </div>
+            {% endif %}
+            {% if object.ink %}
+                <div>
+                    <label>Language/Script:</label>
+                    <span>{{ object.ink }}</span>
+                </div>
+            {% endif %}
+            {% if object.partial_date_range %}
+                <div>
+                    <label>Date Range:</label>
+                    <span>{{ object.partial_date_range }}</span>
+                </div>
+            {% endif %}
+            {% if object.date %}
+                <div>
+                    <label>Date:</label>
+                    <span>{{ object.date }}</span>
+                </div>
+            {% endif %}
+            {% if object.information %}
+                <div>
+                    <label>Information:</label>
+                    <span>{{ object.information | safe | linebreaks }}</span>
+                </div>
+            {% endif %}
+        </div>
     </section>
 
     <section class="tabbed" id="tabbed-comments">
@@ -78,12 +176,152 @@
         Comments
     </section>
 
+    {% if request.user.is_staff %}
+        <section class="tabbed" id="tabbed-admin">
+            <div class="tabbed-title">Admin</div>
+            Admin stuff
+        </section>
+    {% endif %}
+
 </div>
 
-<div id="detail-image">
-    <img src="{{ object.default_image.image.url }}" alt="Image of historical document: {{ object }}">
+<div id="transcription-exercise-imagepartpreview">
+    <img id="transcription-exercise-imagepartpreview-image" src="" alt="Document image part preview">
 </div>
 
 <script src="{% static 'js/tabs.js' %}"></script>
+
+<script>
+$(document).ready(function(){
+
+    var lastActiveDocumentImagePartId;
+    var showCorrectAnswerInlineIndividual = false;
+    var showCorrectAnswerInlineAll = false;
+
+    // Clear transcription attempts
+    function resetTranscriptionAttempts(){
+        $('.transcription-exercise-input-line-word').each(function(){$(this).val('');});
+    }
+    // Execute on page load (stops browser caching them on page refresh)
+    resetTranscriptionAttempts();
+
+    // Set a 'reveal' class to document image parts that overlay image when user hovers over them
+    $('.detail-images-image-parts-part, .transcription-exercise-input-line-word').hover(
+        // Hover starts
+        function(){
+            var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
+            $('#detail-images-image-parts-part-' + documentImagePartId + ', #transcription-exercise-input-line-word-' + documentImagePartId).addClass('reveal');
+        },
+        // Hover ends
+        function(){
+            var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
+            $('#detail-images-image-parts-part-' + documentImagePartId + ', #transcription-exercise-input-line-word-' + documentImagePartId).removeClass('reveal');
+        }
+    );
+
+    // Connect document image part occurences: image overlays and transcription inputs
+    $('.transcription-exercise-input-line-word').on('focus', function(){
+        var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
+        $('.detail-images-image-parts-part').removeClass('active');
+        $('#detail-images-image-parts-part-' + documentImagePartId).addClass('active');
+        // Hide the active correct answer inline (individual) if focussing on a different part
+        if (showCorrectAnswerInlineIndividual && lastActiveDocumentImagePartId !== documentImagePartId){
+            $('#transcription-exercise-meta label').first().trigger('click');  // TODO update this with the correct button when it's been created
+        }
+        lastActiveDocumentImagePartId = documentImagePartId;  // Update last active global var
+    }).on('focusout', function(){
+        // When an input is no longer focussed on, ensure image overlay isn't left active
+        $('.detail-images-image-parts-part').removeClass('active');
+    });
+    $('.detail-images-image-parts-part').on('click', function(){
+        var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
+        $('#transcription-exercise-input-line-word-' + documentImagePartId).focus();
+    });
+
+    // Toggle active state of inline correct answers. There are 2 types: individual, all
+    // Individual inline correct answer
+    $('#transcription-exercise-meta label').on('click', function(){
+        // Toggle global var
+        showCorrectAnswerInlineIndividual = !showCorrectAnswerInlineIndividual;
+        // Only continue if there's an active image part and not all are active
+        if (lastActiveDocumentImagePartId && !showCorrectAnswerInlineAll){
+            var elements = $('#transcription-exercise-input-line-word-answer-' + lastActiveDocumentImagePartId + ', #transcription-exercise-input-line-word-answer-afterpart-' + lastActiveDocumentImagePartId);
+            // Toggle elements
+            if (showCorrectAnswerInlineIndividual) elements.addClass('active');
+            else elements.removeClass('active');
+        }
+    });
+    // All inline correct answers
+    $('#transcription-exercise-title').on('click', function(){
+        // Toggle global var
+        showCorrectAnswerInlineAll = !showCorrectAnswerInlineAll;
+        // Toggle elements
+        var elements = $('.transcription-exercise-input-line-word-answer, .transcription-exercise-input-line-word-answer-afterpart');
+        if (showCorrectAnswerInlineAll) elements.addClass('active');
+        else elements.removeClass('active');
+    });
+
+    // Score transcription attempts
+    function scoreTranscriptionAttempt(inputField, ignoreWrongAnswers=false){
+        // Class names
+        var classCorrect = 'correct';
+        var classWrong = 'wrong';
+        // Answers
+        var answerAttempt = inputField.val();
+        var answerCorrectList = inputField.attr('data-correctanswer').split("|");
+        // Only score answer if a value provided
+        if (answerAttempt !== ''){
+            // Correct - if the answer attempt is in list of correct answers
+            if (answerCorrectList.indexOf(answerAttempt) > -1){
+                inputField.addClass(classCorrect).removeClass(classWrong); return;
+            }
+            // Wrong
+            else if (!ignoreWrongAnswers) {
+                inputField.addClass(classWrong).removeClass(classCorrect); return;
+            }
+        }
+        // Reset empty attempts
+        inputField.removeClass(classWrong).removeClass(classCorrect);
+    }
+    // Score transcription attempt as correct/incorrect when focus out of an input
+    $('.transcription-exercise-input-line-word').on('focusout', function(){
+        scoreTranscriptionAttempt($(this));
+    });
+    // Score transcription attempt as correct whilst user types
+    $('.transcription-exercise-input-line-word').on('input', function(){
+        scoreTranscriptionAttempt($(this), true);
+    });
+
+    // Click 'enter' to move focus to next transcription input
+    $('.transcription-exercise-input-line-word').keydown(function(e){
+        var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+        if (key == 13) {
+            e.preventDefault();
+            var inputs = $(this).closest('.transcription-exercise-input').find('.transcription-exercise-input-line-word');
+            inputs.eq( inputs.index(this)+ 1 ).focus();
+        }
+    });
+
+    // Image Part Preview
+    $('.transcription-exercise-input-line-word').on('focus', function(){
+        // Move the preview above the current image part
+        var posX = 400;
+        var posY = 400;
+        // Set the image in the preview as the current image part's cropped image
+        var img = $('.detail-images-image.active').first().find('img');
+        $('#transcription-exercise-imagepartpreview-image').attr('src', img.attr('src'));
+    });
+
+    // Show an image and accompanying transcription
+    $('#transcription-chooseimage li').on('click', function(){
+        var imageId = $(this).attr('data-imageid');
+        // Remove 'active' from existing image
+        $('.detail-images-image.active, .transcription-exercise.active').removeClass('active');
+        // Mark this image as 'active'
+        $('#detail-images-image-' + imageId + ', #transcription-exercise-' + imageId).addClass('active');
+    }).first().trigger('click');  // Show the first image by default on page load
+
+});
+</script>
 
 {% endblock %}

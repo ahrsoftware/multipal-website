@@ -55,6 +55,13 @@ def image_is_wider_than_tall(image_field):
         return None
 
 
+def m2m_as_text(m2m_field, delimeter="; "):
+    if m2m_field.all():
+        return delimeter.join([str(i) for i in m2m_field.all()])
+    else:
+        return None
+
+
 class SlAbstract(models.Model):
     """
     An abstract model for Select List models
@@ -111,9 +118,9 @@ class Document(models.Model):
     repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
+    difficulty = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
     languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
     ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
-    difficulty = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
     information = models.TextField(blank=True, null=True)
     custom_instructions = models.TextField(blank=True, null=True, help_text="If the default instructions are insufficient, please provide custom instructions to the user")
 
@@ -145,7 +152,7 @@ class Document(models.Model):
 
     @property
     def instructions(self):
-        default_instructions = """XXX
+        default_instructions = """XXX TODO
         xxx
         """
         return self.custom_instructions if self.custom_instructions else default_instructions
@@ -157,6 +164,39 @@ class Document(models.Model):
     @property
     def default_image(self):
         return self.documentimage_set.first()
+
+    @property
+    def partial_date_range(self):
+        partial_date_range = ""
+        # From
+        if self.partial_date_range_from:
+            partial_date_range += f"From {self.partial_date_range_from} "
+        # To
+        if self.partial_date_range_to:
+            partial_date_range += f"To {self.partial_date_range_to})"
+        return partial_date_range if len(partial_date_range) else None
+
+    @property
+    def date(self):
+        date = ""
+        # Year
+        if self.date_year:
+            date += f"Year {self.date_year}; "
+        # Month
+        if self.date_month:
+            date += f"Month {self.date_month}; "
+        # Day
+        if self.date_day:
+            date += f"Day {self.date_day}; "
+        return date if len(date) else None
+
+    @property
+    def m2m_as_text_languages(self):
+        return m2m_as_text(self.languages)
+
+    @property
+    def m2m_as_text_repositories(self):
+        return m2m_as_text(self.repositories)
 
     @property
     def list_title(self):
@@ -226,7 +266,11 @@ class DocumentImage(models.Model):
 
     @property
     def correct_transcription(self):
-        return "TODO - need to set this to ImagePartials combined"
+        x = []
+        for document_image_part in self.documentimagepart_set.all():
+            sw = document_image_part.sw if document_image_part.sw else ''
+            x.append(document_image_part.w + sw)
+        return ' '.join(x)
 
     @property
     def correct_transcription_words(self):
@@ -335,3 +379,15 @@ class DocumentImagePart(models.Model):
     meta_lastupdated_by = models.ForeignKey(User, related_name="documentimagepart_lastupdated_by",
                                             on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
+
+    @property
+    def word_length(self):
+        return len(self.w)
+
+    @property
+    def is_first_in_image(self):
+        return True if self.l is None and self.c is None else False
+
+    @property
+    def is_first_in_line(self):
+        return True if self.c is None else False

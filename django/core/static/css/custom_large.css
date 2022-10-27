@@ -64,13 +64,13 @@
 
     /* ---------- Detail ---------- */
 
-    #detail-image,
+    #detail-images,
     #detail-details {
         margin-top: -2.7rem;
         width: 49.5%;
         display: inline-block;
         vertical-align: top;
-        overflow: hidden;
+        overflow: auto;
         height: calc(100vh - 3.5rem);
     }
 

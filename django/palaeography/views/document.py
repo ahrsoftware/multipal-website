@@ -12,37 +12,34 @@ class DocumentDetailView(DetailView):
     template_name = 'palaeography/detail.html'
     model = models.Document
 
-#     def get_queryset(self):
-#         return common.filter_by_user_role_permissions_view(self, self.model.objects.all())
+    def get_queryset(self):
+        queryset = self.model.objects.all()
+        # Only show unpublished items to admins
+        if not self.request.user.is_staff:
+            queryset = queryset.filter(admin_published=True)
+        # Prefetch related (FK) fields
+        queryset = queryset.prefetch_related('languages', 'repositories', 'documentimage_set', 'documentimage_set__documentimagepart_set')
+        return queryset
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-#         # Admin URL
-#         context['admin_url'] = reverse('admin:palaeography_item_change', args=[self.object.id])
+        # Admin URL
+        context['admin_url'] = reverse('admin:palaeography_document_change', args=[self.object.id])
 
-#         # Related data
-#         context['related_data_list'] = [
-#             {
-#                 'title': 'Document Images',
-#                 'id': 'itemimages',
-#                 'list_type': 'image',
-#                 'objects': common.filter_by_user_role_permissions_view(self, self.object.itemimages)
-#             },
-#             {
-#                 'title': 'Other Documents in Shelfmark',
-#                 'id': 'otheritemsinshelfmark',
-#                 'list_type': 'text',
-#                 'objects': common.filter_by_user_role_permissions_view(
-#                     self,
-#                     models.Document.objects.filter(
-#                         admin_published=True,
-#                         shelfmark=self.object.shelfmark).exclude(id=self.object.id)
-#                 )
-#             },
-#         ]
+        # Navigate documents
+        # All
+        context['navigate_all_url'] = reverse('palaeography:document-list')
+        # Previous
+        prev = self.get_queryset().filter(id__lt=self.object.id).order_by('id').last()
+        if prev:
+            context['navigate_previous_url'] = reverse('palaeography:document-detail', args=[prev.id])
+        # Next
+        next = self.get_queryset().filter(id__gt=self.object.id).order_by('id').first()
+        if next:
+            context['navigate_next_url'] = reverse('palaeography:document-detail', args=[next.id])
 
-#         return context
+        return context
 
 
 class DocumentListView(ListView):
@@ -61,7 +58,7 @@ class DocumentListView(ListView):
         # Select related (FK) fields
         queryset = queryset.select_related('type', 'ink')
         # Prefetch related (FK) fields
-        queryset = queryset.prefetch_related('languages', 'repositories', 'documentimage_set')
+        queryset = queryset.prefetch_related('languages', 'repositories', 'documentimage_set', 'documentimage_set__documentimagepart_set')
         # Search
         search = self.request.GET.get('search', '')
         if search != '':
