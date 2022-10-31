@@ -18,13 +18,22 @@
     }
 
     .nav-link {
-        margin-left: 0.7em;
-        margin-right: 0.7em;
-        margin-top: 0.2em;
+        font-size: 1rem;
+        margin: 0.2em 0.7em;
     }
 
     .nav-link.active {
         font-weight: bold;
+    }
+
+    #nav-languagelinks {
+        margin-left: 1em;
+    }
+
+    #nav-languagelinks img {
+        width: 2em;
+        margin: 0.5em;
+        display: block;
     }
 
     /* ---------- Main ---------- */
@@ -35,6 +44,12 @@
     }
 
     /* ---------- List ---------- */
+
+    .list-options-filters-filter {
+        display: inline-block;
+        margin: 0.4em 0 0.7em 1em;
+        width: calc(25% - 1.3em);
+    }
 
     #list-options-sort {
         display: inline-block;
@@ -70,8 +85,11 @@
         width: 49.5%;
         display: inline-block;
         vertical-align: top;
-        overflow: auto;
         height: calc(100vh - 3.5rem);
+    }
+
+    #detail-details {
+        overflow: auto;
     }
 
     /* ---------- Tabs ---------- */

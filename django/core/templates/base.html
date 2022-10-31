@@ -46,6 +46,8 @@
 
         <!-- jQuery (has to load at start of page, as some templates that extend from this base template include jQuery in them) -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <!-- jQuery UI - used by the image viewer -->
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
 
         <!-- Navigation bar -->
         <nav class="navbar fixed-top navbar-expand-lg">
@@ -96,6 +98,17 @@
                         </li>
                     {% endif %}
                 </ul>
+
+                <!-- Language links -->
+                <div id="nav-languagelinks">
+                    {% get_available_languages as languages %}
+                    {% for lang_code, lang_name in languages %}
+                        <!-- href said dynamically in main.js to redirect to current page -->
+                        <a data-langcode="{{ lang_code }}" href="#">
+                            <img src="{% static 'images/flags/' %}{{ lang_code }}.svg" alt="flag for language {{ lang_code }}">
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
         </nav>
 
@@ -104,20 +117,6 @@
             <div id="main-content">
                 {% block main %}
                 {% endblock %}
-            </div>
-
-            <!-- Language -->
-            <div id="language-show"><i class="fas fa-globe-americas"></i></div>
-            <div id="language-popup">
-                <p>{% translate 'Choose a language:' %}</p>
-                <div id="lang-options">
-                    {% get_available_languages as languages %}
-                    {% for lang_code, lang_name in languages %}
-                        <a data-langcode="{{ lang_code }}" href="#">
-                            <img src="{% static 'images/flags/' %}{{ lang_code }}.svg" alt="flag for language {{ lang_code }}"> {{ lang_name }}
-                        </a>
-                    {% endfor %}
-                </div>
             </div>
         </main>
 

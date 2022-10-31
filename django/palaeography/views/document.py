@@ -1,5 +1,5 @@
 from django.views.generic import (DetailView, ListView)
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.urls import reverse
 from .. import models
 from . import common
@@ -17,6 +17,8 @@ class DocumentDetailView(DetailView):
         # Only show unpublished items to admins
         if not self.request.user.is_staff:
             queryset = queryset.filter(admin_published=True)
+        # Only show documents that have images
+        queryset = queryset.annotate(image_count=Count('documentimage')).filter(image_count__gt=0)
         # Prefetch related (FK) fields
         queryset = queryset.prefetch_related('languages', 'repositories', 'documentimage_set', 'documentimage_set__documentimagepart_set')
         return queryset
@@ -55,6 +57,8 @@ class DocumentListView(ListView):
         # Only show unpublished items to admins
         if not self.request.user.is_staff:
             queryset = queryset.filter(admin_published=True)
+        # Only show documents that have images
+        queryset = queryset.annotate(image_count=Count('documentimage')).filter(image_count__gt=0)
         # Select related (FK) fields
         queryset = queryset.select_related('type', 'ink')
         # Prefetch related (FK) fields
@@ -92,7 +96,7 @@ class DocumentListView(ListView):
             # Numerical
             {
                 'value': f'{common.sort_pre_count_value}documentimage',
-                'label': f'{common.sort_pre_count_label}Document Images'
+                'label': f'{common.sort_pre_count_label}Images'
             },
         ]
 

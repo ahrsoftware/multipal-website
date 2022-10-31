@@ -29,7 +29,7 @@ Sections of this template:
             <div class="col-12">
                 <div class="input-group">
                     <!-- Search textbox -->
-                    <input type="text" class="form-control" name="search" title="search" id="list-options-search-input" placeholder="Search text">
+                    <input type="text" class="form-control" name="search" title="search" id="list-options-search-input" placeholder="Search historical documents">
                     <!-- Search button -->
                     <div class="input-group-append">
                         <button type="submit" value="Search" class="btn btn-primary" title="search-btn" id="list-options-search-button">
@@ -42,7 +42,6 @@ Sections of this template:
 
         <!-- Filters -->
         <div id="list-options-filters">
-            <div>Filters:</div>
             {% for f in options_filters %}
                 <div class="list-options-filters-filter">
                     <label for="{{ f.filter_id }}">{{ f.filter_name }}</label>
@@ -58,7 +57,7 @@ Sections of this template:
 
         <!-- Sort -->
         <div id="list-options-sort">
-            <label>Sort by:</label>
+            <label>Sort:</label>
             <!-- Sort by -->
             <select id="list-options-sort-by" name="sort_by">
                 {% for option in options_sortby %}

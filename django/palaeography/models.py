@@ -229,14 +229,12 @@ class DocumentImage(models.Model):
 
     media_root = 'palaeography/'
     media_dir = media_root + 'documentimages/'
-    media_dir_originals = media_dir[:-1] + '-originals/'
     media_dir_thumbnails = media_dir[:-1] + '-thumbnails/'
 
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
     order_in_document = models.IntegerField(blank=True, null=True)
 
     image = models.ImageField(upload_to=media_dir)
-    image_original = models.ImageField(upload_to=media_dir_originals, blank=True, null=True)  # Created via save() method below
     image_thumbnail = models.ImageField(upload_to=media_dir_thumbnails, blank=True, null=True)  # Created via save() method below
     right_to_left = models.BooleanField(default=False)
 
@@ -266,11 +264,16 @@ class DocumentImage(models.Model):
 
     @property
     def correct_transcription(self):
-        x = []
+        transcription_parts = []
         for document_image_part in self.documentimagepart_set.all():
-            sw = document_image_part.sw if document_image_part.sw else ''
-            x.append(document_image_part.w + sw)
-        return ' '.join(x)
+            # Add line break, if needed
+            linebreak = '<br>' if document_image_part.is_first_in_line and not document_image_part.is_first_in_image else ''
+            # Before
+            text_before_part = document_image_part.text_before_part if document_image_part.text_before_part else ''
+            text_after_part = document_image_part.text_after_part if document_image_part.text_after_part else ''
+            # Add full string to transcription_parts list
+            transcription_parts.append(linebreak + text_before_part + document_image_part.text + text_after_part)
+        return ' '.join(transcription_parts)
 
     @property
     def correct_transcription_words(self):
@@ -295,8 +298,6 @@ class DocumentImage(models.Model):
         """
         When an DocumentImage is saved (created or updated):
         - Set its order in the parent document
-        - Compress the image (if needed)
-        - Retain the original image
         - Create the DocumentImage thumbnail
         """
 
@@ -309,25 +310,6 @@ class DocumentImage(models.Model):
 
         file_extension = self.image.name.split('.')[-1].lower()
         file_format = 'PNG' if file_extension == 'png' else 'JPEG'
-
-        # Retain original high quality copy of image
-        if self.image_original:
-            self.image_original.delete(save=False)
-        img_original = Image.open(self.image.path)
-        img_original = img_original.convert('RGB')
-        img_original = ImageOps.exif_transpose(img_original)  # Rotate to correct orientation
-        blob_original = BytesIO()
-        img_original.save(blob_original, file_format, optimize=True, quality=90)
-        self.image_original.save(os.path.basename(self.image.name), File(blob_original), save=False)
-
-        # Shrink image (if too large)
-        img_to_shrink = Image.open(self.image.path)
-        img_to_shrink_width, img_to_shrink_height = img_to_shrink.size
-        max_size = 2000  # images shouldn't be larger than this in width or height
-        if img_to_shrink_width > max_size or img_to_shrink_height > max_size:
-            img_to_shrink.thumbnail((max_size, max_size))
-            img_to_shrink = ImageOps.exif_transpose(img_to_shrink)  # Rotate to correct orientation
-            img_to_shrink.save(self.image.path)
 
         # Create a thumbnail of image (e.g. for use in list views, where many images loaded at once)
         if self.image_thumbnail:
@@ -342,12 +324,11 @@ class DocumentImage(models.Model):
 
         # Update the object (must use update() not save() to avoid unique ID error)
         DocumentImage.objects.filter(id=self.id).update(
-            image_original=f'{self.media_dir_originals}/{name}.{file_extension}',
             image_thumbnail=f'{self.media_dir_thumbnails}/{name}_thumbnail.{file_extension}'
         )
 
     class Meta:
-        ordering = [Upper('document__name'), 'id']
+        ordering = [Upper('document__name'), 'order_in_document', 'id']
 
 
 class DocumentImagePart(models.Model):
@@ -364,13 +345,13 @@ class DocumentImagePart(models.Model):
     image_cropped_width = models.FloatField(blank=True, null=True)
     image_cropped_height = models.FloatField(blank=True, null=True)
 
-    w = models.CharField(max_length=1000, blank=True, null=True)
-    pw = models.CharField(max_length=1000, blank=True, null=True)
-    sw = models.CharField(max_length=1000, blank=True, null=True)
-    cw = models.CharField(max_length=1000, blank=True, null=True)
-    cew = models.CharField(max_length=1000, blank=True, null=True)
-    l = models.CharField(max_length=1000, blank=True, null=True)
-    c = models.CharField(max_length=1000, blank=True, null=True)
+    text = models.CharField(max_length=1000, blank=True, null=True)
+    text_before_part = models.CharField(max_length=1000, blank=True, null=True)
+    text_after_part = models.CharField(max_length=1000, blank=True, null=True)
+    help_text = models.CharField(max_length=1000, blank=True, null=True)
+    cew = models.CharField(max_length=1000, blank=True, null=True)  # TODO - what is this?
+    line_index = models.IntegerField()
+    part_index_in_line = models.IntegerField()
 
     # Metadata fields
     meta_created_by = models.ForeignKey(User, related_name="documentimagepart_created_by",
@@ -382,12 +363,23 @@ class DocumentImagePart(models.Model):
 
     @property
     def word_length(self):
-        return len(self.w)
+        return len(self.text)
 
     @property
     def is_first_in_image(self):
-        return True if self.l is None and self.c is None else False
+        return True if self.line_index == 0 and self.part_index_in_line == 0 else False
 
     @property
     def is_first_in_line(self):
-        return True if self.c is None else False
+        return True if self.part_index_in_line == 0 else False
+
+    @property
+    def line_count(self):
+        return self.line_index + 1
+
+    @property
+    def part_count_in_line(self):
+        return self.part_index_in_line + 1
+
+    class Meta:
+        ordering = [Upper('document_image__document__name'), 'document_image__order_in_document', 'document_image__id', 'line_index', 'part_index_in_line', 'id']

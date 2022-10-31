@@ -54,6 +54,12 @@
 
     /* ---------- List ---------- */
 
+    .list-options-filters-filter {
+        display: block;
+        margin: 0.4em 0 0.7em 0;
+        width: 100%;
+    }
+
     #list-options-links {
         display: inline-block;
         width: 49%;

@@ -192,7 +192,7 @@ class DocumentImageAdminView(GenericAdminView):
                            'meta_lastupdated_by')
     list_filter = ('document__type', 'document__languages')
     autocomplete_fields = ('document',)
-    exclude = ('image_original', 'image_thumbnail')
+    exclude = ('image_thumbnail',)
 
 
 # Register admin views
