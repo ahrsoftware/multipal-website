@@ -168,6 +168,7 @@ class DocumentAdminView(GenericAdminView):
 admin.site.register(models.Document, DocumentAdminView)
 
 # Select list tables
+admin.site.register(models.SlDocumentDifficulty, GenericSlAdminView)
 admin.site.register(models.SlDocumentInk, GenericSlAdminView)
 admin.site.register(models.SlDocumentLanguage, GenericSlAdminView)
 admin.site.register(models.SlDocumentRepository, GenericSlAdminView)

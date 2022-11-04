@@ -1,8 +1,9 @@
 from django.conf import settings
 from django.db import migrations
 from palaeography import models
-import os
 from ast import literal_eval
+import os
+import shutil
 
 
 # Reusable functions/variables
@@ -54,6 +55,14 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlDocumentType.objects.create(name=name)
 
+    # SlDocumentDifficulty
+    for name in [
+        "easy",
+        "normal",
+        "hard"
+    ]:
+        models.SlDocumentDifficulty.objects.create(name=name)
+
 
 def insert_data_documents(apps, schema_editor):
     """
@@ -87,6 +96,16 @@ def insert_data_documentimages(apps, schema_editor):
     """
     Inserts data into the Document Image model
     """
+
+    # Delete existing itemimage directories and the existing images in them
+    dirs_to_delete = [
+        'palaeography-documentimages-thumbnails'
+    ]
+    for dir in dirs_to_delete:
+        try:
+            shutil.rmtree(os.path.join(settings.BASE_DIR, f"media/{dir}"))
+        except FileNotFoundError:
+            pass  # it's ok if can't find dir, will just skip it
 
     with open(os.path.join(old_data, "data_documentimages.txt"), 'r') as file:
         for object in literal_eval(file.read()):

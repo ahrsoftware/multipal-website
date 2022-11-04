@@ -901,6 +901,10 @@ main {
     display: block;
 }
 
+.transcription-exercise-controlsdropdown a {
+    font-weight: bold;
+}
+
 .transcription-exercise-solutions-solution {
     display: none;
 }

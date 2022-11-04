@@ -93,12 +93,8 @@
             <!-- Core Info -->
             <div id="transcription-exercise-controls-coreinfo" class="detail-controls-item">
                 <div>
-                    <label>Author</label>
-                    <span>{{ object.meta_created_by }}</span>
-                </div>
-                <div>
                     <label>Difficulty</label>
-                    <span>{{ object.difficulty }}</span>
+                    <span>{{ object.difficulty | title }}</span>
                 </div>
             </div>
         </div>
@@ -241,6 +237,12 @@
                 <div>
                     <label>Date:</label>
                     <span>{{ object.date }}</span>
+                </div>
+            {% endif %}
+            {% if object.meta_created_by %}
+                <div>
+                    <label>Exercise Author:</label>
+                    <span>{{ object.meta_created_by }}</span>
                 </div>
             {% endif %}
             {% if object.information %}

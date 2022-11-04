@@ -60,7 +60,7 @@ class DocumentListView(ListView):
         # Only show documents that have images
         queryset = queryset.annotate(image_count=Count('documentimage')).filter(image_count__gt=0)
         # Select related (FK) fields
-        queryset = queryset.select_related('type', 'ink')
+        queryset = queryset.select_related('type', 'ink', 'difficulty')
         # Prefetch related (FK) fields
         queryset = queryset.prefetch_related('languages', 'repositories', 'documentimage_set', 'documentimage_set__documentimagepart_set')
         # Search
@@ -108,6 +108,11 @@ class DocumentListView(ListView):
                 'filter_options': models.SlDocumentLanguage.objects.all()
             },
             {
+                'filter_id': f'{common.filter_pre_fk}difficulty',
+                'filter_name': 'Difficulty',
+                'filter_options': models.SlDocumentDifficulty.objects.all()
+            },
+            {
                 'filter_id': f'{common.filter_pre_mm}repositories',
                 'filter_name': 'Repository',
                 'filter_options': models.SlDocumentRepository.objects.all()
@@ -116,12 +121,7 @@ class DocumentListView(ListView):
                 'filter_id': f'{common.filter_pre_fk}type',
                 'filter_name': 'Type',
                 'filter_options': models.SlDocumentType.objects.all()
-            },
-            {
-                'filter_id': f'{common.filter_pre_fk}ink',
-                'filter_name': 'Ink',
-                'filter_options': models.SlDocumentInk.objects.all()
-            },
+            }
         ]
 
         return context

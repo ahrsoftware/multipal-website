@@ -87,6 +87,10 @@ class SlAbstract(models.Model):
 #
 
 
+class SlDocumentDifficulty(SlAbstract):
+    "The difficulty of a document exercise. E.g. Easy/Medium/Difficult"
+
+
 class SlDocumentInk(SlAbstract):
     "The ink used within a document"
 
@@ -118,7 +122,7 @@ class Document(models.Model):
     name = models.CharField(max_length=1000)
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
-    difficulty = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
+    difficulty = models.ForeignKey(SlDocumentDifficulty, on_delete=models.SET_NULL, blank=True, null=True)
     ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
     repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
     languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
@@ -153,9 +157,9 @@ class Document(models.Model):
 
     @property
     def instructions(self):
-        default_instructions = """XXX TODO
-        xxx
-        """
+        default_instructions = """Click on an input below and transcribe the matching part of the image.
+If you get stuck you can use the buttons above to view the correct answers.
+For more tips and assistance please visit the <a href="/help/">Help section</a>."""
         return self.custom_instructions if self.custom_instructions else default_instructions
 
     @property
