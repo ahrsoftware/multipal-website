@@ -55,13 +55,13 @@ def insert_data_select_list_models(apps, schema_editor):
     ]:
         models.SlDocumentType.objects.create(name=name)
 
-    # SlDocumentDifficulty
+    # SlDocumentImageDifficulty
     for name in [
         "easy",
         "normal",
         "hard"
     ]:
-        models.SlDocumentDifficulty.objects.create(name=name)
+        models.SlDocumentImageDifficulty.objects.create(name=name)
 
 
 def insert_data_documents(apps, schema_editor):
@@ -99,7 +99,7 @@ def insert_data_documentimages(apps, schema_editor):
 
     # Delete existing itemimage directories and the existing images in them
     dirs_to_delete = [
-        'palaeography-documentimages-thumbnails'
+        'palaeography/documentimages-thumbnails'
     ]
     for dir in dirs_to_delete:
         try:

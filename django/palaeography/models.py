@@ -87,10 +87,6 @@ class SlAbstract(models.Model):
 #
 
 
-class SlDocumentDifficulty(SlAbstract):
-    "The difficulty of a document exercise. E.g. Easy/Medium/Difficult"
-
-
 class SlDocumentInk(SlAbstract):
     "The ink used within a document"
 
@@ -105,6 +101,13 @@ class SlDocumentRepository(SlAbstract):
 
 class SlDocumentType(SlAbstract):
     "The type of document. E.g. book"
+
+
+class SlDocumentImageDifficulty(SlAbstract):
+    "The difficulty of a document image. E.g. Easy/Medium/Difficult"
+
+    class Meta:
+        ordering = ['id']
 
 
 #
@@ -122,7 +125,6 @@ class Document(models.Model):
     name = models.CharField(max_length=1000)
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
-    difficulty = models.ForeignKey(SlDocumentDifficulty, on_delete=models.SET_NULL, blank=True, null=True)
     ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
     repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
     languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
@@ -171,6 +173,15 @@ For more tips and assistance please visit the <a href="/help/">Help section</a>.
         return self.documentimage_set.first()
 
     @property
+    def max_difficulty(self):
+        # Show the maximum difficulty of this document's images
+        max_difficulty = 1
+        for image in self.documentimage_set.all():
+            if image.difficulty_id > max_difficulty:
+                max_difficulty = image.difficulty_id
+        return SlDocumentImageDifficulty.objects.get(id=max_difficulty)
+
+    @property
     def partial_date_range(self):
         partial_date_range = ""
         # From
@@ -212,7 +223,7 @@ For more tips and assistance please visit the <a href="/help/">Help section</a>.
         details = f"{singular_plural(self.count_documentimages, 'image')}"
         details += f" | Type: {self.type}" if self.type else ""
         details += f" | Shelfmark: {self.shelfmark}" if self.shelfmark else ""
-        details += f" | Difficulty: {self.difficulty}" if self.difficulty else ""
+        details += f" | Difficulty: {self.max_difficulty}" if self.max_difficulty else ""
         return textwrap.shorten(details, width=200, placeholder="...")
 
     def __str__(self):
@@ -240,6 +251,7 @@ class DocumentImage(models.Model):
     media_dir_thumbnails = media_dir[:-1] + '-thumbnails/'
 
     document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    difficulty = models.ForeignKey(SlDocumentImageDifficulty, on_delete=models.SET_NULL, blank=True, null=True)
     order_in_document = models.IntegerField(blank=True, null=True)
 
     image = models.ImageField(upload_to=media_dir)

@@ -886,6 +886,14 @@ main {
     margin-left: 0.2rem;
 }
 
+.transcription-exercise-controls-coreinfo-difficulty {
+    display: none;
+}
+
+.transcription-exercise-controls-coreinfo-difficulty.active {
+    display: inline-block;
+}
+
 .transcription-exercise-controlsdropdown {
     display: none;
     background: rgba(255, 255, 255, 0.1);
