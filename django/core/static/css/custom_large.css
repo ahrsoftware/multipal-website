@@ -19,7 +19,7 @@
 
     .nav-link {
         font-size: 1rem;
-        margin: 0.2em 0.7em;
+        margin: 0.2em 1em;
     }
 
     .nav-link.active {
@@ -27,7 +27,7 @@
     }
 
     #nav-languagelinks {
-        margin-left: 1em;
+        margin-left: 1.5em;
     }
 
     #nav-languagelinks img {

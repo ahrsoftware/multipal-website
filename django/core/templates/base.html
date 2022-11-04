@@ -89,14 +89,6 @@
                             {% translate 'Help' %}
                         </a>
                     </li>
-                    {% if user.is_staff %}
-                        <!-- Admin Dashboard -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'admin:index' %}">
-                                {% translate 'Admin' %}
-                            </a>
-                        </li>
-                    {% endif %}
                 </ul>
 
                 <!-- Language links -->
@@ -143,6 +135,13 @@
                         <a href="{% url 'general:cookies' %}">{% translate 'Cookies' %}</a>
                         |
                         <a href="{% url 'general:accessibility' %}">{% translate 'Accessibility' %}</a>
+                        |
+                        <a href="{% url 'account:account' %}">{% translate 'Account' %}</a>
+
+                        {% if user.is_staff %}
+                            |
+                            <a href="{% url 'admin:index' %}">{% translate 'Admin' %}</a>
+                        {% endif %}
                     </p>
                     <p>
                         © MultiPal {% now "Y" %}
