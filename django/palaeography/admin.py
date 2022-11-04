@@ -146,16 +146,6 @@ class DocumentImageInline(admin.TabularInline):
     readonly_fields = ('meta_created_datetime',
                        'meta_lastupdated_datetime')
 
-    def save_model(self, request, obj, form, change):
-        # Meta: created (if not yet set) or last updated by (if created already set)
-        if obj.meta_created_by is None:
-            obj.meta_created_by = request.user
-            # meta_created_datetime default value set in model so not needed here
-        else:
-            obj.meta_lastupdated_by = request.user
-            obj.meta_lastupdated_datetime = timezone.now()
-        obj.save()
-
 
 # Admin views for main models
 
