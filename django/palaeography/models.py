@@ -116,12 +116,12 @@ class Document(models.Model):
     m2m_related_name = 'documents'
 
     name = models.CharField(max_length=1000)
-    repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
     difficulty = models.IntegerField(default=1, validators=[MinValueValidator(1), MaxValueValidator(3)])
-    languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
     ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
+    repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
+    languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
     information = models.TextField(blank=True, null=True)
     custom_instructions = models.TextField(blank=True, null=True, help_text="If the default instructions are insufficient, please provide custom instructions to the user")
 
@@ -214,6 +214,9 @@ class Document(models.Model):
     def __str__(self):
         return self.name
 
+    def has_delete_permission(self, request, obj=None):
+        return custom_permission(self, request)
+
     def get_absolute_url(self):
         return reverse('palaeography:document-detail', args=[str(self.id)])
 
@@ -240,12 +243,8 @@ class DocumentImage(models.Model):
     right_to_left = models.BooleanField(default=False)
 
     # Metadata fields
-    meta_created_by = models.ForeignKey(User, related_name="documentimage_created_by",
-                                        on_delete=models.PROTECT, blank=True, null=True, verbose_name="created by")
-    meta_created_datetime = models.DateTimeField(default=timezone.now, verbose_name="created")
-    meta_lastupdated_by = models.ForeignKey(User, related_name="documentimage_lastupdated_by",
-                                            on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
-    meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
+    meta_created_datetime = models.DateTimeField(auto_now_add=True, verbose_name="created")
+    meta_lastupdated_datetime = models.DateTimeField(auto_now=True, verbose_name="last updated")
 
     @property
     def other_images_in_document(self):

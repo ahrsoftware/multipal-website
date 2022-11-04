@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db.models import ManyToManyField
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.utils import timezone
@@ -58,6 +59,14 @@ def get_model_perms_dict(self, request):
     }
 
 
+def get_manytomany_fields(model, exclude=[]):
+    """
+    Returns a list of strings containing the field names of many to many fields of a model
+    To ignore certain fields, provide a list of such fields using the exclude parameter
+    """
+    return list(f.name for f in model._meta.get_fields() if type(f) == ManyToManyField and f.name not in exclude)
+
+
 class GenericAdminView(admin.ModelAdmin):
     """
     This is a generic class that can be applied to most models to customise their inclusion in the Django admin.
@@ -78,28 +87,21 @@ class GenericAdminView(admin.ModelAdmin):
                        'meta_lastupdated_by',
                        'meta_lastupdated_datetime']
 
-    def get_actions(self, request):
-        actions = super().get_actions(request)
-
-        return actions
-
     def save_model(self, request, obj, form, change):
-        # Meta: created (if not yet set) or last updated by (if created already set)
         if obj.meta_created_by is None:
             obj.meta_created_by = request.user
-            # meta_created_datetime default value set in model so not needed here
         else:
             obj.meta_lastupdated_by = request.user
             obj.meta_lastupdated_datetime = timezone.now()
         obj.save()
 
-    def save_related(self, request, form, formsets, change):
-        super().save_related(request, form, formsets, change)
-        try:
-            # Meta: contributors
-            form.instance.meta_contributors.add(request.user)
-        except Exception:
-            pass
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set all many to many fields to display the filter_horizontal widget
+        self.filter_horizontal = get_manytomany_fields(self.model)
 
 
 class GenericSlAdminView(admin.ModelAdmin):
@@ -140,11 +142,19 @@ class DocumentImageInline(admin.TabularInline):
     """A subform/inline form for DocumentHand to be used in DocumentAdmin"""
     model = models.DocumentImage
     extra = 1
-    exclude = ('image_thumbnail',
-               'meta_created_by',
-               'meta_lastupdated_by',)
+    exclude = ('image_thumbnail',)
     readonly_fields = ('meta_created_datetime',
                        'meta_lastupdated_datetime')
+
+    def save_model(self, request, obj, form, change):
+        # Meta: created (if not yet set) or last updated by (if created already set)
+        if obj.meta_created_by is None:
+            obj.meta_created_by = request.user
+            # meta_created_datetime default value set in model so not needed here
+        else:
+            obj.meta_lastupdated_by = request.user
+            obj.meta_lastupdated_datetime = timezone.now()
+        obj.save()
 
 
 # Admin views for main models
