@@ -10,28 +10,21 @@ from .apps import app_name
 admin.site.site_header = 'MultiPal: Dashboard'
 
 
+# Actions
+
+
 def publish(modeladmin, request, queryset):
-    """
-    Sets all selected objects in queryset to published
-    """
-    for object in queryset:
-        object.admin_published = True
-        object.save()
-
-
-publish.short_description = "Publish selected objects (will appear on main site)"
+    # Sets all objects in queryset to: admin_published = True
+    queryset.update(admin_published=True)
 
 
 def unpublish(modeladmin, request, queryset):
-    """
-    Sets all selected objects in queryset to not published
-    """
-    for object in queryset:
-        object.admin_published = True
-        object.save()
+    # Sets all objects in queryset to: admin_published = False
+    queryset.update(admin_published=False)
 
 
-unpublish.short_description = "Unpublish selected objects (will not appear on main site)"
+publish.short_description = "Published (shown on public website)"
+unpublish.short_description = "Unpublished (hidden from public website)"
 
 
 def fk_link(object, fk_field):
@@ -143,23 +136,15 @@ class GenericSlAdminView(admin.ModelAdmin):
 # Inlines
 
 
-# class GenericStackedInline(admin.StackedInline):
-#     """A generic stacked inline with common settings to be used by actual inlines below"""
-#     extra = 0
-#     classes = ['collapse']
-
-
-# class GenericTabularInline(admin.TabularInline):
-#     """A generic tabular inline with common settings to be used by actual inlines below"""
-#     extra = 0
-#     classes = ['collapse']
-
-
-# class DocumentHandInline(GenericStackedInline):
-#     """A subform/inline form for DocumentHand to be used in DocumentAdmin"""
-#     model = models.DocumentHand
-
-
+class DocumentImageInline(admin.TabularInline):
+    """A subform/inline form for DocumentHand to be used in DocumentAdmin"""
+    model = models.DocumentImage
+    extra = 1
+    exclude = ('image_thumbnail',
+               'meta_created_by',
+               'meta_lastupdated_by',)
+    readonly_fields = ('meta_created_datetime',
+                       'meta_lastupdated_datetime')
 
 
 # Admin views for main models
@@ -174,29 +159,16 @@ class DocumentAdminView(GenericAdminView):
                     'meta_created_datetime',
                     'meta_lastupdated_by',
                     'meta_lastupdated_datetime')
-
-
-
-
-class DocumentImageAdminView(GenericAdminView):
-    """Customise the admin interface for DocumentImage model"""
-    list_display = ('id',
-                    'image',
-                    'meta_created_by',
-                    'meta_created_datetime',
-                    'meta_lastupdated_by',
-                    'meta_lastupdated_datetime')
-    list_display_links = ('id',)
-    list_select_related = ('document',
-                           'meta_created_by',
-                           'meta_lastupdated_by')
-    list_filter = ('document__type', 'document__languages')
-    autocomplete_fields = ('document',)
-    exclude = ('image_thumbnail',)
+    inlines = (DocumentImageInline,)
 
 
 # Register admin views
 
 # Main tables
 admin.site.register(models.Document, DocumentAdminView)
-admin.site.register(models.DocumentImage, DocumentImageAdminView)
+
+# Select list tables
+admin.site.register(models.SlDocumentInk, GenericSlAdminView)
+admin.site.register(models.SlDocumentLanguage, GenericSlAdminView)
+admin.site.register(models.SlDocumentRepository, GenericSlAdminView)
+admin.site.register(models.SlDocumentType, GenericSlAdminView)

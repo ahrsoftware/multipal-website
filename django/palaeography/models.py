@@ -86,20 +86,21 @@ class SlAbstract(models.Model):
 # 2. Select List models
 #
 
-class SlDocumentLanguage(SlAbstract):
-    "The language/script of a document"
-
-
-class SlDocumentType(SlAbstract):
-    "The type of document. E.g. book"
-
 
 class SlDocumentInk(SlAbstract):
     "The ink used within a document"
 
 
+class SlDocumentLanguage(SlAbstract):
+    "The language/script of a document"
+
+
 class SlDocumentRepository(SlAbstract):
     "The repository/location of the document. E.g. Cambridge University Library"
+
+
+class SlDocumentType(SlAbstract):
+    "The type of document. E.g. book"
 
 
 #
