@@ -1,5 +1,5 @@
 from django.views.generic import (DetailView, ListView)
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Prefetch
 from django.db.models.functions import Coalesce
 from django.urls import reverse
 from .. import models
@@ -63,8 +63,6 @@ class DocumentListView(ListView):
         # Select related (FK) fields
         queryset = queryset.select_related('type', 'ink')
         # Prefetch related (M2M) fields
-        models.DocumentImage.objects.select_related('difficulty')
-        from django.db.models import Prefetch
         queryset = queryset.prefetch_related(
             Prefetch(
                 'documentimages',

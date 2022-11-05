@@ -184,11 +184,12 @@ em {
     display: block;
     width: fit-content;
     margin: 1em auto 2em auto;
+    font-weight: bold;
 }
 
 .pdf-viewer-download:hover {
-    color: white;
-    background: #2f4256;
+    color: #121d29;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .dir-rtl {
@@ -202,6 +203,21 @@ em {
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
    opacity: 1;
+}
+
+.quicksearch-input {
+    padding: 0.5em;
+    width: 21em;
+    max-width: 95%;
+    display: block;
+    margin: 2em 2em 3em 0;
+    text-align: left;
+    border: none;
+    outline: none;
+}
+
+.quicksearch-input:focus {
+    outline: 2px solid #EBA82D;
 }
 
 /* ---------- Bubble Links (anchor links with rounded border) ---------- */
@@ -598,6 +614,22 @@ main {
 
 .list-body-item-text p {
     font-size: 0.9em;
+}
+
+.list-body-empty {
+    margin-top: 7em;
+    text-align: center;
+}
+
+.list-body-empty-title {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin: 1em auto;
+}
+
+.list-body-empty-details strong {
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 /* List Pagination */
@@ -1102,6 +1134,28 @@ section.tabbed {
 #help-list-head-search {
     margin: 3em auto;
     text-align: center;
+}
+
+.help-list-items-item {
+    display: block;
+    width: 100%;
+    padding: 0.7em 1em 0.6em 1em;
+    margin: 0.5em 0;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.help-list-items-item:hover {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+.help-list-items-item-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.help-list-items-item-details {
+    font-size: 0.9em;
 }
 
 #help-detail-link {

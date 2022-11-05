@@ -98,6 +98,13 @@ Sections of this template:
                 <p>{{ object.list_details | safe }}</p>
             </div>
         </a>
+    {% empty %}
+        <div class="list-body-empty">
+            <div class="list-body-empty-title">No historical documents found</div>
+            <div class="list-body-empty-details">
+                Please try expanding the criteria or <a href="#" class="reset-form">reset your search</a>.
+            </div>
+        </div>
     {% endfor %}
 </section>
 
