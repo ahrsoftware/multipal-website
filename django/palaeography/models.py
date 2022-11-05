@@ -8,6 +8,7 @@ from django.utils import timezone
 from django.db.models.functions import Upper
 from django.core.validators import MinValueValidator, MaxValueValidator
 import os
+import calendar
 import textwrap
 
 
@@ -50,16 +51,27 @@ def image_is_wider_than_tall(image_field):
             width, height = Image.open(image_field.path).size
             return True if width > height else False
         except Exception:
-            return None
-    else:
-        return None
+            pass
 
 
 def m2m_as_text(m2m_field, delimeter="; "):
+    """
+    Join a list of objects related via a M2M field as a single string 
+    """
     if m2m_field.all():
-        return delimeter.join([str(i) for i in m2m_field.all()])
-    else:
-        return None
+        values = []
+        for i in m2m_field.all():
+            if i not in values:
+                values.append(str(i))
+        values.sort()
+        return delimeter.join(values)
+
+
+def ordinal_number(n):
+    """
+    Return correct ordinal number (e.g. 1 -> 1st, 22 -> 22nd, 34 -> 34th, etc.)
+    """
+    return "%d%s" % (n, "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
 
 class SlAbstract(models.Model):
@@ -104,7 +116,7 @@ class SlDocumentType(SlAbstract):
 
 
 class SlDocumentImageDifficulty(SlAbstract):
-    "The difficulty of a document image. E.g. Easy/Medium/Difficult"
+    "The difficulty of a document image. E.g. Easy/Normal/Hard"
 
     class Meta:
         ordering = ['id']
@@ -161,25 +173,17 @@ class Document(models.Model):
     def instructions(self):
         default_instructions = """Click on an input below and transcribe the matching part of the image.
 If you get stuck you can use the buttons above to view the correct answers.
+
 For more tips and assistance please visit the <a href="/help/">Help section</a>."""
         return self.custom_instructions if self.custom_instructions else default_instructions
 
     @property
     def count_documentimages(self):
-        return self.documentimage_set.count()
+        return self.documentimages.count()
 
     @property
     def default_image(self):
-        return self.documentimage_set.first()
-
-    @property
-    def max_difficulty(self):
-        # Show the maximum difficulty of this document's images
-        max_difficulty = 1
-        for image in self.documentimage_set.all():
-            if image.difficulty_id > max_difficulty:
-                max_difficulty = image.difficulty_id
-        return SlDocumentImageDifficulty.objects.get(id=max_difficulty)
+        return self.documentimages.first()
 
     @property
     def partial_date_range(self):
@@ -189,22 +193,27 @@ For more tips and assistance please visit the <a href="/help/">Help section</a>.
             partial_date_range += f"From {self.partial_date_range_from} "
         # To
         if self.partial_date_range_to:
-            partial_date_range += f"To {self.partial_date_range_to})"
+            partial_date_range += f"To {self.partial_date_range_to}"
         return partial_date_range if len(partial_date_range) else None
 
     @property
-    def date(self):
-        date = ""
+    def date_full(self):
+        date_parts = []
         # Year
         if self.date_year:
-            date += f"Year {self.date_year}; "
+            if self.date_year < 0:
+                date_parts.append(f"{str(self.date_year)[1:]}BCE")
+            else:
+                date_parts.append(str(self.date_year))
         # Month
         if self.date_month:
-            date += f"Month {self.date_month}; "
+            date_parts.append(calendar.month_name[self.date_month])
         # Day
         if self.date_day:
-            date += f"Day {self.date_day}; "
-        return date if len(date) else None
+            date_parts.append(ordinal_number(self.date_day))
+        # Join date parts and return string
+        if len(date_parts):
+            return " ".join(date_parts)
 
     @property
     def m2m_as_text_languages(self):
@@ -215,22 +224,30 @@ For more tips and assistance please visit the <a href="/help/">Help section</a>.
         return m2m_as_text(self.repositories)
 
     @property
+    def difficulties(self):
+        difficulties = []
+        for image in self.documentimages.all():
+            difficulty = str(image.difficulty)
+            if difficulty not in difficulties:
+                difficulties.append(difficulty)
+        return "/".join(difficulties)
+
+    @property
     def list_title(self):
         return textwrap.shorten(str(self), width=90, placeholder="...")
 
     @property
     def list_details(self):
-        details = f"{singular_plural(self.count_documentimages, 'image')}"
-        details += f" | Type: {self.type}" if self.type else ""
-        details += f" | Shelfmark: {self.shelfmark}" if self.shelfmark else ""
-        details += f" | Difficulty: {self.max_difficulty}" if self.max_difficulty else ""
-        return textwrap.shorten(details, width=200, placeholder="...")
+        details = f"<strong>Images:</strong> {self.count_documentimages}"
+        details += f"<br><strong>Language:</strong> {self.m2m_as_text_languages}" if self.m2m_as_text_languages else ""
+        details += f"<br><strong>Difficulty:</strong> {self.difficulties}" if self.difficulties else ""
+        details += f"<br><strong>Type:</strong> {self.type}" if self.type else ""
+        details += f"<br><strong>Ink:</strong> {self.ink}" if self.ink else ""
+        details += f"<br><strong>Repository:</strong> {self.m2m_as_text_repositories}" if self.m2m_as_text_repositories else ""
+        return textwrap.shorten(details, width=279, placeholder="...")
 
     def __str__(self):
         return self.name
-
-    def has_delete_permission(self, request, obj=None):
-        return custom_permission(self, request)
 
     def get_absolute_url(self):
         return reverse('palaeography:document-detail', args=[str(self.id)])
@@ -250,7 +267,7 @@ class DocumentImage(models.Model):
     media_dir = media_root + 'documentimages/'
     media_dir_thumbnails = media_dir[:-1] + '-thumbnails/'
 
-    document = models.ForeignKey(Document, on_delete=models.CASCADE)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name=m2m_related_name)
     difficulty = models.ForeignKey(SlDocumentImageDifficulty, on_delete=models.SET_NULL, blank=True, null=True)
     order_in_document = models.IntegerField(blank=True, null=True)
 
@@ -340,7 +357,7 @@ class DocumentImage(models.Model):
 
         # Update the object (must use update() not save() to avoid unique ID error)
         DocumentImage.objects.filter(id=self.id).update(
-            image_thumbnail=f'{self.media_dir_thumbnails}/{name}_thumbnail.{file_extension}'
+            image_thumbnail=f'{self.media_dir_thumbnails}{name}_thumbnail.{file_extension}'
         )
 
     class Meta:

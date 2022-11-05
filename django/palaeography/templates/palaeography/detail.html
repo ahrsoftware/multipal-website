@@ -10,7 +10,7 @@
         <!-- Choose Image -->
         <div id="detail-images-controls-chooseimage" class="detail-controls-item">
             <select{% if object.count_documentimages < 2 %} style="display: none;"{% endif %}>
-                {% for document_image in object.documentimage_set.all %}
+                {% for document_image in object.documentimages.all %}
                     <option value="{{ document_image.id }}">Image {{ forloop.counter }}</option>
                 {% endfor %}
             </select>
@@ -39,7 +39,7 @@
         </div>
     </div>
     <div id="detail-images-container">
-        {% for document_image in object.documentimage_set.all %}
+        {% for document_image in object.documentimages.all %}
             <div id="detail-images-image-{{ document_image.id }}" class="detail-images-image">
                 <img src="{{ document_image.image.url }}" alt="{{ document_image.alternative_text }}">
                 <div class="detail-images-image-parts">
@@ -79,7 +79,7 @@
             <!-- Reset Transcription -->
             <div id="transcription-exercise-controls-reset" class="detail-controls-item" title="Reset Transcription"><i class="fas fa-redo-alt"></i></div>
             <!-- Instructions -->
-            <div id="transcription-exercise-controls-instructions" class="detail-controls-item" title="Instructions"><i class="fas fa-info-circle"></i></div>
+            <div id="transcription-exercise-controls-instructions" class="detail-controls-item" title="Instructions"><i class="fas fa-question-circle"></i></div>
             <!-- Full Solution Text -->
             <div id="transcription-exercise-controls-fullsolution" class="detail-controls-item" title="Full Solution"><i class="fas fa-scroll"></i></div>
             <!-- All Correct Answers -->
@@ -94,8 +94,8 @@
             <div id="transcription-exercise-controls-coreinfo" class="detail-controls-item">
                 <div>
                     <label>Difficulty</label>
-                    {% for document_image in object.documentimage_set.all %}
-                        <span id="transcription-exercise-controls-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-controls-coreinfo-difficulty">{{ document_image.difficulty | title }}</span>
+                    {% for document_image in object.documentimages.all %}
+                        <span id="transcription-exercise-controls-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-controls-coreinfo-difficulty">{{ document_image.difficulty }}</span>
                     {% endfor %}
                 </div>
             </div>
@@ -121,7 +121,7 @@
 
         <!-- Solutions -->
         <div id="transcription-exercise-solutions" class="transcription-exercise-controlsdropdown">
-            {% for document_image in object.documentimage_set.all %}
+            {% for document_image in object.documentimages.all %}
                 <div id="transcription-exercise-solutions-solution-{{ document_image.id }}" class="transcription-exercise-solutions-solution{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
                     <label>Full Solution: Image {{ forloop.counter }}</label>
                     <div>
@@ -132,7 +132,7 @@
         </div>
 
         <!-- Exercises -->
-        {% for document_image in object.documentimage_set.all %}
+        {% for document_image in object.documentimages.all %}
             <div id="transcription-exercise-{{ document_image.id }}" class="transcription-exercise{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
                 <!-- Input -->
                 <div class="transcription-exercise-input">
@@ -229,10 +229,10 @@
                     <span>{{ object.partial_date_range }}</span>
                 </div>
             {% endif %}
-            {% if object.date %}
+            {% if object.date_full %}
                 <div>
                     <label>Date:</label>
-                    <span>{{ object.date }}</span>
+                    <span>{{ object.date_full }}</span>
                 </div>
             {% endif %}
             {% if object.meta_created_by %}

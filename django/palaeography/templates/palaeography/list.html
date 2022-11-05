@@ -45,19 +45,25 @@ Sections of this template:
             {% for f in options_filters %}
                 <div class="list-options-filters-filter">
                     <label for="{{ f.filter_id }}">{{ f.filter_name }}</label>
-                    <select id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}">
-                        {% include 'snippets/select-default.html' %}
-                        {% for o in f.filter_options %}
-                            <option value="{% if o.html_select_value_field %}{{ o.html_select_value_field }}{% else %}{{ o.id }}{% endif %}"{% if o.data_hierarchy_parents_ids %} data-hierarchy-parents-ids="{{ o.data_hierarchy_parents_ids }}"{% endif %}>{{ o }}</option>
-                        {% endfor %}
-                    </select>
+                    <!-- Select List filter -->
+                    {% if f.filter_options %}
+                        <select id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}">
+                            {% include 'snippets/select-default.html' %}
+                            {% for o in f.filter_options %}
+                                <option value="{{ o.id }}">{{ o }}</option>
+                            {% endfor %}
+                        </select>
+                    <!-- Number filter -->
+                    {% elif f.filter_number_min or f.filter_number_max %}
+                        <input id="{{ f.filter_id }}" name="{{ f.filter_id }}" type="number" min="{{ f.filter_number_min }}" max="{{ f.filter_number_max }}">
+                    {% endif %}
                 </div>
             {% endfor %}
         </div>
 
         <!-- Sort -->
         <div id="list-options-sort">
-            <label>Sort:</label>
+            <label>Sort</label>
             <!-- Sort by -->
             <select id="list-options-sort-by" name="sort_by">
                 {% for option in options_sortby %}
@@ -150,7 +156,7 @@ $(document).ready(function() {
     });
 
     // Submit list options form on change of certain inputs
-    $('#list-options-sort-by, #list-options-sort-direction, #list-options-filters select').on('change', function(){
+    $('#list-options-sort-by, #list-options-sort-direction, #list-options-filters select, #list-options-filters input').on('change', function(){
         $('#list-options-form').submit();
     });
 
@@ -165,9 +171,8 @@ $(document).ready(function() {
     // Sort
     setFieldValueFromUrl("list-options-sort-by", "sort_by");
     setFieldValueFromUrl("list-options-sort-direction", "sort_direction");
+    // Filters
     new URL(window.location.href).searchParams.forEach(function(value, key){
-        console.log(1)
-        // If key starts with 'filter_pre' (as defined in view get_context_data()) then it's a filter
         if (key.startsWith('{{ filter_pre }}')) setFieldValueFromUrl(key, key);
     });
 });

@@ -48,7 +48,7 @@
     .list-options-filters-filter {
         display: inline-block;
         margin: 0.4em 0 0.7em 1em;
-        width: calc(25% - 1.3em);
+        width: calc(20% - 1.3em);
     }
 
     #list-options-sort {

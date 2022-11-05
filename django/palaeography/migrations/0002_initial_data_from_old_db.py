@@ -48,18 +48,18 @@ def insert_data_select_list_models(apps, schema_editor):
 
     # SlDocumentType
     for name in [
-        "livre",
-        "document",
-        "épigraphie",
-        "numismatique"
+        "Livre",
+        "Document",
+        "Épigraphie",
+        "Numismatique"
     ]:
         models.SlDocumentType.objects.create(name=name)
 
     # SlDocumentImageDifficulty
     for name in [
-        "easy",
-        "normal",
-        "hard"
+        "Easy",
+        "Normal",
+        "Hard"
     ]:
         models.SlDocumentImageDifficulty.objects.create(name=name)
 

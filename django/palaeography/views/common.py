@@ -59,8 +59,8 @@ def get_field_type(field_name, queryset):
 filter_pre = 'filter_'
 filter_pre_mm = f'{filter_pre}mm_'  # Many to Many relationship
 filter_pre_fk = f'{filter_pre}fk_'  # Foreign Key relationship
-filter_pre_gt = f'{filter_pre}gt_'  # Greater than (or equal to) filter, e.g. "Date (from)"
-filter_pre_lt = f'{filter_pre}lt_'  # Less than (or equal to) filter, e.g. "Date (to)"
+filter_pre_gt = f'{filter_pre}gt_'  # Greater than (or equal to) filter, e.g. "Year (from)"
+filter_pre_lt = f'{filter_pre}lt_'  # Less than (or equal to) filter, e.g. "Year (to)"
 
 
 def filter(request, queryset):
@@ -73,10 +73,10 @@ def filter(request, queryset):
 
     # Only loop through filter values in all GET request values (e.g. exclude search, sort, etc. values)
     for filter_key in [k for k in list(request.GET.keys()) if k.startswith(filter_pre)]:
-
+        print(f'\n\n{filter_key}\n\n')
         filter_value = request.GET.get(filter_key, '')
         if filter_value != '':
-
+            
             # Many to Many relationship (uses __in comparison and filter_value is a list)
             if filter_key.startswith(filter_pre_mm):
                 filter_field = filter_key.replace(filter_pre_mm, '')
@@ -89,6 +89,7 @@ def filter(request, queryset):
 
             # Greater than or equal to
             elif filter_key.startswith(filter_pre_gt):
+                print('\n\222\n\n')
                 filter_field = filter_key.replace(filter_pre_gt, '')
                 queryset = queryset.filter(**{f'{filter_field}__gte': filter_value})
 
