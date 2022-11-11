@@ -15,9 +15,13 @@
 </section>
 
 {% if my_recent_documents %}
-<section class="container" id="account-recentactivity">
-    <h3>Recent Activity</h3>
-    {% include "palaeography/snippets/list-body.html" with object_list=my_recent_documents list_type='text' %}
+<section class="container" id="account-recentdocuments">
+    <h3>My Recent Documents</h3>
+    <ol>
+        {% for document in my_recent_documents %}
+            <li><a href="{% url 'palaeography:document-detail' document.id %}">{{ document }}</a></li>
+        {% endfor %}
+    </ol>
 </section>
 {% endif %}
 

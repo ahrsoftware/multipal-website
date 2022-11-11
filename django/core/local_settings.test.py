@@ -41,6 +41,8 @@ USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD = ('...@uni.ac.uk',)
 
 ACCOUNT_CREATE_CODE = 'xxxxx'
 
+TEMP_PASSWORD_FOR_USERS_FROM_OLD_DB = 'xxxxx'
+
 ADMIN_EMAIL = 'ronny.vollandt@lmu.de'
 
 # Email

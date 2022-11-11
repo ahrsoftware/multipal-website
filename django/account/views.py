@@ -27,7 +27,7 @@ class AccountUpdateView(LoginRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super(AccountUpdateView, self).get_context_data(**kwargs)
 
-        # My Recent Data
+        # My Recent Documents
         context['my_recent_documents'] = palaeography_models.Document.objects.filter(meta_created_by=self.request.user).order_by('-meta_lastupdated_datetime')[:10]
 
         return context

@@ -71,8 +71,8 @@ class DocumentListView(ListView):
         # Annotations
         queryset = queryset.annotate(
             # year_ annotations used for filtering on multiple fields storing year data
-            year_min=Coalesce('date_year', 'partial_date_range_from'),
-            year_max=Coalesce('date_year', 'partial_date_range_to')
+            year_min=Coalesce('date_year', 'partial_date_range_year_from'),
+            year_max=Coalesce('date_year', 'partial_date_range_year_to')
         )
         # Search
         search = self.request.GET.get('search', '')
@@ -83,8 +83,8 @@ class DocumentListView(ListView):
                 Q(shelfmark__icontains=search) |
                 Q(information__icontains=search) |
                 # Integer
-                Q(partial_date_range_from__icontains=search) |
-                Q(partial_date_range_to__icontains=search) |
+                Q(partial_date_range_year_from__icontains=search) |
+                Q(partial_date_range_year_to__icontains=search) |
                 Q(date_year__icontains=search) |
                 Q(date_month__icontains=search) |
                 Q(date_day__icontains=search) |

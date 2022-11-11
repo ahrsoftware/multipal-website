@@ -137,15 +137,15 @@ class Document(models.Model):
     name = models.CharField(max_length=1000)
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
+    language = models.CharField(max_length=10, blank=True, null=True)
     ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
     repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
     languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
     information = models.TextField(blank=True, null=True)
-    custom_instructions = models.TextField(blank=True, null=True, help_text="If the default instructions are insufficient, please provide custom instructions to the user")
 
     # Partial Date Range
-    partial_date_range_from = models.IntegerField(blank=True, null=True)
-    partial_date_range_to = models.IntegerField(blank=True, null=True)
+    partial_date_range_year_from = models.IntegerField(blank=True, null=True)
+    partial_date_range_year_to = models.IntegerField(blank=True, null=True)
 
     # Date
     date_year = models.IntegerField(blank=True, null=True)
@@ -158,7 +158,7 @@ class Document(models.Model):
     time_second = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(60)])
 
     # Admin
-    admin_published = models.BooleanField(default=False, verbose_name='published')
+    admin_published = models.BooleanField(default=True, verbose_name='published')
     admin_notes = models.TextField(blank=True, null=True)
 
     # Metadata
@@ -168,14 +168,6 @@ class Document(models.Model):
     meta_lastupdated_by = models.ForeignKey(User, related_name="document_lastupdated_by",
                                             on_delete=models.PROTECT, blank=True, null=True, verbose_name="last updated by")
     meta_lastupdated_datetime = models.DateTimeField(blank=True, null=True, verbose_name="last updated")
-
-    @property
-    def instructions(self):
-        default_instructions = """Click on an input below and transcribe the matching part of the image.
-If you get stuck you can use the buttons above to view the correct answers.
-
-For more tips and assistance please visit the <a href="/help/">Help section</a>."""
-        return self.custom_instructions if self.custom_instructions else default_instructions
 
     @property
     def count_documentimages(self):
@@ -189,11 +181,11 @@ For more tips and assistance please visit the <a href="/help/">Help section</a>.
     def partial_date_range(self):
         partial_date_range = ""
         # From
-        if self.partial_date_range_from:
-            partial_date_range += f"From {self.partial_date_range_from} "
+        if self.partial_date_range_year_from:
+            partial_date_range += f"From {self.partial_date_range_year_from} "
         # To
-        if self.partial_date_range_to:
-            partial_date_range += f"To {self.partial_date_range_to}"
+        if self.partial_date_range_year_to:
+            partial_date_range += f"To {self.partial_date_range_year_to}"
         return partial_date_range if len(partial_date_range) else None
 
     @property
@@ -270,6 +262,7 @@ class DocumentImage(models.Model):
     document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name=m2m_related_name)
     difficulty = models.ForeignKey(SlDocumentImageDifficulty, on_delete=models.SET_NULL, blank=True, null=True)
     order_in_document = models.IntegerField(blank=True, null=True)
+    custom_instructions = models.TextField(blank=True, null=True, help_text="If the default instructions are insufficient, please provide custom instructions to the user")
 
     image = models.ImageField(upload_to=media_dir)
     image_thumbnail = models.ImageField(upload_to=media_dir_thumbnails, blank=True, null=True)  # Created via save() method below
@@ -286,6 +279,14 @@ class DocumentImage(models.Model):
     @property
     def name(self):
         return f"{self.document.name} - Image #{self.order_in_document}"
+
+    @property
+    def instructions(self):
+        default_instructions = """Click on an input below and transcribe the matching part of the image.
+If you get stuck you can use the buttons above to view the correct answers.
+
+For more tips and assistance please visit the <a href="/help/">Help section</a>."""
+        return self.custom_instructions if self.custom_instructions else default_instructions
 
     @property
     def image_is_wider_than_tall(self):

@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db import migrations
 from palaeography import models
 from ast import literal_eval
+from html.parser import HTMLParser
+from io import StringIO
 import os
 import shutil
 
@@ -32,6 +34,36 @@ def set_related_values(data_file, main_model, relationship_type):
                     getattr(object, field).add(related_object)
         # Save changes to the object
         object.save()
+
+
+class MLStripper(HTMLParser):
+    """
+    Required by below strip_html_tags() function to remove HTML tags from a string
+    """
+    def __init__(self):
+        super().__init__()
+        self.reset()
+        self.strict = False
+        self.convert_charrefs= True
+        self.text = StringIO()
+    def handle_data(self, d):
+        self.text.write(d)
+    def get_data(self):
+        return self.text.getvalue()
+
+
+def strip_html_tags(html):
+    """
+    Removes HTML tags from strings, e.g. <p>xxxx</p> --> xxxx
+    Used for fields that were a RichTextField in old db but a plain TextField in the new db
+    """
+    if html:
+        # Add new lines to </p> tags before they're removed, to preserve new lines in output
+        html = html.replace('</p>', '</p>\n').strip()
+        # Strip HTML tags from string and return
+        stripper = MLStripper()
+        stripper.feed(html)
+        return stripper.get_data()
 
 
 # Migration functions
@@ -71,6 +103,11 @@ def insert_data_documents(apps, schema_editor):
 
     with open(os.path.join(old_data, "data_documents.txt"), 'r') as file:
         for object in literal_eval(file.read()):
+
+            # Tidy information data
+            object['information'] = strip_html_tags(object['information'])
+
+            # Save object
             models.Document.objects.create(**object)
 
 
@@ -97,15 +134,11 @@ def insert_data_documentimages(apps, schema_editor):
     Inserts data into the Document Image model
     """
 
-    # Delete existing itemimage directories and the existing images in them
-    dirs_to_delete = [
-        'palaeography/documentimages-thumbnails'
-    ]
-    for dir in dirs_to_delete:
-        try:
-            shutil.rmtree(os.path.join(settings.BASE_DIR, f"media/{dir}"))
-        except FileNotFoundError:
-            pass  # it's ok if can't find dir, will just skip it
+    # Delete thumbnail directory and the existing images in them, to start fresh
+    try:
+        shutil.rmtree(os.path.join(settings.BASE_DIR, f"media/palaeography/documentimages-thumbnails"))
+    except FileNotFoundError:
+        pass  # it's ok if can't find dir, will just skip it
 
     with open(os.path.join(old_data, "data_documentimages.txt"), 'r') as file:
         for object in literal_eval(file.read()):

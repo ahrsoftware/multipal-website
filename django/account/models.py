@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.db import models
 
 
 class CustomUserManager(UserManager):
@@ -17,6 +18,7 @@ class User(AbstractUser):
     """
 
     objects = CustomUserManager()  # Custom user manager used to allow for case-insensitive usernames
+    language = models.CharField(max_length=10, blank=True, null=True)
 
     @property
     def name(self):

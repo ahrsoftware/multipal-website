@@ -153,6 +153,7 @@ class DocumentImageInline(admin.TabularInline):
 class DocumentAdminView(GenericAdminView):
     """Customise the admin interface for Document model"""
     list_display = ('name',
+                    'id',
                     'type',
                     'admin_published',
                     'meta_created_by',

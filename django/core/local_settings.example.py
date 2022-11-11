@@ -49,6 +49,9 @@ USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD = ('...@uni.ac.uk',)
 # Provide a unique code that new users will need to input when creating a new account
 ACCOUNT_CREATE_CODE = 'xxxxx'
 
+# When users were converted from old database to this one, they must be set a new temporary password
+TEMP_PASSWORD_FOR_USERS_FROM_OLD_DB = 'xxxxx'
+
 # Provide the email address for the site admin (e.g. the researcher/research team)
 ADMIN_EMAIL = '...@uni.ac.uk'
 
