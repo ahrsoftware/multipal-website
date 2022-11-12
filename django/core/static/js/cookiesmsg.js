@@ -42,7 +42,7 @@ if (getCookie('cookieMessageApprove') !== '1') {
 // Add event listener for 'accept' button to set the cookie and hide the message
 try {
     document.getElementById("cookie-message-popup-accept").addEventListener("click", function () {
-        document.cookie = "cookieMessageApprove=1; expires=Mon, 31 Dec 2050 23:59:59 GMT; path=/; Secure;";
+        document.cookie = "cookieMessageApprove=1; expires=Mon, 31 Dec 2050 23:59:59 GMT; path=/;";
         document.getElementById("cookie-message-popup").style.display = "none";
     });
 } catch (ignore) {
