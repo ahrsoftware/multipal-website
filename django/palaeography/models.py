@@ -264,8 +264,8 @@ class DocumentImage(models.Model):
     order_in_document = models.IntegerField(blank=True, null=True)
     custom_instructions = models.TextField(blank=True, null=True, help_text="If the default instructions are insufficient, please provide custom instructions to the user")
 
-    image = models.ImageField(upload_to=media_dir)
-    image_thumbnail = models.ImageField(upload_to=media_dir_thumbnails, blank=True, null=True)  # Created via save() method below
+    image = models.ImageField(upload_to=media_dir, max_length=255)
+    image_thumbnail = models.ImageField(upload_to=media_dir_thumbnails, max_length=255, blank=True, null=True)  # Created via save() method below
     right_to_left = models.BooleanField(default=False)
 
     # Metadata fields
@@ -379,11 +379,11 @@ class DocumentImagePart(models.Model):
     image_cropped_width = models.FloatField(blank=True, null=True)
     image_cropped_height = models.FloatField(blank=True, null=True)
 
-    text = models.CharField(max_length=1000, blank=True, null=True)
-    text_before_part = models.CharField(max_length=1000, blank=True, null=True)
-    text_after_part = models.CharField(max_length=1000, blank=True, null=True)
-    help_text = models.CharField(max_length=1000, blank=True, null=True)
-    cew = models.CharField(max_length=1000, blank=True, null=True)  # TODO - what is this?
+    text = models.TextField(blank=True, null=True)
+    text_before_part = models.TextField(blank=True, null=True)
+    text_after_part = models.TextField(blank=True, null=True)
+    help_text = models.TextField(blank=True, null=True)
+    cew = models.TextField(blank=True, null=True)  # TODO - what is this?
     line_index = models.IntegerField()
     part_index_in_line = models.IntegerField()
 
