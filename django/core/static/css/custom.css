@@ -217,7 +217,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .quicksearch-input:focus {
-    outline: 2px solid #EBA82D;
+    outline: 2px solid orange;
 }
 
 /* ---------- Bubble Links (anchor links with rounded border) ---------- */
@@ -724,11 +724,11 @@ main {
 
 .detail-controls-item:hover {
     opacity: 1;
-    background: #2f4256;
+    background: rgba(0, 0, 0, 0.15);
 }
 
 .detail-controls-item.active {
-    background: #EBA82D;
+    background: rgba(0, 0, 0, 0.3);
     opacity: 1;
 }
 
@@ -953,7 +953,7 @@ main {
     background: rgba(255, 255, 255, 0.1);
     color: white;
     padding: 1em;
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 .transcription-exercise-controlsdropdown label {
@@ -967,11 +967,19 @@ main {
     font-weight: bold;
 }
 
-.transcription-exercise-solutions-solution {
+.transcription-exercise-instructions-instruction {
     display: none;
 }
 
-.transcription-exercise-solutions-solution.active {
+.transcription-exercise-instructions-instruction.active {
+    display: block;
+}
+
+.transcription-exercise-fullsolution-instance {
+    display: none;
+}
+
+.transcription-exercise-fullsolution-instance.active {
     display: block;
 }
 
@@ -992,6 +1000,7 @@ main {
     font-size: 0.95em;
     font-weight: bold;
     display: none;
+    opacity: 0.64;
 }
 
 .transcription-exercise-input-linecount.active {
@@ -1011,6 +1020,7 @@ main {
     font-size: 0.8em;
     font-weight: bold;
     display: none;
+    opacity: 0.64;
 }
 
 .transcription-exercise-input-line-word-count.active {

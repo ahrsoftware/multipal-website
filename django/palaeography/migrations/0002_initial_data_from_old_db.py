@@ -59,11 +59,11 @@ def strip_html_tags(html):
     """
     if html:
         # Add new lines to </p> tags before they're removed, to preserve new lines in output
-        html = html.replace('</p>', '</p>\n').strip()
+        html = html.replace('<p>', '<p>\n')
         # Strip HTML tags from string and return
         stripper = MLStripper()
         stripper.feed(html)
-        return stripper.get_data()
+        return stripper.get_data().strip()
 
 
 # Migration functions
@@ -142,6 +142,11 @@ def insert_data_documentimages(apps, schema_editor):
 
     with open(os.path.join(old_data, "data_documentimages.txt"), 'r') as file:
         for object in literal_eval(file.read()):
+
+            # Tidy custom_instructions data
+            object['custom_instructions'] = strip_html_tags(object['custom_instructions'])
+
+            # Save object
             models.DocumentImage.objects.create(**object)
 
 

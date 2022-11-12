@@ -91,10 +91,12 @@
         <div id="transcription-exercise-controls" class="detail-controls">
             <!-- Reset Transcription -->
             <div id="transcription-exercise-controls-reset" class="detail-controls-item" title="Reset Transcription"><i class="fas fa-redo-alt"></i></div>
-            <!-- Instructions -->
+            <!-- Information -->
             <div id="transcription-exercise-controls-information" class="detail-controls-item" title="Information"><i class="fas fa-info-circle"></i></div>
             <!-- Instructions -->
             <div id="transcription-exercise-controls-instructions" class="detail-controls-item" title="Instructions"><i class="fas fa-question-circle"></i></div>
+            <!-- Scores -->
+            <div id="transcription-exercise-controls-scores" class="detail-controls-item" title="Scores"><i class="fas fa-star"></i></div>
             <!-- Full Solution Text -->
             <div id="transcription-exercise-controls-fullsolution" class="detail-controls-item" title="Full Solution"><i class="fas fa-scroll"></i></div>
             <!-- All Correct Answers -->
@@ -103,8 +105,7 @@
             <div id="transcription-exercise-controls-correctcurrent" class="detail-controls-item" title="Current Correct Answer"><i class="fas fa-check"></i></div>
             <!-- Position Details -->
             <div id="transcription-exercise-controls-positiondetails" class="detail-controls-item" title="Position Details"><i class="fas fa-list-ol"></i></div>
-            <!-- Scores -->
-            <div id="transcription-exercise-controls-scores" class="detail-controls-item" title="Scores"><i class="fas fa-star"></i></div>
+            <!-- Admin -->
             {% if request.user.is_staff %}
                 <div id="transcription-exercise-controls-admin" class="detail-controls-item" title="Admin"><i class="fas fa-cog"></i></div>
             {% endif %}
@@ -175,9 +176,11 @@
         <!-- Instructions -->
         <div id="transcription-exercise-instructions" class="transcription-exercise-controlsdropdown">
             <label>Instructions</label>
-            <div>
-                {{ object.instructions | safe | linebreaks }}
-            </div>
+            {% for document_image in object.documentimages.all %}
+                <div id="transcription-exercise-instructions-instruction-{{ document_image.id }}" class="transcription-exercise-instructions-instruction" dir="auto">
+                    {{ document_image.instructions | safe | linebreaks }}
+                </div>
+            {% endfor %}
         </div>
 
         <!-- Scores -->
@@ -191,10 +194,10 @@
         </div>
 
         <!-- Solutions -->
-        <div id="transcription-exercise-solutions" class="transcription-exercise-controlsdropdown">
+        <div id="transcription-exercise-fullsolution" class="transcription-exercise-controlsdropdown">
             {% for document_image in object.documentimages.all %}
-                <div id="transcription-exercise-solutions-solution-{{ document_image.id }}" class="transcription-exercise-solutions-solution{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
-                    <label>Full Solution: Image {{ forloop.counter }}</label>
+                <div id="transcription-exercise-fullsolution-instance-{{ document_image.id }}" class="transcription-exercise-fullsolution-instance{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
+                    <label>Full Solution</label>
                     <div>
                         {{ document_image.correct_transcription | safe | linebreaksbr }}
                     </div>

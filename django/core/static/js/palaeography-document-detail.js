@@ -11,23 +11,28 @@ $(document).ready(function(){
     $('#transcription-exercise-controls-reset').on('click', function(){
         $('.transcription-exercise-input-line-word').each(function(){$(this).val('').removeClass('correct').removeClass('wrong');});
     }).trigger('click');  // Execute on page load (stops browser caching them on page refresh)
+    // Controls dropdown content toggle
+    function controlsDropdownContentToggle(button){
+        // Get the final word in id of button, e.g. get 'information' in id="...-...-information"
+        var thisId = $(button).attr('id').split("-").slice(-1)[0];
+        // Hide all controldropdown instances and remove active from all buttons
+        $('.transcription-exercise-controlsdropdown').not('#transcription-exercise-' + thisId).hide();
+        $('.detail-controls-item.active').not(button).removeClass('active');
+        // Show this controldropdown instance and mark this button as active
+        $(button).toggleClass('active');
+        $('#transcription-exercise-' + thisId).toggle();
+    }
     // Information
-    $('#transcription-exercise-controls-information').on('click', function(){
-        $('#transcription-exercise-information').toggle();
-        // Hide other controldropdown instances
-        $('.transcription-exercise-controlsdropdown').not('#transcription-exercise-information').hide();
-    });
+    $('#transcription-exercise-controls-information').on('click', function(){ controlsDropdownContentToggle(this); });
     // Instructions
-    $('#transcription-exercise-controls-instructions').on('click', function(){
-        $('#transcription-exercise-instructions').toggle();
-        // Hide other controldropdown instances
-        $('.transcription-exercise-controlsdropdown').not('#transcription-exercise-instructions').hide();
-    });
+    $('#transcription-exercise-controls-instructions').on('click', function(){ controlsDropdownContentToggle(this); });
     // Full solutions
-    $('#transcription-exercise-controls-fullsolution').on('click', function(){
-        $('#transcription-exercise-solutions').toggle();
-        // Hide other controldropdown instances
-        $('.transcription-exercise-controlsdropdown').not('#transcription-exercise-solutions').hide();
+    $('#transcription-exercise-controls-fullsolution').on('click', function(){ controlsDropdownContentToggle(this); });
+    // Scores details
+    $('#transcription-exercise-controls-scores').on('click', function(){
+        // Set score text
+        setTranscriptionScoresText();
+        controlsDropdownContentToggle(this);
     });
     // All correct answers
     $('#transcription-exercise-controls-correctall').on('click', function(){
@@ -45,26 +50,18 @@ $(document).ready(function(){
     $('#transcription-exercise-controls-correctcurrent').on('click', function(){
         // Toggle global var
         showCorrectAnswerInlineIndividual = !showCorrectAnswerInlineIndividual;
-        // Only continue if there's an active image part and not all are active
-        if (lastActiveDocumentImagePartId && !showCorrectAnswerInlineAll){
-            var element_beforepart = '#transcription-exercise-input-line-word-answer-beforepart-' + lastActiveDocumentImagePartId;
-            var element_text = '#transcription-exercise-input-line-word-answer-' + lastActiveDocumentImagePartId;
-            var element_afterpart = '#transcription-exercise-input-line-word-answer-afterpart-' + lastActiveDocumentImagePartId;
+        // Set image part Id to the last active (if exists) or 1 by default, to show the first image part
+        imagePartId = (lastActiveDocumentImagePartId ? lastActiveDocumentImagePartId : 1);
+        if (!showCorrectAnswerInlineAll){
+            var element_beforepart = '#transcription-exercise-input-line-word-answer-beforepart-' + imagePartId;
+            var element_text = '#transcription-exercise-input-line-word-answer-' + imagePartId;
+            var element_afterpart = '#transcription-exercise-input-line-word-answer-afterpart-' + imagePartId;
 
             var elements = $([element_beforepart, element_text, element_afterpart].join(', '));
             // Toggle elements
             if (showCorrectAnswerInlineIndividual) elements.addClass('active');
             else elements.removeClass('active');
         }
-    });
-    // Scores details
-    $('#transcription-exercise-controls-scores').on('click', function(){
-        // Set score text
-        setTranscriptionScoresText();
-        // Show/hide scores
-        $('#transcription-exercise-scores').toggle();
-        // Hide other controldropdown instances
-        $('.transcription-exercise-controlsdropdown').not('#transcription-exercise-scores').hide();
     });
     // Position Details
     $('#transcription-exercise-controls-positiondetails').on('click', function(){
@@ -155,7 +152,7 @@ $(document).ready(function(){
         $('#detail-images-image-parts-part-' + documentImagePartId).addClass('active');
         // Hide the active correct answer inline (individual) if focussing on a different part
         if (showCorrectAnswerInlineIndividual && lastActiveDocumentImagePartId !== documentImagePartId){
-            $('#transcription-exercise-controls-correctcurrent').first().trigger('click');  // TODO update this with the correct button when it's been created
+            $('#transcription-exercise-controls-correctcurrent').first().trigger('click');
         }
         lastActiveDocumentImagePartId = documentImagePartId;  // Update last active global var
     }).on('focusout', function(){
@@ -192,9 +189,9 @@ $(document).ready(function(){
 
         var imageId = $(this).find(":selected").val();
         // Remove 'active' from existing image (and related content)
-        $('.detail-images-image.active, .transcription-exercise.active, .transcription-exercise-coreinfo-difficulty.active, .transcription-exercise-solutions-solution.active').removeClass('active');
+        $('.detail-images-image.active, .detail-controls-item.active, .transcription-exercise.active, .transcription-exercise-coreinfo-difficulty.active, .transcription-exercise-fullsolution-instance.active, .transcription-exercise-instructions-instruction.active').removeClass('active');
         // Mark this image (and related content) as 'active'
-        $('#detail-images-image-' + imageId + ', #transcription-exercise-' + imageId + ', #transcription-exercise-coreinfo-difficulty-' + imageId + ', #transcription-exercise-solutions-solution-' + imageId).addClass('active');
+        $('#detail-images-image-' + imageId + ', #transcription-exercise-' + imageId + ', #transcription-exercise-coreinfo-difficulty-' + imageId + ', #transcription-exercise-fullsolution-instance-' + imageId + ', #transcription-exercise-instructions-instruction-' + imageId).addClass('active');
         // Set the 'Download image' link location
         var imageUrl = $('#detail-images-image-' + imageId).find('img').attr('src');
         $('#detail-images-controls-downloadimage a').attr('href', imageUrl);
