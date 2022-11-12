@@ -24,8 +24,6 @@ else:
 
 ALLOWED_HOSTS = ['*']
 
-OLD_DATABASE_CONNECTION = "dbname=DBNAME user=USER password=PASS host=HOST port=5432"
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

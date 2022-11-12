@@ -29,9 +29,6 @@ else:
 # Set to ['*'] if in development, or specific IP addresses and domains if in production
 ALLOWED_HOSTS = ['*']/['multipal.fr']
 
-# Old project postgres database connection, for extracting data out of it
-OLD_DATABASE_CONNECTION = "dbname=DBNAME user=USER password=PASS host=HOST port=5432"
-
 # Databases
 DATABASES = {
     'default': {
