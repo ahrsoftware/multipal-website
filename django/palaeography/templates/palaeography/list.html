@@ -97,6 +97,9 @@ Sections of this template:
                 <label>{{ object.list_title }}</label>
                 <p>{{ object.list_details | safe }}</p>
             </div>
+            {% if not object.admin_published %}
+                <div class="list-body-item-publishedwarning">Document not yet published</div>
+            {% endif %}
         </a>
     {% empty %}
         <div class="list-body-empty">

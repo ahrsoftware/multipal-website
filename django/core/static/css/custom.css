@@ -616,6 +616,16 @@ main {
     font-size: 0.9em;
 }
 
+.list-body-item-publishedwarning,
+#transcription-exercise-publishedwarning {
+    background: #C23616;
+    color: white;
+    padding: 0.4em;
+    font-weight: bold;
+    font-size: 0.9em;
+    text-align: center;
+}
+
 .list-body-empty {
     margin-top: 7em;
     text-align: center;
@@ -910,30 +920,31 @@ main {
 #transcription-exercise-title {
     font-size: 2em;
     font-weight: 900;
-    margin: 0.4em 0 0.7em 0;
+    margin: 0.4em 0;
     line-height: 1.3em;
 }
 
-#transcription-exercise-controls-coreinfo {
-    text-align: right;
-    float: right;
+#transcription-exercise-coreinfo {
+    text-align: left;
+    font-size: 0.9rem;
+    margin-bottom: 2em;
 }
 
-#transcription-exercise-controls-coreinfo div {
-    margin: 0.6em 0 0 3em;
+#transcription-exercise-coreinfo div {
+    margin-right: 3em;
     display: inline-block;
 }
 
-#transcription-exercise-controls-coreinfo div span {
+#transcription-exercise-coreinfo div span {
     font-weight: bold;
     margin-left: 0.2rem;
 }
 
-.transcription-exercise-controls-coreinfo-difficulty {
+.transcription-exercise-coreinfo-difficulty {
     display: none;
 }
 
-.transcription-exercise-controls-coreinfo-difficulty.active {
+.transcription-exercise-coreinfo-difficulty.active {
     display: inline-block;
 }
 
@@ -1092,41 +1103,14 @@ main {
     font-weight: bold;
 }
 
-#information-content div {
-    margin-bottom: 2em;
+#transcription-exercise-information div {
+    margin-bottom: 0.5em;
 }
 
-#information-content div label {
+#transcription-exercise-information div label {
     margin-right: 0.3em;
     display: inline-block;
     font-weight: bold;
-}
-
-/* ---------- Tabs ---------- */
-
-.tabs {
-    display: block;
-    padding-left: 0;
-    list-style: none;
-}
-
-.tabbed-title {
-    display: none;
-}
-
-.tabs li {
-    background: rgba(255, 255, 255, 0.2);
-    color: white;
-    cursor: pointer;
-}
-
-.tabs li.active {
-    background: #4f667d;
-    color: white;
-}
-
-section.tabbed {
-    display: none;
 }
 
 /* ---------- Help ---------- */

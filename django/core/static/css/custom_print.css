@@ -4,7 +4,6 @@
     /* Hide certain content when printing */
     #database-nav-toggler,
     nav,
-    .tabs,
     .quicksearch-input {
         display: none;
     }
@@ -16,17 +15,6 @@
 
     h2 {
         margin: 0;
-    }
-
-    .tabbed {
-        display: block;
-    }
-
-    .tabbed-title {
-        display: block;
-        font-weight: bold;
-        font-size: 2em;
-        margin: 3em 0 1em 0;
     }
 
 }

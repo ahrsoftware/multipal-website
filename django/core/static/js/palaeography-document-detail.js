@@ -11,6 +11,12 @@ $(document).ready(function(){
     $('#transcription-exercise-controls-reset').on('click', function(){
         $('.transcription-exercise-input-line-word').each(function(){$(this).val('').removeClass('correct').removeClass('wrong');});
     }).trigger('click');  // Execute on page load (stops browser caching them on page refresh)
+    // Information
+    $('#transcription-exercise-controls-information').on('click', function(){
+        $('#transcription-exercise-information').toggle();
+        // Hide other controldropdown instances
+        $('.transcription-exercise-controlsdropdown').not('#transcription-exercise-information').hide();
+    });
     // Instructions
     $('#transcription-exercise-controls-instructions').on('click', function(){
         $('#transcription-exercise-instructions').toggle();
@@ -186,9 +192,9 @@ $(document).ready(function(){
 
         var imageId = $(this).find(":selected").val();
         // Remove 'active' from existing image (and related content)
-        $('.detail-images-image.active, .transcription-exercise.active, .transcription-exercise-controls-coreinfo-difficulty.active, .transcription-exercise-solutions-solution.active').removeClass('active');
+        $('.detail-images-image.active, .transcription-exercise.active, .transcription-exercise-coreinfo-difficulty.active, .transcription-exercise-solutions-solution.active').removeClass('active');
         // Mark this image (and related content) as 'active'
-        $('#detail-images-image-' + imageId + ', #transcription-exercise-' + imageId + ', #transcription-exercise-controls-coreinfo-difficulty-' + imageId + ', #transcription-exercise-solutions-solution-' + imageId).addClass('active');
+        $('#detail-images-image-' + imageId + ', #transcription-exercise-' + imageId + ', #transcription-exercise-coreinfo-difficulty-' + imageId + ', #transcription-exercise-solutions-solution-' + imageId).addClass('active');
         // Set the 'Download image' link location
         var imageUrl = $('#detail-images-image-' + imageId).find('img').attr('src');
         $('#detail-images-controls-downloadimage a').attr('href', imageUrl);

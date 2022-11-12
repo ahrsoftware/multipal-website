@@ -55,29 +55,44 @@
 <div id="detail-details">
 
     <section id="transcription-exercise">
+
         <!-- Navigation -->
         <div id="detail-navigation">
             <a href="{{ navigate_all_url }}"><i class="fas fa-th"></i> All</a>
             <a href="{{ navigate_previous_url }}"><i class="fas fa-chevron-left"></i> Previous</a>
             <a href="{{ navigate_next_url }}">Next <i class="fas fa-chevron-right"></i></a>
         </div>
+
         <!-- Title -->
         <div id="transcription-exercise-title">{{ object }}</div>
-        <!-- Tabs -->
-        <ul class="tabs">
-            <li id="transcription">Transcription</li><!--
-            --><li id="information">Information</li><!--
-            --><li id="comments">Comments</li><!--
-            -->{% if request.user.is_staff %}<li id="admin">Admin</li>{% endif %}
-        </ul>
-    </section>
 
-    <section class="tabbed" id="tabbed-transcription">
-        <div class="tabbed-title">Transcription</div>
+        <!-- Core Info -->
+        <div id="transcription-exercise-coreinfo">
+            <div>
+                <label>Author</label>
+                <span>{{ object.meta_created_by }}</span>
+            </div>
+            <div>
+                <label>Difficulty</label>
+                {% for document_image in object.documentimages.all %}
+                    <span id="transcription-exercise-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-coreinfo-difficulty">{{ document_image.difficulty }}</span>
+                {% endfor %}
+            </div>
+        </div>
+
+        {% if not object.admin_published %}
+            <!-- Unpublished warning -->
+            <div id="transcription-exercise-publishedwarning">
+                Document not yet published, meaning general users can't see it. Remember to publish when it's ready.
+            </div>
+        {% endif %}
+
         <!-- Transcription Controls -->
         <div id="transcription-exercise-controls" class="detail-controls">
             <!-- Reset Transcription -->
             <div id="transcription-exercise-controls-reset" class="detail-controls-item" title="Reset Transcription"><i class="fas fa-redo-alt"></i></div>
+            <!-- Instructions -->
+            <div id="transcription-exercise-controls-information" class="detail-controls-item" title="Information"><i class="fas fa-info-circle"></i></div>
             <!-- Instructions -->
             <div id="transcription-exercise-controls-instructions" class="detail-controls-item" title="Instructions"><i class="fas fa-question-circle"></i></div>
             <!-- Full Solution Text -->
@@ -90,15 +105,71 @@
             <div id="transcription-exercise-controls-positiondetails" class="detail-controls-item" title="Position Details"><i class="fas fa-list-ol"></i></div>
             <!-- Scores -->
             <div id="transcription-exercise-controls-scores" class="detail-controls-item" title="Scores"><i class="fas fa-star"></i></div>
-            <!-- Core Info -->
-            <div id="transcription-exercise-controls-coreinfo" class="detail-controls-item">
-                <div>
-                    <label>Difficulty</label>
-                    {% for document_image in object.documentimages.all %}
-                        <span id="transcription-exercise-controls-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-controls-coreinfo-difficulty">{{ document_image.difficulty }}</span>
-                    {% endfor %}
-                </div>
+            {% if request.user.is_staff %}
+                <div id="transcription-exercise-controls-admin" class="detail-controls-item" title="Admin"><i class="fas fa-cog"></i></div>
+            {% endif %}
+        </div>
+
+        <!-- Information -->
+        <div id="transcription-exercise-information" class="transcription-exercise-controlsdropdown">
+            <div>
+                <label>Name:</label>
+                <span>{{ object.name }}</span>
             </div>
+            {% if object.m2m_as_text_repositories %}
+                <div>
+                    <label>Repository:</label>
+                    <span>{{ object.m2m_as_text_repositories }}</span>
+                </div>
+            {% endif %}
+            {% if object.shelfmark %}
+                <div>
+                    <label>Shelf Mark:</label>
+                    <span>{{ object.shelfmark }}</span>
+                </div>
+            {% endif %}
+            {% if object.type %}
+                <div>
+                    <label>Type:</label>
+                    <span>{{ object.type }}</span>
+                </div>
+            {% endif %}
+            {% if object.m2m_as_text_languages %}
+                <div>
+                    <label>Language/Script:</label>
+                    <span>{{ object.m2m_as_text_languages }}</span>
+                </div>
+            {% endif %}
+            {% if object.ink %}
+                <div>
+                    <label>Language/Script:</label>
+                    <span>{{ object.ink }}</span>
+                </div>
+            {% endif %}
+            {% if object.partial_date_range %}
+                <div>
+                    <label>Date Range:</label>
+                    <span>{{ object.partial_date_range }}</span>
+                </div>
+            {% endif %}
+            {% if object.date_full %}
+                <div>
+                    <label>Date:</label>
+                    <span>{{ object.date_full }}</span>
+                </div>
+            {% endif %}
+            {% if object.meta_created_by %}
+                <div>
+                    <label>Exercise Author:</label>
+                    <span>{{ object.meta_created_by }}</span>
+                </div>
+            {% endif %}
+            {% if object.information %}
+                <div>
+                    <label>Information:</label>
+                    <span>{{ object.information | safe | linebreaks }}</span>
+                </div>
+            {% endif %}
         </div>
 
         <!-- Instructions -->
@@ -185,87 +256,9 @@
         {% endfor %}
     </section>
 
-    <section class="tabbed" id="tabbed-information">
-        <div class="tabbed-title">Information</div>
-
-        <div id="information-content">
-            <div>
-                <label>Name:</label>
-                <span>{{ object.name }}</span>
-            </div>
-            {% if object.m2m_as_text_repositories %}
-                <div>
-                    <label>Repository:</label>
-                    <span>{{ object.m2m_as_text_repositories }}</span>
-                </div>
-            {% endif %}
-            {% if object.shelfmark %}
-                <div>
-                    <label>Shelf Mark:</label>
-                    <span>{{ object.shelfmark }}</span>
-                </div>
-            {% endif %}
-            {% if object.type %}
-                <div>
-                    <label>Type:</label>
-                    <span>{{ object.type }}</span>
-                </div>
-            {% endif %}
-            {% if object.m2m_as_text_languages %}
-                <div>
-                    <label>Language/Script:</label>
-                    <span>{{ object.m2m_as_text_languages }}</span>
-                </div>
-            {% endif %}
-            {% if object.ink %}
-                <div>
-                    <label>Language/Script:</label>
-                    <span>{{ object.ink }}</span>
-                </div>
-            {% endif %}
-            {% if object.partial_date_range %}
-                <div>
-                    <label>Date Range:</label>
-                    <span>{{ object.partial_date_range }}</span>
-                </div>
-            {% endif %}
-            {% if object.date_full %}
-                <div>
-                    <label>Date:</label>
-                    <span>{{ object.date_full }}</span>
-                </div>
-            {% endif %}
-            {% if object.meta_created_by %}
-                <div>
-                    <label>Exercise Author:</label>
-                    <span>{{ object.meta_created_by }}</span>
-                </div>
-            {% endif %}
-            {% if object.information %}
-                <div>
-                    <label>Information:</label>
-                    <span>{{ object.information | safe | linebreaks }}</span>
-                </div>
-            {% endif %}
-        </div>
-    </section>
-
-    <section class="tabbed" id="tabbed-comments">
-        <div class="tabbed-title">Comments</div>
-        Comments
-    </section>
-
-    {% if request.user.is_staff %}
-        <section class="tabbed" id="tabbed-admin">
-            <div class="tabbed-title">Admin</div>
-            Admin stuff
-        </section>
-    {% endif %}
-
 </div>
 
 <!-- JS -->
-<script src="{% static 'js/tabs.js' %}"></script>
 <script src="{% static 'js/palaeography-document-detail.js' %}"></script>
 
 {% endblock %}
