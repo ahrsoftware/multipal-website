@@ -69,13 +69,20 @@
         <!-- Core Info -->
         <div id="transcription-exercise-coreinfo">
             <div>
-                <label>Author</label>
+                <label>Tutorial Author:</label>
                 <span>{{ object.meta_created_by }}</span>
             </div>
             <div>
-                <label>Difficulty</label>
+                <label>Difficulty:</label>
                 {% for document_image in object.documentimages.all %}
-                    <span id="transcription-exercise-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-coreinfo-difficulty">{{ document_image.difficulty }}</span>
+                    <span id="transcription-exercise-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-coreinfo-difficulty">
+                        {{ document_image.difficulty }}
+                        <div class="transcription-exercise-coreinfo-difficulty-icons">
+                            <i class="fa{% if document_image.difficulty.id > 0 %}s{% else %}r{% endif %} fa-circle"></i>
+                            <i class="fa{% if document_image.difficulty.id > 1 %}s{% else %}r{% endif %} fa-circle"></i>
+                            <i class="fa{% if document_image.difficulty.id > 2 %}s{% else %}r{% endif %} fa-circle"></i>
+                        </div>
+                    </span>
                 {% endfor %}
             </div>
         </div>

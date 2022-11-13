@@ -935,9 +935,12 @@ main {
     display: inline-block;
 }
 
-#transcription-exercise-coreinfo div span {
+#transcription-exercise-coreinfo div label {
     font-weight: bold;
-    margin-left: 0.2rem;
+}
+
+#transcription-exercise-coreinfo div span {
+    margin-left: 0.3rem;
 }
 
 .transcription-exercise-coreinfo-difficulty {
@@ -946,6 +949,12 @@ main {
 
 .transcription-exercise-coreinfo-difficulty.active {
     display: inline-block;
+}
+
+.transcription-exercise-coreinfo-difficulty-icons {
+    display: inline-block;
+    margin-left: 0.5em;
+    font-size: 0.9em;
 }
 
 .transcription-exercise-controlsdropdown {
