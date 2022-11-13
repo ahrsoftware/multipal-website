@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     var lastActiveDocumentImagePartId = $('.transcription-exercise-line-part-input').first().attr('id').split('-').slice('-1')[0];
-    var showCorrectAnswerInlineIndividual = false;
+    var showCorrectAnswerInlineCurrent = false;
     var showCorrectAnswerInlineAll = false;
 
     $('.detail-controls div').attr('data-placement', 'bottom').tooltip();
@@ -52,7 +52,7 @@ $(document).ready(function(){
     // Current correct answer
     $('#transcription-exercise-controls-correctcurrent').on('click', function(){
         // Toggle global var
-        showCorrectAnswerInlineIndividual = !showCorrectAnswerInlineIndividual;
+        showCorrectAnswerInlineCurrent = !showCorrectAnswerInlineCurrent;
         // Set image part Id to the last active (if exists) or 1 by default, to show the first image part
         if (!showCorrectAnswerInlineAll){
             var element_beforepart = '#transcription-exercise-line-beforepart-answer-' + lastActiveDocumentImagePartId;
@@ -61,7 +61,7 @@ $(document).ready(function(){
 
             var elements = $([element_beforepart, element_text, element_afterpart].join(', '));
             // Toggle elements
-            if (showCorrectAnswerInlineIndividual) elements.addClass('active');
+            if (showCorrectAnswerInlineCurrent) elements.addClass('active');
             else elements.removeClass('active');
         }
     });
@@ -158,8 +158,8 @@ $(document).ready(function(){
         var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
         $('.detail-images-image-parts-part').removeClass('active');
         $('#detail-images-image-parts-part-' + documentImagePartId).addClass('active');
-        // Hide the active correct answer inline (individual) if focussing on a different part
-        if (showCorrectAnswerInlineIndividual && lastActiveDocumentImagePartId !== documentImagePartId){
+        // Hide the active correct answer inline (current) if focussing on a different part
+        if (showCorrectAnswerInlineCurrent && lastActiveDocumentImagePartId !== documentImagePartId){
             $('#transcription-exercise-controls-correctcurrent').first().trigger('click');
         }
         lastActiveDocumentImagePartId = documentImagePartId;  // Update last active global var
