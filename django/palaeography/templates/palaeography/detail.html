@@ -77,13 +77,17 @@
                 {% for document_image in object.documentimages.all %}
                     <span id="transcription-exercise-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-coreinfo-difficulty">
                         {{ document_image.difficulty }}
-                        <div class="transcription-exercise-coreinfo-difficulty-icons">
+                        <span class="transcription-exercise-coreinfo-difficulty-icons">
                             <i class="fa{% if document_image.difficulty.id > 0 %}s{% else %}r{% endif %} fa-circle"></i>
                             <i class="fa{% if document_image.difficulty.id > 1 %}s{% else %}r{% endif %} fa-circle"></i>
                             <i class="fa{% if document_image.difficulty.id > 2 %}s{% else %}r{% endif %} fa-circle"></i>
-                        </div>
+                        </span>
                     </span>
                 {% endfor %}
+            </div>
+            <div>
+                <label>Score:</label>
+                <span id="transcription-exercise-coreinfo-scoresummary"></span>
             </div>
         </div>
 
@@ -103,7 +107,7 @@
             <!-- Instructions -->
             <div id="transcription-exercise-controls-instructions" class="detail-controls-item" title="Instructions"><i class="fas fa-question-circle"></i></div>
             <!-- Scores -->
-            <div id="transcription-exercise-controls-scores" class="detail-controls-item" title="Scores"><i class="fas fa-star"></i></div>
+            <div id="transcription-exercise-controls-scores" class="detail-controls-item" title="Score Details"><i class="fas fa-star"></i></div>
             <!-- Full Solution Text -->
             <div id="transcription-exercise-controls-fullsolution" class="detail-controls-item" title="Full Solution"><i class="fas fa-scroll"></i></div>
             <!-- All Correct Answers -->
@@ -215,52 +219,55 @@
         <!-- Exercises -->
         {% for document_image in object.documentimages.all %}
             <div id="transcription-exercise-{{ document_image.id }}" class="transcription-exercise{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
-                <!-- Input -->
-                <div class="transcription-exercise-input">
-                    {% for document_image_part in document_image.documentimagepart_set.all %}
-                        {% if document_image_part.is_first_in_line %}
-                            {% if not document_image_part.is_first_in_image %}</div>{% endif %}
-                            <div class="transcription-exercise-input-linecount">Line {{ document_image_part.line_count }}</div>
-                            <div class="transcription-exercise-input-line">
-                        {% endif %}
+
+                {% for document_image_part in document_image.documentimagepart_set.all %}
+
+                    {% if document_image_part.is_first_in_line %}
+                        {% if not document_image_part.is_first_in_image %}</div>{% endif %}
+                        <div class="transcription-exercise-linecount">Line {{ document_image_part.line_count }}</div>
+                        <div class="transcription-exercise-line">
+                    {% endif %}
+
+                    {% if document_image_part.text_before_part %}
                         <!-- Before part -->
-                        {% if document_image_part.text_before_part %}
-                            <div class="transcription-exercise-input-line-beforepart">
-                                <div id="transcription-exercise-input-line-word-beforepart-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-beforepart">
-                                    {{ document_image_part.text_before_part }}
-                                </div>
-                                <div id="transcription-exercise-input-line-word-answer-beforepart-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-answer-beforepart">
-                                    {{ document_image_part.text_before_part }}
-                                </div>
+                        <div class="transcription-exercise-line-beforepart">
+                            <div id="transcription-exercise-line-word-beforepart-{{ document_image_part.id }}" class="transcription-exercise-line-word-beforepart">
+                                {{ document_image_part.text_before_part }}
                             </div>
-                        {% endif %}
-                        <!-- Part -->
-                        <div class="transcription-exercise-input-line-part">
-                            <!-- Part - Count -->
-                            <div class="transcription-exercise-input-line-word-count">{{ document_image_part.part_count_in_line }}</div>
-                            <!-- Part - Input -->
-                            <input id="transcription-exercise-input-line-word-{{ document_image_part.id }}" class="transcription-exercise-input-line-word" type="text" size="{{ document_image_part.word_length }}" title="Transcribe this part of the image" data-correctanswer="{{ document_image_part.text }}"{% if document_image_part.help_text %} data-helptext="{{ document_image_part.help_text }}"{% endif %}>
-                            <!-- Part - Answer -->
-                            <div id="transcription-exercise-input-line-word-answer-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-answer">{{ document_image_part.text }}</div>
+                            <div id="transcription-exercise-line-word-answer-beforepart-{{ document_image_part.id }}" class="transcription-exercise-line-word-answer-beforepart">
+                                {{ document_image_part.text_before_part }}
+                            </div>
                         </div>
-                        <!-- After part -->
-                        {% if document_image_part.text_after_part %}
-                            <div class="transcription-exercise-input-line-afterpart">
-                                <div id="transcription-exercise-input-line-word-afterpart-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-afterpart">
-                                    {{ document_image_part.text_after_part }}
-                                </div>
-                                <div id="transcription-exercise-input-line-word-answer-afterpart-{{ document_image_part.id }}" class="transcription-exercise-input-line-word-answer-afterpart">
-                                    {{ document_image_part.text_after_part }}
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                    {% endif %}
+
+                    <!-- Part -->
+                    <div class="transcription-exercise-line-part">
+                        <!-- Part - Count -->
+                        <div class="transcription-exercise-line-word-count">{{ document_image_part.part_count_in_line }}</div>
+                        <!-- Part - Input -->
+                        <input id="transcription-exercise-line-word-{{ document_image_part.id }}" class="transcription-exercise-line-word" type="text" size="{{ document_image_part.word_length }}" title="Transcribe this part of the image" data-correctanswer="{{ document_image_part.text }}"{% if document_image_part.help_text %} data-helptext="{{ document_image_part.help_text }}"{% endif %} data-left="{{ document_image_part.image_cropped_left }}" data-top="{{ document_image_part.image_cropped_top }}" data-width="{{ document_image_part.image_cropped_width }}" data-height="{{ document_image_part.image_cropped_height }}" data-linecount="{{ document_image_part.line_count }}" data-partcountinline="{{ document_image_part.part_count_in_line }}">
+                        <!-- Part - Answer -->
+                        <div id="transcription-exercise-line-word-answer-{{ document_image_part.id }}" class="transcription-exercise-line-word-answer">{{ document_image_part.text }}</div>
                     </div>
-                </div>
-                <!-- Popup -->
+
+                    {% if document_image_part.text_after_part %}
+                        <!-- After part -->
+                        <div class="transcription-exercise-line-afterpart">
+                            <div id="transcription-exercise-line-word-afterpart-{{ document_image_part.id }}" class="transcription-exercise-line-word-afterpart">
+                                {{ document_image_part.text_after_part }}
+                            </div>
+                            <div id="transcription-exercise-line-word-answer-afterpart-{{ document_image_part.id }}" class="transcription-exercise-line-word-answer-afterpart">
+                                {{ document_image_part.text_after_part }}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+                <!-- Popup (content added dynamically in js)-->
                 <div id="transcription-exercise-part-popup">
-                    <img id="transcription-exercise-part-popup-image" src="" alt="Document image part preview">
-                    <div id="transcription-exercise-part-popup-helptext"></div>
+                    <div id="transcription-exercise-part-popup-position"></div>
+                    <div id="transcription-exercise-part-popup-helptext" dir="auto"></div>
+                    <div id="transcription-exercise-part-popup-image"></div>
                 </div>
             </div>
         {% endfor %}

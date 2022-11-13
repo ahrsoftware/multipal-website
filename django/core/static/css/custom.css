@@ -857,7 +857,7 @@ main {
 #detail-images-container {
     overflow: auto;
     height: calc(100vh - 8em);
-    background: rgba(255, 255, 255, 0.13);
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .detail-images-image {
@@ -996,15 +996,16 @@ main {
     display: none;
     padding: 1.3em 0.64em 1.3em 0.64em;
     white-space: nowrap;
-    overflow-x: auto;
-    background: rgba(255, 255, 255, 0.13);
+    overflow: auto;
+    max-height: 70vh;
+    background: rgba(255, 255, 255, 0.2);
 }
 
 .transcription-exercise.active {
     display: block;
 }
 
-.transcription-exercise-input-linecount {
+.transcription-exercise-linecount {
     margin-top: 1em;
     font-size: 0.95em;
     font-weight: bold;
@@ -1012,31 +1013,31 @@ main {
     opacity: 0.64;
 }
 
-.transcription-exercise-input-linecount.active {
+.transcription-exercise-linecount.active {
     display: block;
 }
 
-.transcription-exercise-input-line {
+.transcription-exercise-line {
     width: 100%;
 }
 
-.transcription-exercise-input-line-part {
+.transcription-exercise-line-part {
     display: inline-block;
     vertical-align: top;
 }
 
-.transcription-exercise-input-line-word-count {
+.transcription-exercise-line-word-count {
     font-size: 0.8em;
     font-weight: bold;
     display: none;
     opacity: 0.64;
 }
 
-.transcription-exercise-input-line-word-count.active {
+.transcription-exercise-line-word-count.active {
     display: inline-block;
 }
 
-.transcription-exercise-input-line-word {
+.transcription-exercise-line-word {
     padding: 0.3em;
     margin: 0.5em;
     opacity: 0.8;
@@ -1044,28 +1045,28 @@ main {
     cursor: pointer;
 }
 
-.transcription-exercise-input-line-word.correct {
+.transcription-exercise-line-word.correct {
     background: green;
     color: white;
 }
 
-.transcription-exercise-input-line-word.wrong {
+.transcription-exercise-line-word.wrong {
     background: red;
     color: white;
 }
 
-.transcription-exercise-input-line-word.reveal {
+.transcription-exercise-line-word.reveal {
     opacity: 1;
 }
 
-.transcription-exercise-input-line-word:active,
-.transcription-exercise-input-line-word:focus {
+.transcription-exercise-line-word:active,
+.transcription-exercise-line-word:focus {
     opacity: 1;
     outline: 2px solid orange;
     cursor: text;
 }
 
-.transcription-exercise-input-line-word-answer {
+.transcription-exercise-line-word-answer {
     margin: 0 0.5em;
     width: calc(100% - 1em);
     background: orange;
@@ -1074,52 +1075,63 @@ main {
     display: none;
 }
 
-.transcription-exercise-input-line-word-answer.active {
+.transcription-exercise-line-word-answer.active {
     display: block;
 }
 
-.transcription-exercise-input-line-beforepart,
-.transcription-exercise-input-line-afterpart {
+.transcription-exercise-line-beforepart,
+.transcription-exercise-line-afterpart {
     display: inline-block;
     vertical-align: top;
 }
 
-.transcription-exercise-input-line-word-beforepart,
-.transcription-exercise-input-line-word-afterpart {
+.transcription-exercise-line-word-beforepart,
+.transcription-exercise-line-word-afterpart {
     margin: 0.5em 0;
     padding: 0.3em 0;
     display: block;
 }
 
-.transcription-exercise-input-line-word-answer-beforepart,
-.transcription-exercise-input-line-word-answer-afterpart {
+.transcription-exercise-line-word-answer-beforepart,
+.transcription-exercise-line-word-answer-afterpart {
     padding: 0.5em 0;
     display: none;
 }
 
-.transcription-exercise-input-line-word-answer-beforepart.active,
-.transcription-exercise-input-line-word-answer-afterpart.active {
+.transcription-exercise-line-word-answer-beforepart.active,
+.transcription-exercise-line-word-answer-afterpart.active {
     display: block;
 }
 
 #transcription-exercise-part-popup {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 200px;
-    height: 200px;
+    display: none;
+    position: absolute;
     background: white;
     color: black;
-    display: none;
+    border-radius: 0.27em;
+    overflow: hidden;
+    box-shadow: rgba(0, 0, 0, 0.27) 0px 3px 6px, rgba(0, 0, 0, 0.37) 0px 3px 6px;
+    font-size: 0.9rem;
+    padding: 0.5em;
 }
 
-#transcription-exercise-part-popup-image {
+#transcription-exercise-part-popup-position {
+    font-weight: bold;
     width: 100%;
+    white-space: pre-wrap;
+}
+
+#transcription-exercise-part-popup-position span {
+    white-space:nowrap;
 }
 
 #transcription-exercise-part-popup-helptext {
     width: 100%;
-    font-weight: bold;
+    white-space: pre-wrap;
+}
+
+#transcription-exercise-part-popup-image {
+    margin-top: 0.3em;
 }
 
 #transcription-exercise-information div {

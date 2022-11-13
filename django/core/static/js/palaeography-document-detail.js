@@ -1,20 +1,23 @@
 $(document).ready(function(){
 
-    var lastActiveDocumentImagePartId;
+    var lastActiveDocumentImagePartId = $('.transcription-exercise-line-word').first().attr('id').split('-').slice('-1')[0];
     var showCorrectAnswerInlineIndividual = false;
     var showCorrectAnswerInlineAll = false;
 
     $('.detail-controls div').attr('data-placement', 'bottom').tooltip();
 
+    // Ensure transcription inputs are cleared on page load (stops browser caching on page refresh)
+    $('.transcription-exercise-line-word').each(function(){$(this).val('').removeClass('correct').removeClass('wrong');});
+
     // Transcription Controls functionality
-    // Clear transcription attempts
+    // Reset the exercise fully by refreshing the page
     $('#transcription-exercise-controls-reset').on('click', function(){
-        $('.transcription-exercise-input-line-word').each(function(){$(this).val('').removeClass('correct').removeClass('wrong');});
-    }).trigger('click');  // Execute on page load (stops browser caching them on page refresh)
+        window.location.replace(window.location.href);
+    });
     // Controls dropdown content toggle
     function controlsDropdownContentToggle(button){
         // Get the final word in id of button, e.g. get 'information' in id="...-...-information"
-        var thisId = $(button).attr('id').split("-").slice(-1)[0];
+        var thisId = $(button).attr('id').split('-').slice(-1)[0];
         // Hide all controldropdown instances and remove active from all buttons
         $('.transcription-exercise-controlsdropdown').not('#transcription-exercise-' + thisId).hide();
         $('.detail-controls-item.active').not(button).removeClass('active');
@@ -39,9 +42,9 @@ $(document).ready(function(){
         // Toggle global var
         showCorrectAnswerInlineAll = !showCorrectAnswerInlineAll;
         // Toggle elements
-        var element_beforepart = '.transcription-exercise-input-line-word-answer-beforepart';
-        var element_text = '.transcription-exercise-input-line-word-answer';
-        var element_afterpart = '.transcription-exercise-input-line-word-answer-afterpart';
+        var element_beforepart = '.transcription-exercise-line-word-answer-beforepart';
+        var element_text = '.transcription-exercise-line-word-answer';
+        var element_afterpart = '.transcription-exercise-line-word-answer-afterpart';
         var elements = $([element_beforepart, element_text, element_afterpart].join(', '));
         if (showCorrectAnswerInlineAll) elements.addClass('active');
         else elements.removeClass('active');
@@ -51,11 +54,10 @@ $(document).ready(function(){
         // Toggle global var
         showCorrectAnswerInlineIndividual = !showCorrectAnswerInlineIndividual;
         // Set image part Id to the last active (if exists) or 1 by default, to show the first image part
-        imagePartId = (lastActiveDocumentImagePartId ? lastActiveDocumentImagePartId : 1);
         if (!showCorrectAnswerInlineAll){
-            var element_beforepart = '#transcription-exercise-input-line-word-answer-beforepart-' + imagePartId;
-            var element_text = '#transcription-exercise-input-line-word-answer-' + imagePartId;
-            var element_afterpart = '#transcription-exercise-input-line-word-answer-afterpart-' + imagePartId;
+            var element_beforepart = '#transcription-exercise-line-word-answer-beforepart-' + lastActiveDocumentImagePartId;
+            var element_text = '#transcription-exercise-line-word-answer-' + lastActiveDocumentImagePartId;
+            var element_afterpart = '#transcription-exercise-line-word-answer-afterpart-' + lastActiveDocumentImagePartId;
 
             var elements = $([element_beforepart, element_text, element_afterpart].join(', '));
             // Toggle elements
@@ -65,7 +67,7 @@ $(document).ready(function(){
     });
     // Position Details
     $('#transcription-exercise-controls-positiondetails').on('click', function(){
-        $('.transcription-exercise-input-linecount, .transcription-exercise-input-line-word-count').toggleClass('active');
+        $('.transcription-exercise-linecount, .transcription-exercise-line-word-count').toggleClass('active');
     });
 
     // Score transcription attempts
@@ -96,23 +98,27 @@ $(document).ready(function(){
         setTranscriptionScoresText();
     }
     // Score transcription attempt as correct/incorrect when focus out of an input
-    $('.transcription-exercise-input-line-word').on('focusout', function(){
+    $('.transcription-exercise-line-word').on('focusout', function(){
         scoreTranscriptionAttempt($(this));
     });
     // Score transcription attempt as correct whilst user types
-    $('.transcription-exercise-input-line-word').on('input', function(){
+    $('.transcription-exercise-line-word').on('input', function(){
         scoreTranscriptionAttempt($(this), true);
     });
     // Set the score text for transcriptions
     function setTranscriptionScoresText(){
         // Get counts
-        var count_available = $('.transcription-exercise-input-line-word').length;
-        var count_wrong = $('.transcription-exercise-input-line-word.wrong').length;
-        var count_correct = $('.transcription-exercise-input-line-word.correct').length;
+        var count_available = $('.transcription-exercise-line-word').length;
+        var count_wrong = $('.transcription-exercise-line-word.wrong').length;
+        var count_correct = $('.transcription-exercise-line-word.correct').length;
         var count_answered = count_wrong + count_correct;
         var count_unanswered = count_available - count_answered;
         var percentage = Math.round((count_correct / count_available) * 100);
-        // Set scores text
+        
+        // Set text
+        // Core info
+        $('#transcription-exercise-coreinfo-scoresummary').text(count_correct + '/' + count_available + ' (' + percentage + '%)');
+        // Score details
         $('#transcription-exercise-scores-percentage').text(percentage + '%');
         $('#transcription-exercise-scores-available').text(count_available);
         $('#transcription-exercise-scores-unanswered').text(count_unanswered);
@@ -120,33 +126,35 @@ $(document).ready(function(){
         $('#transcription-exercise-scores-wrong').text(count_wrong);
         $('#transcription-exercise-scores-correct').text(count_correct);
     }
+    // Run on page load
+    setTranscriptionScoresText();
 
     // Click 'enter' to move focus to next transcription input
-    $('.transcription-exercise-input-line-word').keydown(function(e){
+    $('.transcription-exercise-line-word').keydown(function(e){
         var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
         if (key == 13) {
             e.preventDefault();
-            var inputs = $(this).closest('.transcription-exercise-input').find('.transcription-exercise-input-line-word');
+            var inputs = $(this).closest('.transcription-exercise').find('.transcription-exercise-line-word');
             inputs.eq( inputs.index(this)+ 1 ).focus();
         }
     });
 
     // Set a 'reveal' class to document image parts that overlay image when user hovers over them
-    $('.detail-images-image-parts-part, .transcription-exercise-input-line-word').hover(
+    $('.detail-images-image-parts-part, .transcription-exercise-line-word').hover(
         // Hover starts
         function(){
             var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
-            $('#detail-images-image-parts-part-' + documentImagePartId + ', #transcription-exercise-input-line-word-' + documentImagePartId).addClass('reveal');
+            $('#detail-images-image-parts-part-' + documentImagePartId + ', #transcription-exercise-line-word-' + documentImagePartId).addClass('reveal');
         },
         // Hover ends
         function(){
             var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
-            $('#detail-images-image-parts-part-' + documentImagePartId + ', #transcription-exercise-input-line-word-' + documentImagePartId).removeClass('reveal');
+            $('#detail-images-image-parts-part-' + documentImagePartId + ', #transcription-exercise-line-word-' + documentImagePartId).removeClass('reveal');
         }
     );
 
     // Connect document image part occurences: image overlays and transcription inputs
-    $('.transcription-exercise-input-line-word').on('focus', function(){
+    $('.transcription-exercise-line-word').on('focus', function(){
         var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
         $('.detail-images-image-parts-part').removeClass('active');
         $('#detail-images-image-parts-part-' + documentImagePartId).addClass('active');
@@ -156,28 +164,65 @@ $(document).ready(function(){
         }
         lastActiveDocumentImagePartId = documentImagePartId;  // Update last active global var
     }).on('focusout', function(){
-        // When an input is no longer focussed on, ensure image overlay isn't left active
         $('.detail-images-image-parts-part').removeClass('active');
+        $('#transcription-exercise-part-popup').hide()
     });
     $('.detail-images-image-parts-part').on('click', function(){
         var documentImagePartId = $(this).attr('id').split('-').slice('-1')[0];
-        $('#transcription-exercise-input-line-word-' + documentImagePartId).focus();
+        $('#transcription-exercise-line-word-' + documentImagePartId).focus();
     });
 
     // Document Image Part Popup
-    $('.transcription-exercise-input-line-word').on('focus', function(){
-        // Move the preview above the current image part
-        var posX = 400;
-        var posY = 400;
+    function setDocumentImagePartPopupStyle(inputElement){
+        var inputElement = $('#transcription-exercise-line-word-' + lastActiveDocumentImagePartId);
+        var unit = 'px';
+        $('#transcription-exercise-part-popup').show().width($(inputElement).attr('data-width') + unit);
+        var popupWidth = $('#transcription-exercise-part-popup').outerWidth();
+        var popupHeight = $('#transcription-exercise-part-popup').outerHeight();
+        var inputElementPosition = $(inputElement).position();
+        var inputElementWidth = $(inputElement).outerWidth();
+        var balance = (inputElementWidth > 80 ? 40 : 15);  // Make wider parts go further right to make feel more balanced
+        $('#transcription-exercise-part-popup').css({
+            'top': (inputElementPosition.top - popupHeight) + unit,
+            // Right align popup relative to input, so it never goes off the screen to right
+            'left': (inputElementPosition.left - popupWidth + $(inputElement).outerWidth() + balance) + unit
+        });
+    }
+    // Update popup when scrolled, so it moves with the scroll (if already currently visible)
+    $('.transcription-exercise').on('scroll', function(){
+        if ($('#transcription-exercise-part-popup').is(":visible")){
+            setDocumentImagePartPopupStyle();
+        }
+    });
+    // When focusing on a part, load the popup with that part's content and style/position it for the part
+    $('.transcription-exercise-line-word').on('focus', function(){
+
+        var unit = 'px';
+
+        // Set the position details (i.e. line count and part count in line)
+        var positiontext = 'Line: ' + $(this).attr('data-linecount') + ', Part: ' + $(this).attr('data-partcountinline');
+        $('#transcription-exercise-part-popup-position').text(positiontext);
 
         // Set the image in the preview as the current image part's cropped image
         var img = $('.detail-images-image.active').first().find('img');
-        $('#transcription-exercise-part-popup-image').attr('src', img.attr('src'));
+        var imagePartWidth = $(this).attr('data-width');
+        var imagePartHeight = $(this).attr('data-height');
+        $('#transcription-exercise-part-popup-image').css({
+            'background-repeat': 'no-repeat',
+            'background-image': 'url("' + img.attr('src') + '")',
+            'background-position': '-' + $(this).attr('data-left') + unit + ' -' + $(this).attr('data-top') + unit,
+            'width': imagePartWidth + unit,
+            'height': imagePartHeight + unit,
+            'display': 'block'
+        });
 
         // Set the help text for this document image part in the popup
-        var helptext = $('#transcription-exercise-input-line-word-' + lastActiveDocumentImagePartId).attr('data-helptext');
+        var helptext = $(this).attr('data-helptext');
         if (!helptext) helptext = '';  // Set as an empty string to clear parts with no help text
         $('#transcription-exercise-part-popup-helptext').text(helptext);
+
+        // Set the style of the popup
+        setDocumentImagePartPopupStyle(this);
     });
 
     // Choose/show an image and accompanying transcription
