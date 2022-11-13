@@ -181,7 +181,7 @@ $(document).ready(function(){
         var popupHeight = $('#transcription-exercise-part-popup').outerHeight();
         var inputElementPosition = $(inputElement).position();
         var inputElementWidth = $(inputElement).outerWidth();
-        var balance = (inputElementWidth > 80 ? 40 : 15);  // Make wider parts go further right to make feel more balanced
+        var balance = (inputElementWidth > 89 ? 40 : 15);  // Make wider parts go further right to make feel more balanced
         $('#transcription-exercise-part-popup').css({
             'top': (inputElementPosition.top - popupHeight) + unit,
             // Right align popup relative to input, so it never goes off the screen to right
