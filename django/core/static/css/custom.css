@@ -1026,18 +1026,18 @@ main {
     vertical-align: top;
 }
 
-.transcription-exercise-line-word-count {
+.transcription-exercise-line-part-count {
     font-size: 0.8em;
     font-weight: bold;
     display: none;
     opacity: 0.64;
 }
 
-.transcription-exercise-line-word-count.active {
+.transcription-exercise-line-part-count.active {
     display: inline-block;
 }
 
-.transcription-exercise-line-word {
+.transcription-exercise-line-part-input {
     padding: 0.3em;
     margin: 0.5em;
     opacity: 0.8;
@@ -1045,28 +1045,28 @@ main {
     cursor: pointer;
 }
 
-.transcription-exercise-line-word.correct {
+.transcription-exercise-line-part-input.correct {
     background: green;
     color: white;
 }
 
-.transcription-exercise-line-word.wrong {
+.transcription-exercise-line-part-input.wrong {
     background: red;
     color: white;
 }
 
-.transcription-exercise-line-word.reveal {
+.transcription-exercise-line-part-input.reveal {
     opacity: 1;
 }
 
-.transcription-exercise-line-word:active,
-.transcription-exercise-line-word:focus {
+.transcription-exercise-line-part-input:active,
+.transcription-exercise-line-part-input:focus {
     opacity: 1;
     outline: 2px solid orange;
     cursor: text;
 }
 
-.transcription-exercise-line-word-answer {
+.transcription-exercise-line-part-answer {
     margin: 0 0.5em;
     width: calc(100% - 1em);
     background: orange;
@@ -1075,7 +1075,7 @@ main {
     display: none;
 }
 
-.transcription-exercise-line-word-answer.active {
+.transcription-exercise-line-part-answer.active {
     display: block;
 }
 
@@ -1085,21 +1085,21 @@ main {
     vertical-align: top;
 }
 
-.transcription-exercise-line-word-beforepart,
-.transcription-exercise-line-word-afterpart {
+.transcription-exercise-line-beforepart-input,
+.transcription-exercise-line-afterpart-input {
     margin: 0.5em 0;
     padding: 0.3em 0;
     display: block;
 }
 
-.transcription-exercise-line-word-answer-beforepart,
-.transcription-exercise-line-word-answer-afterpart {
+.transcription-exercise-line-beforepart-answer,
+.transcription-exercise-line-afterpart-answer {
     padding: 0.5em 0;
     display: none;
 }
 
-.transcription-exercise-line-word-answer-beforepart.active,
-.transcription-exercise-line-word-answer-afterpart.active {
+.transcription-exercise-line-beforepart-answer.active,
+.transcription-exercise-line-afterpart-answer.active {
     display: block;
 }
 
