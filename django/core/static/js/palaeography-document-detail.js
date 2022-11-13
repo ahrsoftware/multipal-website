@@ -1,6 +1,11 @@
 $(document).ready(function(){
 
-    var lastActiveDocumentImagePartId = $('.transcription-exercise-line-part-input').first().attr('id').split('-').slice('-1')[0];
+    var lastActiveDocumentImagePartId;
+    // Set the default to the first input if there is one
+    if ($('.transcription-exercise-line-part-input').length) {
+        lastActiveDocumentImagePartId = $('.transcription-exercise-line-part-input').first().attr('id').split('-').slice('-1')[0];
+    }
+
     var showCorrectAnswerInlineCurrent = false;
     var showCorrectAnswerInlineAll = false;
 
@@ -114,6 +119,7 @@ $(document).ready(function(){
         var count_answered = count_wrong + count_correct;
         var count_unanswered = count_available - count_answered;
         var percentage = Math.round((count_correct / count_available) * 100);
+        if (isNaN(percentage)) percentage = 0;  // prevent it from showing NaN as the score
         
         // Set text
         // Core info

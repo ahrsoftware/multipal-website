@@ -384,6 +384,8 @@ class DocumentImagePart(models.Model):
     text_after_part = models.TextField(blank=True, null=True)
     help_text = models.TextField(blank=True, null=True)
     cew = models.TextField(blank=True, null=True)  # TODO - what is this?
+
+    # Position on image
     line_index = models.IntegerField()
     part_index_in_line = models.IntegerField()
 
