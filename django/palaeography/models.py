@@ -373,21 +373,22 @@ class DocumentImagePart(models.Model):
     document_image = models.ForeignKey(DocumentImage, on_delete=models.CASCADE)
 
     # Cropped image measurements
-    # left and top are the x,y coordinates of the top-left starting point of the part
+    # left and top are the x,y coordinates of the top-left starting point of the part in the image
     image_cropped_left = models.FloatField(blank=True, null=True)
     image_cropped_top = models.FloatField(blank=True, null=True)
     image_cropped_width = models.FloatField(blank=True, null=True)
     image_cropped_height = models.FloatField(blank=True, null=True)
 
+    # Index/order in solution (by line, part)
+    line_index = models.IntegerField()
+    part_index_in_line = models.IntegerField()
+
+    # Content
     text = models.TextField(blank=True, null=True)
     text_before_part = models.TextField(blank=True, null=True)
     text_after_part = models.TextField(blank=True, null=True)
     help_text = models.TextField(blank=True, null=True)
     cew = models.TextField(blank=True, null=True)  # TODO - what is this?
-
-    # Position on image
-    line_index = models.IntegerField()
-    part_index_in_line = models.IntegerField()
 
     # Metadata fields
     meta_created_by = models.ForeignKey(User, related_name="documentimagepart_created_by",
