@@ -697,6 +697,8 @@ main {
 
 /* ---------- Detail ---------- */
 
+/* Image */
+
 #detail-images,
 #detail-details {
     padding: 1rem;
@@ -744,12 +746,6 @@ main {
     border: 0;
     width: 7em;
     margin: 0.4em 0.8em;
-}
-
-#detail-images-controls-showgraphicelements {
-    margin: 0.25em 3em !important;
-    padding-top: 0;
-    vertical-align: top;
 }
 
 #detail-images-controls-zoom {
@@ -863,6 +859,7 @@ main {
 .detail-images-image {
     position: relative;
     display: none;
+    width: 1000px;  /* THIS MUST STAY AS 1000px, OR ALL EXISTING ANNOTATIONS WILL MOVE ON PAGE AS THEY'RE BASED ON WIDTH of 1000px */
 }
 
 .detail-images-image.active {
@@ -874,6 +871,8 @@ main {
     top: 0;
     left: 0;
 }
+
+/* Image - parts */
 
 .detail-images-image-parts {
     position: absolute;
@@ -897,6 +896,55 @@ main {
     border: 4px solid orange;
 }
 
+
+/* TODO - merge above and below */
+
+
+.detail-images-image-documentimagepart {
+    position: absolute;
+    border: 1px solid #373C8E;
+    background: rgba(55 ,60, 142, 0.35);
+    cursor: pointer;
+}
+
+.detail-images-image-documentimagepart:hover {
+    background: rgba(105, 86, 200, 0.25);
+}
+
+.detail-images-image-documentimagepart-unpublished {
+    border: 1px solid #ff6b6b;
+    background: rgba(255, 107, 107, 0.35);
+}
+
+.detail-images-image-documentimagepart-unpublished:hover {
+    background: rgba(255, 107, 107, 0.25);
+}
+
+.detail-images-image-documentimagepart.active {
+    border: 1px solid #EBA82D;
+    background: rgba(235, 168, 45, 0.35);
+}
+
+.detail-images-image-documentimagepart.active:hover {
+    background: rgba(235, 168, 45, 0.2);
+}
+
+.detail-images-image-documentimagepart-new {
+    cursor: default;
+    border: 1px solid green;
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.detail-images-image-documentimagepart-new:hover {
+    background: rgba(0, 255, 0, 0.05);
+}
+
+.drawable .detail-images-image-documentimagepart-new {
+    cursor: crosshair;
+}
+
+/* Navigation */
+
 #detail-navigation {
     text-align: right;
 }
@@ -917,12 +965,16 @@ main {
     margin: 0 0.5em;
 }
 
+/* Title */
+
 #transcription-exercise-title {
     font-size: 2em;
     font-weight: 900;
     margin: 0.4em 0;
     line-height: 1.3em;
 }
+
+/* Core Info */
 
 #transcription-exercise-coreinfo {
     text-align: left;
@@ -957,18 +1009,21 @@ main {
     font-size: 0.9em;
 }
 
+/* Exercise */
+
 .transcription-exercise-controlsdropdown {
     display: none;
     background: rgba(255, 255, 255, 0.1);
     color: white;
     padding: 1em;
     font-size: 1em;
+    line-height: 1.7em;
 }
 
 .transcription-exercise-controlsdropdown label {
     font-weight: bold;
     font-size: 1.1em;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.3em;
     display: block;
 }
 

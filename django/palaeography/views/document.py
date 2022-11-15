@@ -1,4 +1,4 @@
-from django.views.generic import (DetailView, ListView)
+from django.views.generic import (DetailView, ListView, RedirectView)
 from django.db.models import Q, Count, Prefetch
 from django.db.models.functions import Coalesce
 from django.urls import reverse
@@ -8,14 +8,14 @@ from . import common
 
 class DocumentDetailView(DetailView):
     """
-    Class-based view for item detail template
+    Class-based view for document detail template
     """
     template_name = 'palaeography/detail.html'
     model = models.Document
 
     def get_queryset(self):
         queryset = self.model.objects.all()
-        # Only show unpublished items to admins
+        # Only show unpublished documents to admins
         if not self.request.user.is_staff:
             queryset = queryset.filter(admin_published=True)
         # Only show documents that have images
@@ -47,7 +47,7 @@ class DocumentDetailView(DetailView):
 
 class DocumentListView(ListView):
     """
-    Class-based view for item list template
+    Class-based view for document list template
     """
     template_name = 'palaeography/list.html'
     model = models.Document
@@ -55,7 +55,7 @@ class DocumentListView(ListView):
 
     def get_queryset(self):
         queryset = self.model.objects.all()
-        # Only show unpublished items to admins
+        # Only show unpublished documents to admins
         if not self.request.user.is_staff:
             queryset = queryset.filter(admin_published=True)
         # Only show documents that have images
@@ -188,3 +188,46 @@ class DocumentListView(ListView):
         ]
 
         return context
+
+
+class DocumentImagePartAddRedirectView(RedirectView):
+    """
+    Class-based view for adding new document image parts and redirecting to parent document
+    """
+    permanent = False
+
+    def get_redirect_url(self, *args, **kwargs):
+        # Calculate line_index and part_index_in_line values
+        add_after_image_part_id = self.request.POST.get('add_after_image_part_id')
+        if add_after_image_part_id:
+            add_after_part = models.DocumentImagePart.objects.get(id=add_after_image_part_id)
+            # part index in line
+            part_index_in_line = add_after_part.part_index_in_line + 1
+            # line index
+            line_index = add_after_part.line_index + 1 if self.request.POST.get('newline') else add_after_part.line_index
+        else:
+            line_index = 0
+            part_index_in_line = 0
+
+        # Save DocumentImagePart object
+        document_image_part_obj = models.DocumentImagePart.objects.create(
+            document_image_id=self.request.POST.get('document_image_id'),
+            # Cropped image measurements
+            image_cropped_left=self.request.POST.get('image_cropped_left'),
+            image_cropped_top=self.request.POST.get('image_cropped_top'),
+            image_cropped_width=self.request.POST.get('image_cropped_width'),
+            image_cropped_height=self.request.POST.get('image_cropped_height'),
+            # Index/order in solution (by line, part)
+            line_index=line_index,
+            part_index_in_line=part_index_in_line,
+            # Content
+            text = self.request.POST.get('text')
+        )
+        # Optional fields
+        document_image_part_obj.text_before_part = self.request.POST.get('text_before_part')
+        document_image_part_obj.text_after_part = self.request.POST.get('text_after_part')
+        document_image_part_obj.help_text = self.request.POST.get('help_text')
+        document_image_part_obj.cew = self.request.POST.get('cew')
+        document_image_part_obj.save()
+
+        return reverse('palaeography:document-detail', args=[18])

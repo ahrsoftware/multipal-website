@@ -19,11 +19,11 @@
         <div id="detail-images-controls-reset" class="detail-controls-item" title="Reset Image"><i class="fas fa-redo-alt"></i></div>
         <!-- Download Image -->
         <div id="detail-images-controls-downloadimage" class="detail-controls-item" title="Download Image">
-            <a href="{{ object.default_image.image.url }}" download><i class="fas fa-download"></i></a>
+            <a href="{{ object.default_image.image.url }}" title="download image" download><i class="fas fa-download"></i></a>
         </div>
         {% if user.is_authenticated %}
-            <!-- Add New Document Image Part/Transcription -->
-            <div id="detail-images-controls-newdocumentimagepart" class="detail-controls-item" title="Add New Transcription"><i class="fas fa-plus-square"></i></div>
+            <!-- Add New Document Image Part -->
+            <div id="detail-images-controls-newdocumentimagepart" class="detail-controls-item" title="Add New Image Part"><i class="fas fa-plus-square"></i></div>
         {% endif %}
 
         <!-- Zoom -->
@@ -214,6 +214,58 @@
                     </div>
                 </div>
             {% endfor %}
+        </div>
+
+        <!-- Admin -->
+        <div id="transcription-exercise-admin" class="transcription-exercise-controlsdropdown">
+            <form id="transcription-exercise-admin-form" enctype="multipart/form-data" name="" method="POST" action="{% url 'palaeography:document-imagepart-add' %}">
+                {% csrf_token %}
+                <!-- Hidden form fields -->
+                <input type="hidden" name="document_image_id" required>
+                <input type="hidden" name="image_cropped_left" required>
+                <input type="hidden" name="image_cropped_top" required>
+                <input type="hidden" name="image_cropped_width" required>
+                <input type="hidden" name="image_cropped_height" required>
+                <!-- Visible form fields -->
+                <div>
+                    <label for="admin-form-textbeforepart">Text before solution</label>
+                    <input type="text" id="admin-form-textbeforepart" name="text_before_part">
+                </div>
+                <div>
+                    <label for="admin-form-text">Correct solution text</label>
+                    <input type="text" id="admin-form-text" name="text" required>
+                </div>
+                <div>
+                    <label for="admin-form-textafterpart">Text after solution</label>
+                    <input type="text" id="admin-form-textafterpart" name="text_after_part">
+                </div>
+                <div>
+                    <label for="admin-form-helptext">Help text</label>
+                    <input type="text" id="admin-form-helptext" name="help_text">
+                </div>
+                <div>
+                    <label for="admin-form-cew">cew</label>
+                    <input type="text" id="admin-form-cew" name="cew">
+                </div>
+                {% for document_image in object.documentimages.all %}
+                    {% if document_image.documentimagepart_set.all %}
+                        <div>
+                            <label for="admin-form-addafterimagepartid">Add after image part:</label>
+                            <select id="admin-form-addafterimagepartid" name="add_after_image_part_id" required>
+                                    <option>(Add to start)</option>
+                                {% for image_part in document_image.documentimagepart_set.all %}
+                                    <option value="{{ image_part.id }}">{{ image_part.text }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="admin-form-newline">Start on a new line?</label>
+                            <input type="checkbox" id="admin-form-newline" name="newline">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit">Add New Document Image Part</button>
+            </form>
         </div>
 
         <!-- Exercises -->

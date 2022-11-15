@@ -9,8 +9,6 @@ $(document).ready(function(){
     var showCorrectAnswerInlineCurrent = false;
     var showCorrectAnswerInlineAll = false;
 
-    $('.detail-controls div').attr('data-placement', 'bottom').tooltip();
-
     // Ensure transcription inputs are cleared on page load (stops browser caching on page refresh)
     $('.transcription-exercise-line-part-input').each(function(){$(this).val('').removeClass('correct').removeClass('wrong');});
 
@@ -74,6 +72,8 @@ $(document).ready(function(){
     $('#transcription-exercise-controls-positiondetails').on('click', function(){
         $('.transcription-exercise-linecount, .transcription-exercise-line-part-count').toggleClass('active');
     });
+    // Full solutions
+    $('#transcription-exercise-controls-admin').on('click', function(){ controlsDropdownContentToggle(this); });
 
     // Score transcription attempts
     function scoreTranscriptionAttempt(inputField, ignoreWrongAnswers=false){
@@ -267,13 +267,13 @@ $(document).ready(function(){
         zoomInOrOut();
     });
     // Zoom: Slider
-    function zoomItemImage(zoomLevel){
+    function zoomImage(zoomLevel){
         $('.detail-images-image').css({'transform': 'scale(' + zoomLevel + ', ' + zoomLevel + ')', 'transform-origin': '0% 0%'});
     }
     // Set zoom via slider
     $('#detail-images-controls-zoom-range-slider').on('input', function(){
         let zoomLevel = $(this).val() / 100;
-        zoomItemImage(zoomLevel);
+        zoomImage(zoomLevel);
     }).on('change', function(){$(this).blur();});  // Stops the tooltip from remaining visible when focus stays on range slider
     // Set zoom/scale for 100% width of the image in the container
     function zoomFullWidth(){
@@ -288,5 +288,85 @@ $(document).ready(function(){
         zoomFullWidth();
         $('#detail-images-container').scrollTop(0).scrollLeft(0);
     }).trigger('click'); // Reset the image viewer on page load
+
+
+    //
+    // Drawing a rectangle (to represent a new Document Image Part)
+    //
+    let canDrawNewDocumentImagePart = false;
+    let isDrawingNewDocumentImagePart = false;  // User is in the process of drawing (mousedown starts, mouseup ends)
+    let newDocumentImagePartPosition;  // Top, left, width, height values of the new part
+    // Can start drawing rectangle
+    $('#detail-images-controls-newdocumentimagepart').on('click', function(){
+        // If can draw state is active, deactivate it
+        if(canDrawNewDocumentImagePart){
+            $(this).removeClass('active');
+            canDrawNewDocumentImagePart = false;
+            $('.detail-images-image').removeClass('drawable');
+        }
+        // If can draw state is deactive, activate it
+        else {
+            $(this).addClass('active');
+            canDrawNewDocumentImagePart = true;
+            $('.detail-images-image-documentimagepart-new').remove();
+            $('.detail-images-image').addClass('drawable');
+        }
+    });
+    // Start drawing rectangle
+    $('.detail-images-image').on('mousedown', function(e){
+        // Only allow to draw a rectangle if a current annotation isn't already happening
+        if(canDrawNewDocumentImagePart){
+
+            // Reset position values
+            newDocumentImagePartPosition = {left: 0, top: 0, width: 0, height: 0}
+            // Set new position values
+            let zoomLevel = $('#detail-images-controls-zoom-range-slider').val()/100;
+            newDocumentImagePartPosition.left = (e.pageX - $(this).offset().left) / zoomLevel;
+            newDocumentImagePartPosition.top = (e.pageY - $(this).offset().top) / zoomLevel;
+
+            // Create and append the new rectangle
+            let newDocumentImagePartHtml = `<div class="detail-images-image-documentimagepart detail-images-image-documentimagepart-new" style="height: 2px; width: 2px; left: ` + newDocumentImagePartPosition.left + `px; top: ` + newDocumentImagePartPosition.top + `px;"></div>`;
+            $(this).append(newDocumentImagePartHtml);
+
+            // Activate drawing boolean
+            isDrawingNewDocumentImagePart = true;
+        }
+    });
+    // Drawing size of rectangle
+    $('.detail-images-image').on('mousemove', function(e){
+        if (isDrawingNewDocumentImagePart){
+            let zoomLevel = $('#detail-images-controls-zoom-range-slider').val()/100;
+            newDocumentImagePartPosition.width = ((e.pageX - $(this).offset().left) / zoomLevel) - newDocumentImagePartPosition.left;
+            newDocumentImagePartPosition.height = ((e.pageY - $(this).offset().top) / zoomLevel) - newDocumentImagePartPosition.top;
+
+            $('.detail-images-image-documentimagepart-new').first().css({'height': newDocumentImagePartPosition.height + 'px', 'width': newDocumentImagePartPosition.width + 'px'})
+        }
+    });
+    // Finish drawing rectangle
+    $('.detail-images-image').on('mouseup', function(){
+        if (isDrawingNewDocumentImagePart){
+            isDrawingNewDocumentImagePart = false;
+            $('#detail-images-controls-newdocumentimagepart').trigger('click');
+
+            // Launch the new document image part form
+            $('#transcription-exercise-controls-admin').click();
+            // Fill in hidden field values:
+            // Document Image
+            var document_image_id = $('.detail-images-image.active').first().attr('id').split('-').slice(-1)[0];
+            $('#transcription-exercise-admin-form input[name="document_image_id"]').val(document_image_id);
+            // Positions
+            $('#transcription-exercise-admin-form input[name="image_cropped_left"]').val(newDocumentImagePartPosition.left);
+            $('#transcription-exercise-admin-form input[name="image_cropped_top"]').val(newDocumentImagePartPosition.top);
+            $('#transcription-exercise-admin-form input[name="image_cropped_width"]').val(newDocumentImagePartPosition.width);
+            $('#transcription-exercise-admin-form input[name="image_cropped_height"]').val(newDocumentImagePartPosition.height);
+        }
+    });
+    // Stop the item image img object from dragging/selecting when trying to draw a rectangle
+    $('.detail-images-image').bind('dragstart', function(){ return false; });
+
+
+    // jQuery UI
+    // $('.detail-images-image').draggable();
+    $('.detail-controls div').attr('data-placement', 'bottom').tooltip();
 
 });
