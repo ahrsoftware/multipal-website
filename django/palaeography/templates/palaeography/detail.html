@@ -113,7 +113,9 @@
             <div id="transcription-exercise-controls-positiondetails" class="detail-controls-item" title="Position Details"><i class="fas fa-list-ol"></i></div>
             {% if user.is_authenticated %}
                 <!-- Add New Document Image Part -->
-                <div id="transcription-exercise-controls-newdocumentimagepart" class="detail-controls-item" title="Add New Image Part"><i class="fas fa-plus-square"></i></div>
+                <div id="transcription-exercise-controls-newdocumentimagepart" class="detail-controls-item" title="Add New Part"><i class="fas fa-plus-square"></i></div>
+                <!-- Delete Document Image Part -->
+                <div id="transcription-exercise-controls-deletedocumentimagepart" class="detail-controls-item" title="Delete a Part"><i class="fas fa-trash"></i></div>
             {% endif %}
         </div>
 
@@ -211,9 +213,9 @@
             {% endfor %}
         </div>
 
-        <!-- Admin -->
+        <!-- Add New Document Image Part -->
         <div id="transcription-exercise-newdocumentimagepart" class="transcription-exercise-controlsdropdown">
-            <form id="transcription-exercise-newdocumentimagepart-form" enctype="multipart/form-data" name="" method="POST" action="{% url 'palaeography:document-imagepart-add' %}">
+            <form id="transcription-exercise-newdocumentimagepart-form" enctype="multipart/form-data" method="POST" action="{% url 'palaeography:document-imagepart-add' %}">
                 {% csrf_token %}
                 <!-- Hidden form fields -->
                 <input type="hidden" name="document_image_id" required>
@@ -266,6 +268,36 @@
                     {% endif %}
                 {% endfor %}
                 <button type="submit">Add New Document Image Part</button>
+            </form>
+        </div>
+
+        <!-- Delete a Document Image Part -->
+        <div id="transcription-exercise-deletedocumentimagepart" class="transcription-exercise-controlsdropdown">
+            <form id="transcription-exercise-deletedocumentimagepart-form" enctype="multipart/form-data" method="POST" action="{% url 'palaeography:document-imagepart-delete' %}">
+                {% csrf_token %}
+                <input type="hidden" name="document_id" value="{{ object.id }}">
+
+                {% for document_image in object.documentimages.all %}
+                    {% if document_image.documentimagepart_set.all %}
+                        <div>
+                            <label for="deletedocumentimagepart-form-deleteimagepartid">Delete the following part:</label>
+                            <select id="deletedocumentimagepart-form-deleteimagepartid" name="delete_document_image_part_id">
+                                {% for image_part in document_image.documentimagepart_set.all %}
+                                    <option value="{{ image_part.id }}"{% if forloop.last %} selected="selected"{% endif %}>
+                                        {{ image_part.position_and_text }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div>
+                            <label for="deletedocumentimagepart-form-confirm">
+                                Tick to confirm you understand that this action cannot be undone and this part will be permanently deleted
+                            </label>
+                            <input type="checkbox" id="deletedocumentimagepart-form-confirm" name="confirm" required>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <button type="submit">Delete Document Image Part</button>
             </form>
         </div>
 

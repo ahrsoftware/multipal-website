@@ -166,7 +166,10 @@ $(document).ready(function(){
         if (showCorrectAnswerInlineCurrent && lastActiveDocumentImagePartId !== documentImagePartId){
             $('#transcription-exercise-controls-correctcurrent').first().trigger('click');
         }
-        lastActiveDocumentImagePartId = documentImagePartId;  // Update last active global var
+        // Set the relevant form field values
+        $('#deletedocumentimagepart-form-deleteimagepartid').val(documentImagePartId);
+        // Update last active global var
+        lastActiveDocumentImagePartId = documentImagePartId;
     }).on('focusout', function(){
         $('.detail-images-image-parts-part').removeClass('active');
         $('#transcription-exercise-part-popup').hide()
@@ -288,7 +291,7 @@ $(document).ready(function(){
 
 
     //
-    // Drawing a rectangle (to represent a new Document Image Part)
+    // Document Image Part controls (e.g. add, delete)
     //
     let canDrawNewDocumentImagePart = false;
     let isDrawingNewDocumentImagePart = false;  // User is in the process of drawing (mousedown starts, mouseup ends)
@@ -358,6 +361,11 @@ $(document).ready(function(){
     });
     // Stop the item image img object from dragging/selecting when trying to draw a rectangle
     $('.detail-images-image').bind('dragstart', function(){ return false; });
+
+    // Delete a Document Part
+    $('#transcription-exercise-controls-deletedocumentimagepart').on('click', function(){
+        controlsDropdownContentToggle(this);
+    });
 
 
     // jQuery UI
