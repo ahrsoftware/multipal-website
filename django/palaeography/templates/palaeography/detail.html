@@ -21,11 +21,6 @@
         <div id="detail-images-controls-downloadimage" class="detail-controls-item" title="Download Image">
             <a href="{{ object.default_image.image.url }}" title="download image" download><i class="fas fa-download"></i></a>
         </div>
-        {% if user.is_authenticated %}
-            <!-- Add New Document Image Part -->
-            <div id="detail-images-controls-newdocumentimagepart" class="detail-controls-item" title="Add New Image Part"><i class="fas fa-plus-square"></i></div>
-        {% endif %}
-
         <!-- Zoom -->
         <div id="detail-images-controls-zoom">
             <!-- Zoom: Out -->
@@ -116,9 +111,9 @@
             <div id="transcription-exercise-controls-correctcurrent" class="detail-controls-item" title="Current Correct Answer"><i class="fas fa-check"></i></div>
             <!-- Position Details -->
             <div id="transcription-exercise-controls-positiondetails" class="detail-controls-item" title="Position Details"><i class="fas fa-list-ol"></i></div>
-            <!-- Admin -->
-            {% if request.user.is_staff %}
-                <div id="transcription-exercise-controls-admin" class="detail-controls-item" title="Admin"><i class="fas fa-cog"></i></div>
+            {% if user.is_authenticated %}
+                <!-- Add New Document Image Part -->
+                <div id="transcription-exercise-controls-newdocumentimagepart" class="detail-controls-item" title="Add New Image Part"><i class="fas fa-plus-square"></i></div>
             {% endif %}
         </div>
 
@@ -217,8 +212,8 @@
         </div>
 
         <!-- Admin -->
-        <div id="transcription-exercise-admin" class="transcription-exercise-controlsdropdown">
-            <form id="transcription-exercise-admin-form" enctype="multipart/form-data" name="" method="POST" action="{% url 'palaeography:document-imagepart-add' %}">
+        <div id="transcription-exercise-newdocumentimagepart" class="transcription-exercise-controlsdropdown">
+            <form id="transcription-exercise-newdocumentimagepart-form" enctype="multipart/form-data" name="" method="POST" action="{% url 'palaeography:document-imagepart-add' %}">
                 {% csrf_token %}
                 <!-- Hidden form fields -->
                 <input type="hidden" name="document_image_id" required>
@@ -228,39 +223,45 @@
                 <input type="hidden" name="image_cropped_height" required>
                 <!-- Visible form fields -->
                 <div>
-                    <label for="admin-form-textbeforepart">Text before solution</label>
-                    <input type="text" id="admin-form-textbeforepart" name="text_before_part">
+                    <label for="newdocumentimagepart-form-textbeforepart">Text before solution</label>
+                    <input type="text" id="newdocumentimagepart-form-textbeforepart" name="text_before_part">
                 </div>
                 <div>
-                    <label for="admin-form-text">Correct solution text</label>
-                    <input type="text" id="admin-form-text" name="text" required>
+                    <label for="newdocumentimagepart-form-text">Correct solution text</label>
+                    <input type="text" id="newdocumentimagepart-form-text" name="text" required>
                 </div>
                 <div>
-                    <label for="admin-form-textafterpart">Text after solution</label>
-                    <input type="text" id="admin-form-textafterpart" name="text_after_part">
+                    <label for="newdocumentimagepart-form-textafterpart">Text after solution</label>
+                    <input type="text" id="newdocumentimagepart-form-textafterpart" name="text_after_part">
                 </div>
                 <div>
-                    <label for="admin-form-helptext">Help text</label>
-                    <input type="text" id="admin-form-helptext" name="help_text">
+                    <label for="newdocumentimagepart-form-helptext">Help text</label>
+                    <input type="text" id="newdocumentimagepart-form-helptext" name="help_text">
                 </div>
                 <div>
-                    <label for="admin-form-cew">cew</label>
-                    <input type="text" id="admin-form-cew" name="cew">
+                    <label for="newdocumentimagepart-form-cew">cew</label>
+                    <input type="text" id="newdocumentimagepart-form-cew" name="cew">
                 </div>
                 {% for document_image in object.documentimages.all %}
                     {% if document_image.documentimagepart_set.all %}
                         <div>
-                            <label for="admin-form-addafterimagepartid">Add after image part:</label>
-                            <select id="admin-form-addafterimagepartid" name="add_after_image_part_id" required>
-                                    <option>(Add to start)</option>
+                            <label for="newdocumentimagepart-form-addafterimagepartid">Add after part:</label>
+                            <select id="newdocumentimagepart-form-addafterimagepartid" name="add_after_image_part_id">
+                                    <option value="">(Add to start)</option>
                                 {% for image_part in document_image.documentimagepart_set.all %}
-                                    <option value="{{ image_part.id }}">{{ image_part.text }}</option>
+                                    <option value="{{ image_part.id }}"{% if forloop.last %} selected="selected"{% endif %}>
+                                        {% if forloop.last %}
+                                            (Add to end)
+                                        {% else %}
+                                            {{ image_part.position_and_text }}
+                                        {% endif %}
+                                    </option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div>
-                            <label for="admin-form-newline">Start on a new line?</label>
-                            <input type="checkbox" id="admin-form-newline" name="newline">
+                            <label for="newdocumentimagepart-form-newline">Start a new line?</label>
+                            <input type="checkbox" id="newdocumentimagepart-form-newline" name="newline">
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -297,7 +298,7 @@
                         <!-- Part - Count -->
                         <div class="transcription-exercise-line-part-count">{{ image_part.part_count_in_line }}</div>
                         <!-- Part - Input -->
-                        <input id="transcription-exercise-line-part-{{ image_part.id }}" class="transcription-exercise-line-part-input" type="text" size="{{ image_part.word_length }}" title="Transcribe this part of the image" data-correctanswer="{{ image_part.text }}"{% if image_part.help_text %} data-helptext="{{ image_part.help_text }}"{% endif %} data-left="{{ image_part.image_cropped_left }}" data-top="{{ image_part.image_cropped_top }}" data-width="{{ image_part.image_cropped_width }}" data-height="{{ image_part.image_cropped_height }}" data-linecount="{{ image_part.line_count }}" data-partcountinline="{{ image_part.part_count_in_line }}">
+                        <input id="transcription-exercise-line-part-{{ image_part.id }}" class="transcription-exercise-line-part-input" type="text" size="{{ image_part.word_length }}" title="Transcribe this part of the image" data-correctanswer="{{ image_part.text }}"{% if image_part.help_text %} data-helptext="{{ image_part.help_text }}"{% endif %} data-left="{{ image_part.image_cropped_left }}" data-top="{{ image_part.image_cropped_top }}" data-width="{{ image_part.image_cropped_width }}" data-height="{{ image_part.image_cropped_height }}" data-position="{{ image_part.position }}">
                         <!-- Part - Answer -->
                         <div id="transcription-exercise-line-part-answer-{{ image_part.id }}" class="transcription-exercise-line-part-answer">{{ image_part.text }}</div>
                     </div>

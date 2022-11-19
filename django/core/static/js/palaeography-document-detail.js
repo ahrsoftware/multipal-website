@@ -72,8 +72,6 @@ $(document).ready(function(){
     $('#transcription-exercise-controls-positiondetails').on('click', function(){
         $('.transcription-exercise-linecount, .transcription-exercise-line-part-count').toggleClass('active');
     });
-    // Full solutions
-    $('#transcription-exercise-controls-admin').on('click', function(){ controlsDropdownContentToggle(this); });
 
     // Score transcription attempts
     function scoreTranscriptionAttempt(inputField, ignoreWrongAnswers=false){
@@ -206,8 +204,7 @@ $(document).ready(function(){
         var unit = 'px';
 
         // Set the position details (i.e. line count and part count in line)
-        var positiontext = 'Line: ' + $(this).attr('data-linecount') + ', Part: ' + $(this).attr('data-partcountinline');
-        $('#transcription-exercise-part-popup-position').text(positiontext);
+        $('#transcription-exercise-part-popup-position').text($(this).attr('data-position'));
 
         // Set the image in the preview as the current image part's cropped image
         var img = $('.detail-images-image.active').first().find('img');
@@ -297,7 +294,8 @@ $(document).ready(function(){
     let isDrawingNewDocumentImagePart = false;  // User is in the process of drawing (mousedown starts, mouseup ends)
     let newDocumentImagePartPosition;  // Top, left, width, height values of the new part
     // Can start drawing rectangle
-    $('#detail-images-controls-newdocumentimagepart').on('click', function(){
+    $('#transcription-exercise-controls-newdocumentimagepart').on('click', function(){
+        controlsDropdownContentToggle(this);
         // If can draw state is active, deactivate it
         if(canDrawNewDocumentImagePart){
             $(this).removeClass('active');
@@ -346,19 +344,16 @@ $(document).ready(function(){
     $('.detail-images-image').on('mouseup', function(){
         if (isDrawingNewDocumentImagePart){
             isDrawingNewDocumentImagePart = false;
-            $('#detail-images-controls-newdocumentimagepart').trigger('click');
 
-            // Launch the new document image part form
-            $('#transcription-exercise-controls-admin').click();
             // Fill in hidden field values:
             // Document Image
             var document_image_id = $('.detail-images-image.active').first().attr('id').split('-').slice(-1)[0];
-            $('#transcription-exercise-admin-form input[name="document_image_id"]').val(document_image_id);
+            $('#transcription-exercise-newdocumentimagepart-form input[name="document_image_id"]').val(document_image_id);
             // Positions
-            $('#transcription-exercise-admin-form input[name="image_cropped_left"]').val(newDocumentImagePartPosition.left);
-            $('#transcription-exercise-admin-form input[name="image_cropped_top"]').val(newDocumentImagePartPosition.top);
-            $('#transcription-exercise-admin-form input[name="image_cropped_width"]').val(newDocumentImagePartPosition.width);
-            $('#transcription-exercise-admin-form input[name="image_cropped_height"]').val(newDocumentImagePartPosition.height);
+            $('#transcription-exercise-newdocumentimagepart-form input[name="image_cropped_left"]').val(newDocumentImagePartPosition.left);
+            $('#transcription-exercise-newdocumentimagepart-form input[name="image_cropped_top"]').val(newDocumentImagePartPosition.top);
+            $('#transcription-exercise-newdocumentimagepart-form input[name="image_cropped_width"]').val(newDocumentImagePartPosition.width);
+            $('#transcription-exercise-newdocumentimagepart-form input[name="image_cropped_height"]').val(newDocumentImagePartPosition.height);
         }
     });
     // Stop the item image img object from dragging/selecting when trying to draw a rectangle

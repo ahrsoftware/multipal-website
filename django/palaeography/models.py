@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from PIL import Image, ImageOps
 from django.core.files import File
@@ -417,6 +418,71 @@ class DocumentImagePart(models.Model):
     @property
     def part_count_in_line(self):
         return self.part_index_in_line + 1
+
+    @property
+    def position(self):
+        return f"Line {self.line_count}, Part {self.part_count_in_line}"
+
+    @property
+    def position_and_text(self):
+        return f"({self.position}) - {self.text}"
+
+    @property
+    def count_all_parts_in_line(self):
+        return DocumentImagePart.objects.filter(
+            document_image=self.document_image,
+            line_index=self.line_index
+        ).count()
+
+
+
+    def move_other_parts_positions(self, add_after_image_part_id=None, delete=False, new_line=False):
+        """
+        When a part is added/edited/deleted its change in position affects other existing parts
+
+        """
+
+        # Move parts (increase/decrease by 1 depending on if new part is being added/deleted)
+        if not new_line:
+            move = 1 if not delete else -1
+            DocumentImagePart.objects.filter(
+                ~Q(id=self.id),
+                document_image=self.document_image,
+                line_index=self.line_index,
+                part_index_in_line__gte=self.part_index_in_line
+            ).update(
+                part_index_in_line=models.F('part_index_in_line') + move
+            )
+
+        # Insert new line
+        move_line = None
+        parts_from_old_line = []
+        if new_line and not delete:
+            move_line = 1
+            # If a new line has been started (that isn't the very first line)
+            # all parts after the new part in the current line 
+            # must be moved to the new part's new line
+            if self.line_index > 0 and add_after_image_part_id:
+                for i, part in enumerate(DocumentImagePart.objects.filter(
+                    document_image=self.document_image,
+                    line_index=self.line_index - 1,
+                    part_index_in_line__gt=DocumentImagePart.objects.get(id=add_after_image_part_id).part_index_in_line
+                ).order_by('part_index_in_line', 'id')):
+                    part.line_index += 1
+                    part.part_index_in_line = i + 1
+                    part.save()
+                    parts_from_old_line.append(part.id)
+        # Remove blank line if the only part in the line has been deleted
+        elif delete and self.count_all_parts_in_line == 1:
+            move_line = -1
+        # Move parts' line index up/down if specified
+        if move_line:
+            DocumentImagePart.objects.filter(
+                ~Q(id=self.id),
+                ~Q(id__in=parts_from_old_line),
+                document_image=self.document_image,
+                line_index__gte=self.line_index
+            ).update(line_index=models.F('line_index') + move_line)
 
     class Meta:
         ordering = [Upper('document_image__document__name'), 'document_image__order_in_document', 'document_image__id', 'line_index', 'part_index_in_line', 'id']

@@ -198,13 +198,20 @@ class DocumentImagePartAddRedirectView(RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         # Calculate line_index and part_index_in_line values
+        new_line = self.request.POST.get('newline')
         add_after_image_part_id = self.request.POST.get('add_after_image_part_id')
+        # If adding after an existing part
         if add_after_image_part_id:
             add_after_part = models.DocumentImagePart.objects.get(id=add_after_image_part_id)
-            # part index in line
-            part_index_in_line = add_after_part.part_index_in_line + 1
-            # line index
-            line_index = add_after_part.line_index + 1 if self.request.POST.get('newline') else add_after_part.line_index
+            # Move to a new line after the specified part
+            if new_line:
+                part_index_in_line = 0
+                line_index = add_after_part.line_index + 1
+            # Add within current line after specified part
+            else:
+                part_index_in_line = add_after_part.part_index_in_line + 1
+                line_index = add_after_part.line_index
+        # If adding to start
         else:
             line_index = 0
             part_index_in_line = 0
@@ -230,4 +237,11 @@ class DocumentImagePartAddRedirectView(RedirectView):
         document_image_part_obj.cew = self.request.POST.get('cew')
         document_image_part_obj.save()
 
-        return reverse('palaeography:document-detail', args=[18])
+        # Update other parts in response to this new part
+        document_image_part_obj.move_other_parts_positions(add_after_image_part_id, delete=False, new_line=new_line=='on')
+
+        # Return to document page
+        document_id = models.DocumentImage.objects.get(
+            id=self.request.POST.get('document_image_id')
+        ).document_id
+        return reverse('palaeography:document-detail', args=[document_id])
