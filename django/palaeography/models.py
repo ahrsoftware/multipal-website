@@ -438,7 +438,8 @@ class DocumentImagePart(models.Model):
     def move_other_parts_positions(self, add_after_image_part_id=None, delete=False, new_line=False):
         """
         When a part is added/edited/deleted its change in position affects other existing parts
-
+        This method moves other parts' positions relative to the action (insert/edit/deletion)
+        of this object
         """
 
         # Move parts (increase/decrease by 1 depending on if new part is being added/deleted)
