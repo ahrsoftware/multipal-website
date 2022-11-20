@@ -138,10 +138,10 @@ class GenericSlAdminView(admin.ModelAdmin):
 # Inlines
 
 
-class DocumentImageInline(admin.TabularInline):
+class DocumentImageInline(admin.StackedInline):
     """A subform/inline form for DocumentHand to be used in DocumentAdmin"""
     model = models.DocumentImage
-    extra = 1
+    extra = 0
     exclude = ('image_thumbnail',)
     readonly_fields = ('meta_created_datetime',
                        'meta_lastupdated_datetime')
@@ -160,7 +160,13 @@ class DocumentAdminView(GenericAdminView):
                     'meta_created_datetime',
                     'meta_lastupdated_by',
                     'meta_lastupdated_datetime')
+    list_filter = ('admin_published', 'type', 'meta_created_by')
     inlines = (DocumentImageInline,)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.select_related('type', 'meta_created_by', 'meta_lastupdated_by')
+        return queryset
 
 
 # Register admin views

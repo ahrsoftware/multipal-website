@@ -251,6 +251,11 @@ $(document).ready(function(){
 
     // Image Controls
 
+    // Reveal All Parts
+    $('#detail-images-controls-revealallparts').on('click', function(){
+        $('.detail-images-image-parts-part').toggleClass('revealall');
+    });
+
     // Zoom
     function zoomInOrOut(zoomOut=false){
         let slider = $('#detail-images-controls-zoom-range-slider');
@@ -282,7 +287,6 @@ $(document).ready(function(){
         var scale = (imageContainerWidth / imageWidth) * 100;
         $('#detail-images-controls-zoom-range-slider').val(scale).trigger('input');
     }
-
     // Reset image viewer to default
     $('#detail-images-controls-reset').on('click', function(){
         zoomFullWidth();

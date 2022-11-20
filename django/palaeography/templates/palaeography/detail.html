@@ -21,6 +21,9 @@
         <div id="detail-images-controls-downloadimage" class="detail-controls-item" title="Download Image">
             <a href="{{ object.default_image.image.url }}" title="download image" download><i class="fas fa-download"></i></a>
         </div>
+        <!-- Reveal All Parts -->
+        <div id="detail-images-controls-revealallparts" class="detail-controls-item" title="Reveal All Parts on Image"><i class="fas fa-border-none"></i></div>
+        
         <!-- Zoom -->
         <div id="detail-images-controls-zoom">
             <!-- Zoom: Out -->
@@ -56,6 +59,9 @@
             <a href="{{ navigate_all_url }}"><i class="fas fa-th"></i> All</a>
             <a href="{{ navigate_previous_url }}"><i class="fas fa-chevron-left"></i> Previous</a>
             <a href="{{ navigate_next_url }}">Next <i class="fas fa-chevron-right"></i></a>
+            {% if user.is_staff %}
+                <a id="detail-navigation-admindashboard" href="{{ admin_url }}"><i class="fas fa-cog"></i> View in Admin Dashboard</a>
+            {% endif %}
         </div>
 
         <!-- Title -->
@@ -167,10 +173,16 @@
                     <span>{{ object.date_full }}</span>
                 </div>
             {% endif %}
-            {% if object.meta_created_by %}
+            {% if object.meta_created_datetime %}
                 <div>
-                    <label>Exercise Author:</label>
-                    <span>{{ object.meta_created_by }}</span>
+                    <label>Tutorial Created:</label>
+                    <span>{{ object.meta_created_datetime }}</span>
+                </div>
+            {% endif %}
+            {% if object.meta_lastupdated_datetime %}
+                <div>
+                    <label>Tutorial Last Updated:</label>
+                    <span>{{ object.meta_lastupdated_datetime }}</span>
                 </div>
             {% endif %}
             {% if object.information %}

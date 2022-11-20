@@ -133,15 +133,15 @@ class Document(models.Model):
     A historical document (e.g. a book, a coin, etc.)
     """
 
-    m2m_related_name = 'documents'
+    related_name = 'documents'
 
     name = models.CharField(max_length=1000)
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
     language = models.CharField(max_length=10, blank=True, null=True)
     ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
-    repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=m2m_related_name, db_index=True)
-    languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=m2m_related_name, db_index=True)
+    repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=related_name, db_index=True)
+    languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=related_name, db_index=True)
     information = models.TextField(blank=True, null=True)
 
     # Partial Date Range
@@ -254,13 +254,13 @@ class DocumentImage(models.Model):
     An image belonging to a document, e.g. an image of a page in a book
     """
 
-    m2m_related_name = 'documentimages'
+    related_name = 'documentimages'
 
     media_root = 'palaeography/'
     media_dir = media_root + 'documentimages/'
     media_dir_thumbnails = media_dir[:-1] + '-thumbnails/'
 
-    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name=m2m_related_name)
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name=related_name)
     difficulty = models.ForeignKey(SlDocumentImageDifficulty, on_delete=models.SET_NULL, blank=True, null=True)
     order_in_document = models.IntegerField(blank=True, null=True)
     custom_instructions = models.TextField(blank=True, null=True, help_text="If the default instructions are insufficient, please provide custom instructions to the user")
