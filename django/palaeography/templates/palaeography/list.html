@@ -91,7 +91,7 @@ Sections of this template:
     {% for object in object_list %}
         <a class="list-body-item" href="{% url 'palaeography:document-detail' object.id %}">
             <!-- Document Image -->
-            <div class="list-body-item-image" style="background-image: url('{{ object.default_image.image.url }}'); background-repeat: no-repeat; background-size: cover;"></div><!--
+            <div class="list-body-item-image" style="background-image: url('{{ object.default_image.image_thumbnail.url }}'); background-repeat: no-repeat; background-size: cover;"></div><!--
             Document Text 
             --><div class="list-body-item-text">
                 <label>{{ object.list_title }}</label>

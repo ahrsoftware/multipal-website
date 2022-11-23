@@ -227,6 +227,23 @@
 
         <!-- Add New Document Image Part -->
         <div id="transcription-exercise-newdocumentimagepart" class="transcription-exercise-controlsdropdown">
+
+            <!-- Step 1 -->
+            <div class="newdocumentimagepart-step" data-step="1">
+                <div class="newdocumentimagepart-step-title">Step 1: Draw new part</div>
+                <div>
+                    <p>
+                        Start by drawing a rectangle directly on the image to show the part of the image to transcribe (e.g. draw a rectangle around a character or word).
+                    </p>
+                    <p>
+                        To begin drawing click in the top left corner of the part and drag your cursor to the bottom right corner of the part.
+                    </p>
+                </div>
+                <div id="newdocumentimagepart-redraw">
+                    <i class="fas fa-pencil-alt"></i> Redraw Part
+                </div>
+            </div>
+
             <form id="transcription-exercise-newdocumentimagepart-form" enctype="multipart/form-data" method="POST" action="{% url 'palaeography:document-imagepart-add' %}">
                 {% csrf_token %}
                 <!-- Hidden form fields -->
@@ -235,51 +252,70 @@
                 <input type="hidden" name="image_cropped_top" required>
                 <input type="hidden" name="image_cropped_width" required>
                 <input type="hidden" name="image_cropped_height" required>
-                <!-- Visible form fields -->
-                <div>
-                    <label for="newdocumentimagepart-form-textbeforepart">Text before solution</label>
-                    <input type="text" id="newdocumentimagepart-form-textbeforepart" name="text_before_part">
+
+                <!-- Step 2 -->
+                <div class="newdocumentimagepart-step" data-step="2">
+                    <div class="newdocumentimagepart-step-title">Step 2: Position new part</div>
+                    <!-- Required fields -->
+                    {% for document_image in object.documentimages.all %}
+                        {% if document_image.documentimagepart_set.all %}
+                            <div>
+                                <label for="newdocumentimagepart-form-addafterimagepartid">Add after part:</label>
+                                <select id="newdocumentimagepart-form-addafterimagepartid" name="add_after_image_part_id">
+                                        <option value="">(Add to start)</option>
+                                    {% for image_part in document_image.documentimagepart_set.all %}
+                                        <option value="{{ image_part.id }}"{% if forloop.last %} selected="selected"{% endif %}>
+                                            {% if forloop.last %}
+                                                (Add to end)
+                                            {% else %}
+                                                {{ image_part.position_and_text }}
+                                            {% endif %}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div>
+                                <label for="newdocumentimagepart-form-newline">Start a new line?</label>
+                                <input type="checkbox" id="newdocumentimagepart-form-newline" name="newline">
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                <div>
-                    <label for="newdocumentimagepart-form-text">Correct solution text</label>
-                    <input type="text" id="newdocumentimagepart-form-text" name="text" required>
-                </div>
-                <div>
-                    <label for="newdocumentimagepart-form-textafterpart">Text after solution</label>
-                    <input type="text" id="newdocumentimagepart-form-textafterpart" name="text_after_part">
-                </div>
-                <div>
-                    <label for="newdocumentimagepart-form-helptext">Help text</label>
-                    <input type="text" id="newdocumentimagepart-form-helptext" name="help_text">
-                </div>
-                <div>
-                    <label for="newdocumentimagepart-form-cew">cew</label>
-                    <input type="text" id="newdocumentimagepart-form-cew" name="cew">
-                </div>
-                {% for document_image in object.documentimages.all %}
-                    {% if document_image.documentimagepart_set.all %}
+
+                <!-- Step 3 -->
+                <div class="newdocumentimagepart-step" data-step="3">
+                    <div class="newdocumentimagepart-step-title">Step 3: Describe new part</div>
+                    <!-- Required fields -->
+                    <div>
+                        <label for="newdocumentimagepart-form-text">Correct solution text</label>
+                        <input type="text" id="newdocumentimagepart-form-text" name="text" required>
+                    </div>
+                    <!-- Optional fields -->
+                    <div class="optional">
+                        <p>The following are optional. They appear outside of the correct solution and are used to help the user complete the exercise.</p>
                         <div>
-                            <label for="newdocumentimagepart-form-addafterimagepartid">Add after part:</label>
-                            <select id="newdocumentimagepart-form-addafterimagepartid" name="add_after_image_part_id">
-                                    <option value="">(Add to start)</option>
-                                {% for image_part in document_image.documentimagepart_set.all %}
-                                    <option value="{{ image_part.id }}"{% if forloop.last %} selected="selected"{% endif %}>
-                                        {% if forloop.last %}
-                                            (Add to end)
-                                        {% else %}
-                                            {{ image_part.position_and_text }}
-                                        {% endif %}
-                                    </option>
-                                {% endfor %}
-                            </select>
+                            <label for="newdocumentimagepart-form-textbeforepart">Text before input</label>
+                            <input type="text" id="newdocumentimagepart-form-textbeforepart" name="text_before_part">
+                        </div><!--
+                        --><div>
+                            <label for="newdocumentimagepart-form-textafterpart">Text after input</label>
+                            <input type="text" id="newdocumentimagepart-form-textafterpart" name="text_after_part">
+                        </div><!--
+                        --><div>
+                            <label for="newdocumentimagepart-form-helptext">Help text</label>
+                            <input type="text" id="newdocumentimagepart-form-helptext" name="help_text">
+                        </div><!--
+                        --><div>
+                            <label for="newdocumentimagepart-form-cew">cew</label>
+                            <input type="text" id="newdocumentimagepart-form-cew" name="cew">
                         </div>
-                        <div>
-                            <label for="newdocumentimagepart-form-newline">Start a new line?</label>
-                            <input type="checkbox" id="newdocumentimagepart-form-newline" name="newline">
-                        </div>
-                    {% endif %}
-                {% endfor %}
-                <button type="submit">Add New Document Image Part</button>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div id="newdocumentimagepart-submit">
+                    <button type="submit"><i class="fas fa-plus-square"></i> Add New Part</button>
+                </div>
             </form>
         </div>
 

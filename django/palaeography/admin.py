@@ -139,7 +139,7 @@ class GenericSlAdminView(admin.ModelAdmin):
 
 
 class DocumentImageInline(admin.StackedInline):
-    """A subform/inline form for DocumentHand to be used in DocumentAdmin"""
+    """A subform/inline form for DocumentImage to be used in DocumentAdminView"""
     model = models.DocumentImage
     extra = 0
     exclude = ('image_thumbnail',)

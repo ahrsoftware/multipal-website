@@ -885,11 +885,11 @@ main {
     border: 4px solid transparent;
     z-index: 10000;
     position: absolute;
-    cursor: pointer;
 }
 
-.detail-images-image-parts-part.reveal {
+.detail-images-image:not(.drawable) .detail-images-image-parts-part.reveal {
     background: rgba(100,200,130, 0.5);
+    cursor: pointer;
 }
 
 .detail-images-image-parts-part.revealall {
@@ -900,50 +900,18 @@ main {
     border: 4px solid orange;
 }
 
-
-/* TODO - merge above and below */
-
-
-.detail-images-image-documentimagepart {
-    position: absolute;
-    border: 1px solid #373C8E;
-    background: rgba(55 ,60, 142, 0.35);
-    cursor: pointer;
-}
-
-.detail-images-image-documentimagepart:hover {
-    background: rgba(105, 86, 200, 0.25);
-}
-
-.detail-images-image-documentimagepart-unpublished {
-    border: 1px solid #ff6b6b;
-    background: rgba(255, 107, 107, 0.35);
-}
-
-.detail-images-image-documentimagepart-unpublished:hover {
-    background: rgba(255, 107, 107, 0.25);
-}
-
-.detail-images-image-documentimagepart.active {
-    border: 1px solid #EBA82D;
-    background: rgba(235, 168, 45, 0.35);
-}
-
-.detail-images-image-documentimagepart.active:hover {
-    background: rgba(235, 168, 45, 0.2);
-}
-
-.detail-images-image-documentimagepart-new {
+.detail-images-image-parts-part.new {
     cursor: default;
-    border: 1px solid green;
+    border: 2px solid orange;
+    background: rgba(0, 255, 0, 0.05);
+    position: absolute;
+}
+
+.detail-images-image-parts-part.new:hover {
     background: rgba(0, 255, 0, 0.05);
 }
 
-.detail-images-image-documentimagepart-new:hover {
-    background: rgba(0, 255, 0, 0.05);
-}
-
-.drawable .detail-images-image-documentimagepart-new {
+.drawable .detail-images-image-parts-part.new {
     cursor: crosshair;
 }
 
@@ -1050,6 +1018,83 @@ a#detail-navigation-admindashboard {
 
 .transcription-exercise-fullsolution-instance.active {
     display: block;
+}
+
+.newdocumentimagepart-step {
+    margin-bottom: 2em;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.8em;
+}
+
+.newdocumentimagepart-step-title {
+    font-weight: bold;
+    font-size: 1.5em;
+    margin-bottom: 0.3em;
+}
+
+.newdocumentimagepart-step label,
+.newdocumentimagepart-step input,
+.newdocumentimagepart-step select {
+    display: inline-block;
+    width: fit-content;
+}
+
+.newdocumentimagepart-step label {
+    margin-right: 1em;
+}
+
+.newdocumentimagepart-step select {
+    padding: 0.1em 0.5em;
+}
+
+.newdocumentimagepart-step .optional {
+    margin-top: 0.5em;
+    padding: 0.3em;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.newdocumentimagepart-step .optional div {
+    font-size: 0.9rem;
+    display: inline-block;
+    padding: 0.5em;
+    width: 24.5%;
+}
+
+.newdocumentimagepart-step .optional label {
+    display: block;
+}
+
+.newdocumentimagepart-step .optional input {
+    width: 100%;
+}
+
+#newdocumentimagepart-redraw {
+    display: block;
+    width: fit-content;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 0.5em;
+    padding: 0.3em 0.8em;
+    margin-top: 0.5em;
+    cursor: pointer;
+}
+
+#newdocumentimagepart-redraw:hover {
+    background: rgba(255, 255, 255, 0.27);
+}
+
+#newdocumentimagepart-submit {
+    margin: 1em auto 1em auto;
+}
+
+#newdocumentimagepart-submit button {
+    border: none;
+    outline: none;
+    appearance: none;
+    padding: 0.5em 1em;
+    border-radius: 0.3em;
+    width: 100%;
+    background-color: #05c46b;
+    color: white;
 }
 
 .transcription-exercise {
