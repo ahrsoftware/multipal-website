@@ -291,8 +291,14 @@ $(document).ready(function(){
     $('#detail-images-controls-reset').on('click', function(){
         zoomFullWidth();
         $('#detail-images-container').scrollTop(0).scrollLeft(0);
-    }).trigger('click'); // Reset the image viewer on page load
+    });
 
+    // Reset the image viewer when the first active image is loaded
+    $('.detail-images-image.active').first().find('img').on('load', function(){
+        $('#detail-images-controls-reset').trigger('click');
+    }).each(function() {
+        if(this.complete) $(this).trigger('load');
+    });
 
     //
     // Document Image Part controls (e.g. add, delete)
@@ -394,7 +400,6 @@ $(document).ready(function(){
 
 
     // jQuery UI
-    // $('.detail-images-image').draggable();
     $('.detail-controls div').attr('data-placement', 'bottom').tooltip();
 
 });
