@@ -6,15 +6,15 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib.sitemaps.views import sitemap
 from . import sitemaps
 
-# sitemaps = {
-#     'static-pages': sitemaps.StaticPagesSitemap,
+sitemaps = {
+    'static-pages': sitemaps.StaticPagesSitemap,
 
-#     'help:list': sitemaps.HelpItemListSitemap,
-#     'help:detail': sitemaps.HelpItemDetailSitemap,
+    'help:list': sitemaps.HelpItemListSitemap,
+    'help:detail': sitemaps.HelpItemDetailSitemap,
 
-#     'palaeography:document-list': sitemaps.ItemListSitemap,
-#     'palaeography:document-detail': sitemaps.ItemDetailSitemap,
-# }
+    'palaeography:document-list': sitemaps.DocumentListSitemap,
+    'palaeography:document-detail': sitemaps.DocumentDetailSitemap,
+}
 
 
 urlpatterns = i18n_patterns(
@@ -37,6 +37,6 @@ urlpatterns = i18n_patterns(
     path('__debug__/', include('debug_toolbar.urls')),
 
     # Sitemap
-    # path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap')
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

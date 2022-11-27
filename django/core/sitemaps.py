@@ -14,65 +14,12 @@ class StaticPagesSitemap(Sitemap):
 
     def items(self):
         return ['general:welcome',
-                'about:project',
-                'about:website',
-                'about:website-cookies',
-                'about:website-accessibility']
+                'general:about',
+                'general:cookies',
+                'general:accessibility']
 
     def location(self, obj):
         return reverse(obj)
-
-
-class AboutNewsItemListSitemap(Sitemap):
-    """
-    Sitemap: About - NewsItem List
-    """
-
-    changefreq = "monthly"
-    priority = 0.5
-
-    def items(self):
-        return ['about:newsitem-list']
-
-    def location(self, obj):
-        return reverse(obj)
-
-
-class AboutNewsItemDetailSitemap(Sitemap):
-    """
-    Sitemap: About - NewsItem Detail
-    """
-
-    priority = 0.5
-
-    def items(self):
-        return aboutmodels.NewsItem.objects.filter(admin_published=True)
-
-
-class AboutTeamMemberListSitemap(Sitemap):
-    """
-    Sitemap: About - TeamMember List
-    """
-
-    changefreq = "monthly"
-    priority = 0.5
-
-    def items(self):
-        return ['about:teammember-list']
-
-    def location(self, obj):
-        return reverse(obj)
-
-
-class AboutTeamMemberDetailSitemap(Sitemap):
-    """
-    Sitemap: About - TeamMember Detail
-    """
-
-    priority = 0.5
-
-    def items(self):
-        return aboutmodels.TeamMember.objects.filter(admin_published=True)
 
 
 class HelpItemListSitemap(Sitemap):
@@ -101,84 +48,20 @@ class HelpItemDetailSitemap(Sitemap):
         return helpmodels.HelpItem.objects.filter(admin_published=True)
 
 
-class GraphicElementListSitemap(Sitemap):
+class DocumentListSitemap(Sitemap):
     """
-    Sitemap: GraphicElement List
-    """
-
-    changefreq = "daily"
-    priority = 0.9
-
-    def items(self):
-        return ['palaeography:graphicelement-list']
-
-    def lastmod(self, obj):
-        try:
-            return palaeographymodels.GraphicElement.objects.order_by('-meta_created_datetime')[0].meta_created_datetime
-        except IndexError:
-            return None
-
-    def location(self, obj):
-        return reverse(obj)
-
-
-class GraphicElementDetailSitemap(Sitemap):
-    """
-    Sitemap: GraphicElement Detail
-    """
-
-    priority = 0.9
-
-    def items(self):
-        return palaeographymodels.GraphicElement.objects.filter(admin_published=True)
-
-
-class ItemImageListSitemap(Sitemap):
-    """
-    Sitemap: ItemImage List
+    Sitemap: Document List
     """
 
     changefreq = "daily"
-    priority = 0.9
-
-    def items(self):
-        return ['palaeography:itemimage-list']
-
-    def lastmod(self, obj):
-        try:
-            return palaeographymodels.ItemImage.objects.order_by('-meta_created_datetime')[0].meta_created_datetime
-        except IndexError:
-            return None
-
-    def location(self, obj):
-        return reverse(obj)
-
-
-class ItemImageDetailSitemap(Sitemap):
-    """
-    Sitemap: ItemImage Detail
-    """
-
-    priority = 0.9
-
-    def items(self):
-        return palaeographymodels.ItemImage.objects.filter(admin_published=True)
-
-
-class ItemListSitemap(Sitemap):
-    """
-    Sitemap: Item List
-    """
-
-    changefreq = "daily"
-    priority = 0.9
+    priority = 1.0
 
     def items(self):
         return ['palaeography:document-list']
 
     def lastmod(self, obj):
         try:
-            return palaeographymodels.Item.objects.order_by('-meta_created_datetime')[0].meta_created_datetime
+            return palaeographymodels.Document.objects.filter(admin_published=True).order_by('-meta_created_datetime')[0].meta_created_datetime
         except IndexError:
             return None
 
@@ -186,76 +69,12 @@ class ItemListSitemap(Sitemap):
         return reverse(obj)
 
 
-class ItemDetailSitemap(Sitemap):
+class DocumentDetailSitemap(Sitemap):
     """
-    Sitemap: Item Detail
+    Sitemap: Document Detail
     """
 
-    priority = 0.9
+    priority = 1.0
 
     def items(self):
-        return palaeographymodels.Item.objects.filter(admin_published=True)
-
-
-class HandListSitemap(Sitemap):
-    """
-    Sitemap: Hand List
-    """
-
-    changefreq = "daily"
-    priority = 0.9
-
-    def items(self):
-        return ['palaeography:hand-list']
-
-    def lastmod(self, obj):
-        try:
-            return palaeographymodels.Hand.objects.order_by('-meta_created_datetime')[0].meta_created_datetime
-        except IndexError:
-            return None
-
-    def location(self, obj):
-        return reverse(obj)
-
-
-class HandDetailSitemap(Sitemap):
-    """
-    Sitemap: Hand Detail
-    """
-
-    priority = 0.9
-
-    def items(self):
-        return palaeographymodels.Hand.objects.filter(admin_published=True)
-
-
-class ScribeListSitemap(Sitemap):
-    """
-    Sitemap: Scribe List
-    """
-
-    changefreq = "daily"
-    priority = 0.9
-
-    def items(self):
-        return ['palaeography:scribe-list']
-
-    def lastmod(self, obj):
-        try:
-            return palaeographymodels.Scribe.objects.order_by('-meta_created_datetime')[0].meta_created_datetime
-        except IndexError:
-            return None
-
-    def location(self, obj):
-        return reverse(obj)
-
-
-class ScribeDetailSitemap(Sitemap):
-    """
-    Sitemap: Scribe Detail
-    """
-
-    priority = 0.9
-
-    def items(self):
-        return palaeographymodels.Scribe.objects.filter(admin_published=True)
+        return palaeographymodels.Document.objects.filter(admin_published=True)
