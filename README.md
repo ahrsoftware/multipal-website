@@ -9,9 +9,10 @@ You can find the officially hosted version of this website at: <https://www.mult
 
 ## People
 
-The people directly involved in the development of this website are:
+The people directly involved in the development of this website are from:
 
-- TODO
+- École Pratique des Hautes Études
+- École Nationale des Chartes end Collège de France, in the framework of the University Paris Sciences Lettres (PSL)
 - [AHR Software](https://ahrsoftware.co.uk)
 
 To get in touch with us about this website or the research project, please email us at: <hello@ahrsoftware.ac.uk>

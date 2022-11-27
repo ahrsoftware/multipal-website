@@ -389,7 +389,7 @@ class DocumentImagePart(models.Model):
     text_before_part = models.TextField(blank=True, null=True)
     text_after_part = models.TextField(blank=True, null=True)
     help_text = models.TextField(blank=True, null=True)
-    cew = models.TextField(blank=True, null=True)  # TODO - what is this?
+    cew = models.TextField(blank=True, null=True)
 
     # Metadata fields
     meta_created_by = models.ForeignKey(User, related_name="documentimagepart_created_by",
