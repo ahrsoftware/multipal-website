@@ -573,12 +573,8 @@ main {
 }
 
 .list-body-item {
-    width: 31em;
     background: rgba(255, 255, 255, 0.13);
-    display: inline-block;
-    vertical-align: middle;
     color: white;
-    margin: 0.5em;
     text-align: left;
     border-radius: 0.2em;
     overflow: hidden;

@@ -77,6 +77,13 @@
         vertical-align: middle;
     }
 
+    .list-body-item {
+        width: 31em;
+        display: inline-block;
+        vertical-align: middle;
+        margin: 0.5em;
+    }
+
     /* ---------- Detail ---------- */
 
     #detail-images,

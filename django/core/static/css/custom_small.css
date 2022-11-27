@@ -92,6 +92,11 @@
         display: block;
     }
 
+    .list-body-item {
+        display: block;
+        margin: 2em;
+    }
+
     /* ---------- Detail ---------- */
 
     #detail-images,
