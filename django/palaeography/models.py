@@ -57,7 +57,7 @@ def image_is_wider_than_tall(image_field):
 
 def m2m_as_text(m2m_field, delimeter="; "):
     """
-    Join a list of objects related via a M2M field as a single string 
+    Join a list of objects related via a M2M field as a single string
     """
     if m2m_field.all():
         values = []
@@ -313,10 +313,10 @@ For more tips and assistance please visit the <a href="/help/">Help section</a>.
     @property
     def correct_transcription_words(self):
         """
-        Returns a matrix (list of lists) of words from correct transcription string
+        Returns a matrix (list of lists) of words from correct transcription strin
         Each new line in string = a new list within the matrix.
         """
-        
+
         words = []
         for correct_transcription_line in self.correct_transcription.splitlines():
             if len(correct_transcription_line.strip()):
@@ -434,7 +434,6 @@ class DocumentImagePart(models.Model):
             line_index=self.line_index
         ).count()
 
-
     def move_other_parts_positions(self, add_after_image_part_id=None, delete=False, new_line=False):
         """
         When a part is added/edited/deleted its change in position affects other existing parts
@@ -460,7 +459,7 @@ class DocumentImagePart(models.Model):
         if new_line and not delete:
             move_line = 1
             # If a new line has been started (that isn't the very first line)
-            # all parts after the new part in the current line 
+            # all parts after the new part in the current line
             # must be moved to the new part's new line
             if self.line_index > 0 and add_after_image_part_id:
                 for i, part in enumerate(DocumentImagePart.objects.filter(

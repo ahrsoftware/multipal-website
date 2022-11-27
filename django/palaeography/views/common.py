@@ -4,8 +4,6 @@ This script is for common resources (e.g. functions) used throughout the main vi
 
 from django.db.models.functions import Lower
 from django.db.models import (Count, Q, CharField, TextField)
-from functools import reduce
-from operator import (or_, and_)
 
 
 def html_details_list_items(object_list):
@@ -76,7 +74,7 @@ def filter(request, queryset):
         print(f'\n\n{filter_key}\n\n')
         filter_value = request.GET.get(filter_key, '')
         if filter_value != '':
-            
+
             # Many to Many relationship (uses __in comparison and filter_value is a list)
             if filter_key.startswith(filter_pre_mm):
                 filter_field = filter_key.replace(filter_pre_mm, '')

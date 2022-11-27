@@ -229,7 +229,7 @@ class DocumentImagePartAddRedirectView(LoginRequiredMixin, RedirectView):
             line_index=line_index,
             part_index_in_line=part_index_in_line,
             # Content
-            text = self.request.POST.get('text')
+            text=self.request.POST.get('text')
         )
         # Optional fields
         document_image_part_obj.text_before_part = self.request.POST.get('text_before_part')
@@ -239,7 +239,7 @@ class DocumentImagePartAddRedirectView(LoginRequiredMixin, RedirectView):
         document_image_part_obj.save()
 
         # Update other parts in response to this new part
-        document_image_part_obj.move_other_parts_positions(add_after_image_part_id, delete=False, new_line=new_line=='on')
+        document_image_part_obj.move_other_parts_positions(add_after_image_part_id, delete=False, new_line=new_line == 'on')
 
         # Return to document page
         document_id = document_image_part_obj.document_image.document_id
