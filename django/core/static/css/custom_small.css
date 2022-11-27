@@ -45,6 +45,12 @@
         font-weight: bold;
     }
 
+    #nav-languagelinks img {
+        width: 3em;
+        margin: 1em;
+        display: inline-block;
+    }
+
     /* ---------- Main ---------- */
 
     main {

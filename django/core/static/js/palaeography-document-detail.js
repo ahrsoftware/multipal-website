@@ -303,9 +303,9 @@ $(document).ready(function(){
     //
     // Document Image Part controls (e.g. add, delete)
     //
-    let canDrawNewDocumentImagePart = false;
-    let isDrawingNewDocumentImagePart = false;  // User is in the process of drawing (mousedown starts, mouseup ends)
-    let newDocumentImagePartPosition;  // Top, left, width, height values of the new part
+    var canDrawNewDocumentImagePart = false;
+    var isDrawingNewDocumentImagePart = false;  // User is in the process of drawing (mousedown starts, mouseup ends)
+    var newDocumentImagePartPosition;  // Top, left, width, height values of the new part
     // Can start drawing rectangle
     $('#transcription-exercise-controls-newdocumentimagepart').on('click', function(){
         controlsDropdownContentToggle(this);
@@ -322,7 +322,7 @@ $(document).ready(function(){
             canDrawNewDocumentImagePart = true;
             $('.detail-images-image').addClass('drawable');
 
-            $('.newdocumentimagepart-step, #newdocumentimagepart-submit, #newdocumentimagepart-redraw').hide();
+            $('.newdocumentimagepart-step, #newdocumentimagepart-submit').hide();
             $('.newdocumentimagepart-step[data-step="1"]').show();
         }
     });
@@ -330,6 +330,8 @@ $(document).ready(function(){
     $('.detail-images-image').on('mousedown', function(e){
         // Only allow to draw a rectangle if a current annotation isn't already happening
         if(canDrawNewDocumentImagePart){
+            // Remove existing new parts, if any exist
+            $('.detail-images-image-parts-part.new').remove();
 
             // Reset position values
             newDocumentImagePartPosition = {left: 0, top: 0, width: 0, height: 0}
@@ -362,7 +364,7 @@ $(document).ready(function(){
             isDrawingNewDocumentImagePart = false;
 
             // Show content in the new part form
-            $('.newdocumentimagepart-step, #newdocumentimagepart-submit, #newdocumentimagepart-redraw').show();
+            $('.newdocumentimagepart-step, #newdocumentimagepart-submit').show();
 
             // Fill in hidden field values:
             // Document Image
@@ -375,12 +377,11 @@ $(document).ready(function(){
             $('#transcription-exercise-newdocumentimagepart-form input[name="image_cropped_height"]').val(newDocumentImagePartPosition.height);
         }
     });
-    // Stop the item image img object from dragging/selecting when trying to draw a rectangle
+    // Stop the document image img object from dragging/selecting when trying to draw a rectangle
     $('.detail-images-image').bind('dragstart', function(){ return false; });
 
     // Ensure rectangle has been drawn before submitting the form
-    $('#transcription-exercise-newdocumentimagepart-form').on('submit', function(e){
-        // e.preventDefault();
+    $('#transcription-exercise-newdocumentimagepart-form').on('submit', function(){
         var partPositionData = [
             $('input[type="hidden"][name="image_cropped_left"]').val(),
             $('input[type="hidden"][name="image_cropped_top"]').val(),

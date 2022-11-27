@@ -1068,20 +1068,6 @@ a#detail-navigation-admindashboard {
     width: 100%;
 }
 
-#newdocumentimagepart-redraw {
-    display: block;
-    width: fit-content;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 0.5em;
-    padding: 0.3em 0.8em;
-    margin-top: 0.5em;
-    cursor: pointer;
-}
-
-#newdocumentimagepart-redraw:hover {
-    background: rgba(255, 255, 255, 0.27);
-}
-
 #newdocumentimagepart-submit {
     margin: 1em auto 1em auto;
 }
