@@ -1072,15 +1072,36 @@ a#detail-navigation-admindashboard {
     margin: 1em auto 1em auto;
 }
 
-#newdocumentimagepart-submit button {
+#newdocumentimagepart-submit button,
+#deletedocumentimagepart-submit button {
     border: none;
     outline: none;
     appearance: none;
     padding: 0.5em 1em;
     border-radius: 0.3em;
     width: 100%;
-    background-color: #05c46b;
     color: white;
+    margin-top: 1em;
+}
+
+#newdocumentimagepart-submit button {
+    background: #05c46b;
+}
+
+#deletedocumentimagepart-submit button {
+    background: #e84118;
+}
+
+.newdocumentimagepart-form-addafterimagepartid,
+.newdocumentimagepart-form-newline,
+.deletedocumentimagepart-form-deleteimagepartid {
+    display: none;
+}
+
+.newdocumentimagepart-form-addafterimagepartid.active,
+.newdocumentimagepart-form-newline.active,
+.deletedocumentimagepart-form-deleteimagepartid.active {
+    display: block;
 }
 
 .transcription-exercise {

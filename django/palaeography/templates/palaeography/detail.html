@@ -256,10 +256,10 @@
                     <!-- Required fields -->
                     {% for document_image in object.documentimages.all %}
                         {% if document_image.documentimagepart_set.all %}
-                            <div>
-                                <label for="newdocumentimagepart-form-addafterimagepartid">Add after part:</label>
-                                <select id="newdocumentimagepart-form-addafterimagepartid" name="add_after_image_part_id">
-                                        <option value="">(Add to start)</option>
+                            <div id="newdocumentimagepart-form-addafterimagepartid-{{ document_image.id }}" class="newdocumentimagepart-form-addafterimagepartid">
+                                <label for="addafterimagepartid-{{ document_image.id }}">Add after part:</label>
+                                <select id="addafterimagepartid-{{ document_image.id }}" name="add_after_image_part_id">
+                                    <option value="">(Add to start)</option>
                                     {% for image_part in document_image.documentimagepart_set.all %}
                                         <option value="{{ image_part.id }}"{% if forloop.last %} selected="selected"{% endif %}>
                                             {% if forloop.last %}
@@ -271,9 +271,9 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div>
-                                <label for="newdocumentimagepart-form-newline">Start a new line?</label>
-                                <input type="checkbox" id="newdocumentimagepart-form-newline" name="newline">
+                            <div id="newdocumentimagepart-form-newline-{{ document_image.id }}" class="newdocumentimagepart-form-newline">
+                                <label for="newline-{{ document_image.id }}">Start a new line?</label>
+                                <input type="checkbox" id="newline-{{ document_image.id }}" name="newline">
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -324,9 +324,9 @@
 
                 {% for document_image in object.documentimages.all %}
                     {% if document_image.documentimagepart_set.all %}
-                        <div>
-                            <label for="deletedocumentimagepart-form-deleteimagepartid">Delete the following part:</label>
-                            <select id="deletedocumentimagepart-form-deleteimagepartid" name="delete_document_image_part_id">
+                        <div id="deletedocumentimagepart-form-deleteimagepartid-{{ document_image.id }}" class="deletedocumentimagepart-form-deleteimagepartid">
+                            <label for="deletedocumentimagepartid-{{ document_image.id }}">Delete the following part:</label>
+                            <select id="deletedocumentimagepartid-{{ document_image.id }}" name="delete_document_image_part_id">
                                 {% for image_part in document_image.documentimagepart_set.all %}
                                     <option value="{{ image_part.id }}"{% if forloop.last %} selected="selected"{% endif %}>
                                         {{ image_part.position_and_text }}
@@ -334,15 +334,17 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div>
-                            <label for="deletedocumentimagepart-form-confirm">
-                                Tick to confirm you understand that this action cannot be undone and this part will be permanently deleted
-                            </label>
-                            <input type="checkbox" id="deletedocumentimagepart-form-confirm" name="confirm" required>
-                        </div>
                     {% endif %}
                 {% endfor %}
-                <button type="submit">Delete Document Image Part</button>
+
+                <p>
+                    Note: This action cannot be reversed. This part will be permanently deleted.
+                </p>
+
+                <!-- Submit -->
+                <div id="deletedocumentimagepart-submit">
+                    <button type="submit"><i class="fas fa-exclamation-triangle"></i> Permanently Delete Selected Document Image Part</button>
+                </div>
             </form>
         </div>
 

@@ -243,7 +243,7 @@ class DocumentImagePartAddRedirectView(LoginRequiredMixin, RedirectView):
 
         # Return to document page
         document_id = document_image_part_obj.document_image.document_id
-        return reverse('palaeography:document-detail', args=[document_id])
+        return f"{reverse('palaeography:document-detail', args=[document_id])}?image={document_image_part_obj.document_image_id}"
 
 
 class DocumentImagePartDeleteRedirectView(LoginRequiredMixin, RedirectView):
@@ -252,14 +252,10 @@ class DocumentImagePartDeleteRedirectView(LoginRequiredMixin, RedirectView):
     """
 
     def get_redirect_url(self, *args, **kwargs):
-
-        delete_document_image_part_obj = models.DocumentImagePart.objects.get(id=self.request.POST.get('delete_document_image_part_id'))
-
+        document_image_part_obj = models.DocumentImagePart.objects.get(id=self.request.POST.get('delete_document_image_part_id'))
         # Move the position of affect parts assuming this part has been deleted
-        delete_document_image_part_obj.move_other_parts_positions(delete=True)
-
+        document_image_part_obj.move_other_parts_positions(delete=True)
         # Delete this part
-        delete_document_image_part_obj.delete()
-
+        document_image_part_obj.delete()
         # Return to document page
-        return reverse('palaeography:document-detail', args=[self.request.POST.get('document_id')])
+        return f"{reverse('palaeography:document-detail', args=[self.request.POST.get('document_id')])}?image={document_image_part_obj.document_image_id}"

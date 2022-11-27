@@ -1,5 +1,15 @@
 $(document).ready(function(){
 
+    // Functions for simplifying interacting with URL parameters
+    function getUrlParameter(parameter) {
+        return new URLSearchParams(window.location.search).get(parameter);
+    }
+    function setUrlParameter(parameter, value) {
+        let urlParams = new URLSearchParams(window.location.search);
+        urlParams.set(parameter, value);
+        history.replaceState(null, null, "?" + urlParams.toString());
+    }
+
     var lastActiveDocumentImagePartId;
     // Set the default to the first input if there is one
     if ($('.transcription-exercise-line-part-input').length) {
@@ -167,7 +177,7 @@ $(document).ready(function(){
             $('#transcription-exercise-controls-correctcurrent').first().trigger('click');
         }
         // Set the relevant form field values
-        $('#deletedocumentimagepart-form-deleteimagepartid').val(documentImagePartId);
+        $('.deletedocumentimagepart-form-deleteimagepartid.active select').val(documentImagePartId);
         // Update last active global var
         lastActiveDocumentImagePartId = documentImagePartId;
     }).on('focusout', function(){
@@ -231,18 +241,24 @@ $(document).ready(function(){
         setDocumentImagePartPopupStyle(this);
     });
 
-    // Choose/show an image and accompanying transcription
-    $('#detail-images-controls-chooseimage').on('change', function(){
+    // Choose image select list (set default value, change event, trigger on load)
+    $('#detail-images-controls-chooseimage select').val(
+        getUrlParameter('image') ? getUrlParameter('image') : $('#detail-images-controls-chooseimage select').val()
+    ).on('change', function(){
         // Go to the correct tab
         $('li#transcription').trigger('click');
+        // Reset toggle for allowing to drawer new parts (if it's active)
+        if(canDrawNewDocumentImagePart) $('#transcription-exercise-controls-newdocumentimagepart').trigger('click');
         // Hide any existing dropdown content
         $('.transcription-exercise-controlsdropdown').hide();
 
         var imageId = $(this).find(":selected").val();
+        // Update URL
+        setUrlParameter('image', imageId);
         // Remove 'active' from existing image (and related content)
-        $('.detail-images-image.active, .detail-controls-item.active, .transcription-exercise.active, .transcription-exercise-coreinfo-difficulty.active, .transcription-exercise-fullsolution-instance.active, .transcription-exercise-instructions-instruction.active').removeClass('active');
+        $('.detail-images-image.active, .detail-controls-item.active, .transcription-exercise.active, .transcription-exercise-coreinfo-difficulty.active, .transcription-exercise-fullsolution-instance.active, .transcription-exercise-instructions-instruction.active, .newdocumentimagepart-form-addafterimagepartid.active, .newdocumentimagepart-form-newline.active, .deletedocumentimagepart-form-deleteimagepartid.active').removeClass('active');
         // Mark this image (and related content) as 'active'
-        $('#detail-images-image-' + imageId + ', #transcription-exercise-' + imageId + ', #transcription-exercise-coreinfo-difficulty-' + imageId + ', #transcription-exercise-fullsolution-instance-' + imageId + ', #transcription-exercise-instructions-instruction-' + imageId).addClass('active');
+        $('#detail-images-image-' + imageId + ', #transcription-exercise-' + imageId + ', #transcription-exercise-coreinfo-difficulty-' + imageId + ', #transcription-exercise-fullsolution-instance-' + imageId + ', #transcription-exercise-instructions-instruction-' + imageId + ', #newdocumentimagepart-form-addafterimagepartid-' + imageId + ', #newdocumentimagepart-form-newline-' + imageId + ', #deletedocumentimagepart-form-deleteimagepartid-' + imageId).addClass('active');
         // Set the 'Download image' link location
         var imageUrl = $('#detail-images-image-' + imageId).find('img').attr('src');
         $('#detail-images-controls-downloadimage a').attr('href', imageUrl);
@@ -321,7 +337,6 @@ $(document).ready(function(){
             $(this).addClass('active');
             canDrawNewDocumentImagePart = true;
             $('.detail-images-image').addClass('drawable');
-
             $('.newdocumentimagepart-step, #newdocumentimagepart-submit').hide();
             $('.newdocumentimagepart-step[data-step="1"]').show();
         }
@@ -380,8 +395,10 @@ $(document).ready(function(){
     // Stop the document image img object from dragging/selecting when trying to draw a rectangle
     $('.detail-images-image').bind('dragstart', function(){ return false; });
 
-    // Ensure rectangle has been drawn before submitting the form
+    // As submitting 'add new part' form
     $('#transcription-exercise-newdocumentimagepart-form').on('submit', function(){
+
+        // Ensure rectangle has been drawn
         var partPositionData = [
             $('input[type="hidden"][name="image_cropped_left"]').val(),
             $('input[type="hidden"][name="image_cropped_top"]').val(),
@@ -392,13 +409,20 @@ $(document).ready(function(){
             alert('Please draw a part. See Step 1 for more information');
             return false;
         }
+
+        // Delete inactive form fields (e.g. if multiple images, remove inactive image related fields from form)
+        $('.newdocumentimagepart-form-addafterimagepartid:not(.active), .newdocumentimagepart-form-newline:not(.active)').remove();
     });
 
     // Delete a Document Image Part
+    // Toggle form
     $('#transcription-exercise-controls-deletedocumentimagepart').on('click', function(){
         controlsDropdownContentToggle(this);
     });
-
+    // As submitting 'delete existing part' form
+    $('#transcription-exercise-deletedocumentimagepart-form').on('submit', function(){
+        $('.deletedocumentimagepart-form-deleteimagepartid:not(.active)').remove();
+    });
 
     // jQuery UI
     $('.detail-controls div').attr('data-placement', 'bottom').tooltip();
