@@ -4,28 +4,11 @@
 
 {% block main %}
 
-<section>
-    <div class="container">
-        <h2>Account</h2>
-        <hr>
-        <p>
-            Welcome to your account for the MultiPal database. On this page you can view and update your details, change your password or logout.
-        </p>
-    </div>
+<section class="container">
+    <h2>Account</h2>
 </section>
 
-{% if my_recent_documents %}
-<section class="container" id="account-recentdocuments">
-    <h3>My Recent Documents</h3>
-    <ol>
-        {% for document in my_recent_documents %}
-            <li><a href="{% url 'palaeography:document-detail' document.id %}">{{ document }}</a></li>
-        {% endfor %}
-    </ol>
-</section>
-{% endif %}
-
-<section class="container" id="account-mydetails">
+<section class="container account">
     <h3>My Details</h3>
     <form method="post" class="full-form">
         {% csrf_token %}
@@ -37,7 +20,7 @@
     </p>
 </section>
 
-<section class="container" id="account-logout">
+<section class="container account">
     <h3>Logout</h3>
     <p>
         Thanks for using MultiPal - see you soon!

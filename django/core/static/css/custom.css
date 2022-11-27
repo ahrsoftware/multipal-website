@@ -1303,8 +1303,12 @@ a#detail-navigation-admindashboard {
 
 /* ---------- Account ---------- */
 
-#account-login-help {
-    margin-top: 2em;
+section.account a {
+    text-align: center;
+    display: block;
+    border-radius: 0.5em;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5em;
 }
 
 /* ---------- Footer ---------- */
