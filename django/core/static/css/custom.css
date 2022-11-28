@@ -108,6 +108,11 @@ select {
     background-color: white;
 }
 
+select option,
+.list-options-filters-filter select option {
+    color: black;
+}
+
 strong {
     font-weight: bold;
 }
