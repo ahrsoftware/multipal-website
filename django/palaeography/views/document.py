@@ -62,13 +62,13 @@ class DocumentListView(ListView):
         # Only show documents that have images
         queryset = queryset.annotate(image_count=Count('documentimages')).filter(image_count__gt=0)
         # Select related (FK) fields
-        queryset = queryset.select_related('type', 'ink')
+        queryset = queryset.select_related('type')
         # Prefetch related (M2M) fields
         queryset = queryset.prefetch_related(
             Prefetch(
                 'documentimages',
                 queryset=models.DocumentImage.objects.select_related('difficulty')
-            ), 'languages', 'repositories', 'documentimages', 'documentimages__documentimagepart_set')
+            ), 'languages', 'inks', 'repositories', 'documentimages', 'documentimages__documentimagepart_set')
         # Annotations
         queryset = queryset.annotate(
             # year_ annotations used for filtering on multiple fields storing year data
@@ -94,8 +94,8 @@ class DocumentListView(ListView):
                 Q(time_second__icontains=search) |
                 # FK
                 Q(type__name__icontains=search) |
-                Q(ink__name__icontains=search) |
                 # M2M
+                Q(inks__name__icontains=search) |
                 Q(languages__name__icontains=search) |
                 Q(repositories__name__icontains=search) |
                 # Via related models
@@ -165,7 +165,7 @@ class DocumentListView(ListView):
                 'filter_options': models.SlDocumentType.objects.all()
             },
             {
-                'filter_id': f'{common.filter_pre_fk}ink',
+                'filter_id': f'{common.filter_pre_mm}inks',
                 'filter_name': 'Ink',
                 'filter_options': models.SlDocumentInk.objects.all()
             },

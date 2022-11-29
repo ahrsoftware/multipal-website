@@ -139,7 +139,7 @@ class Document(models.Model):
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
     language = models.CharField(max_length=10, blank=True, null=True)
-    ink = models.ForeignKey(SlDocumentInk, on_delete=models.SET_NULL, blank=True, null=True)
+    inks = models.ManyToManyField(SlDocumentInk, blank=True, related_name=related_name, db_index=True)
     repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=related_name, db_index=True)
     languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=related_name, db_index=True)
     information = models.TextField(blank=True, null=True)
@@ -209,6 +209,10 @@ class Document(models.Model):
             return " ".join(date_parts)
 
     @property
+    def m2m_as_text_inks(self):
+        return m2m_as_text(self.inks)
+
+    @property
     def m2m_as_text_languages(self):
         return m2m_as_text(self.languages)
 
@@ -235,7 +239,7 @@ class Document(models.Model):
         details += f"<br><strong>Language:</strong> {self.m2m_as_text_languages}" if self.m2m_as_text_languages else ""
         details += f"<br><strong>Difficulty:</strong> {self.difficulties}" if self.difficulties else ""
         details += f"<br><strong>Type:</strong> {self.type}" if self.type else ""
-        details += f"<br><strong>Ink:</strong> {self.ink}" if self.ink else ""
+        details += f"<br><strong>Ink:</strong> {self.m2m_as_text_inks}" if self.m2m_as_text_inks else ""
         details += f"<br><strong>Repository:</strong> {self.m2m_as_text_repositories}" if self.m2m_as_text_repositories else ""
         return textwrap.shorten(details, width=279, placeholder="...")
 
