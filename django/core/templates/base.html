@@ -95,9 +95,9 @@
                 <div id="nav-languagelinks">
                     {% get_available_languages as languages %}
                     {% for lang_code, lang_name in languages %}
-                        <!-- href said dynamically in main.js to redirect to current page -->
-                        <a data-langcode="{{ lang_code }}" href="#">
-                            <img src="{% static 'images/flags/' %}{{ lang_code }}.svg" alt="flag for language {{ lang_code }}">
+                        <!-- href set dynamically in main.js to redirect to current page -->
+                        <a data-langcode="{{ lang_code }}" title="{{ lang_name }}" href="#"{% if lang_code == LANGUAGE_CODE %}class="active"{% endif %}>
+                            <img src="{% static 'images/flags/' %}{{ lang_code }}.svg" alt="flag for language {{ lang_name }}">
                         </a>
                     {% endfor %}
                 </div>

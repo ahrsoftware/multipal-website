@@ -50,7 +50,7 @@ Sections of this template:
                         <select id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}">
                             {% include 'snippets/select-default.html' %}
                             {% for o in f.filter_options %}
-                                <option value="{{ o.id }}">{{ o }}</option>
+                                <option value="{{ o.id }}">{{ o.name }}</option>
                             {% endfor %}
                         </select>
                     <!-- Number filter -->

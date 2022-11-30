@@ -114,9 +114,9 @@ class GenericSlAdminView(admin.ModelAdmin):
     Or if no changes are needed, just register a model, e.g.:
     admin.site.register([model name], GenericAdminView)
     """
-    list_display = ('name',)
-    list_display_links = ('name',)
-    search_fields = ('name',)
+    list_display = ('id', 'name_en', 'name_fr',)
+    list_display_links = ('id',)
+    search_fields = ('name_en', 'name_fr',)
 
     def get_model_perms(self, request):
         """

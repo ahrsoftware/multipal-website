@@ -369,6 +369,16 @@ nav a:hover {
     color: #2f4256;
 }
 
+#nav-languagelinks a:not(.active) img {
+    filter: grayscale(100%);
+    opacity: 0.5;
+}
+
+#nav-languagelinks a:not(.active) img:hover {
+    filter: grayscale(0%);
+    opacity: 1;
+}
+
 /* ---------- Main ---------- */
 
 main {

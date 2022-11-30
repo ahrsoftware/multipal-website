@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import get_language
 from django.db.models import Q
 from django.urls import reverse
 from PIL import Image, ImageOps
@@ -63,7 +64,7 @@ def m2m_as_text(m2m_field, delimeter="; "):
         values = []
         for i in m2m_field.all():
             if i not in values:
-                values.append(str(i))
+                values.append(i.name)
         values.sort()
         return delimeter.join(values)
 
@@ -75,24 +76,51 @@ def ordinal_number(n):
     return "%d%s" % (n, "tsnrhtdd"[(n // 10 % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
 
+def lang_field_value(obj, field='name'):
+    """
+    Retrieves the current language code (if exists) and returns the value of
+    the correct language-specific field for the given object.
+    E.g. it will return value of name_en field (if English is the language) or name_fr for French, etc.
+    If the current language cannot be found it will attempt to return the default language (English).
+    If this field doesn't exist it will return a warning string.
+    """
+    # Current language
+    try:
+        value_lang_current = getattr(obj, f"{field}_{get_language()}")
+    except Exception:
+        value_lang_current = None
+    # Default language
+    try:
+        value_lang_default = getattr(obj, f"{field}_en")
+    except Exception:
+        value_lang_default = "<no matching field name found>"
+
+    return value_lang_current if value_lang_current else value_lang_default 
+
+
 class SlAbstract(models.Model):
     """
     An abstract model for Select List models
     See: https://docs.djangoproject.com/en/4.0/topics/db/models/#abstract-base-classes
     """
 
-    name = models.CharField(max_length=1000, db_index=True)
+    name_en = models.CharField(max_length=1000, unique=True, db_index=True)
+    name_fr = models.CharField(max_length=1000, unique=True, db_index=True)
 
     @property
     def html_details_list_document_text(self):
-        return self.name
+        return str(self)
+
+    @property
+    def name(self):
+        return lang_field_value(self)
 
     def __str__(self):
-        return self.name
+        return f"{self.name_en} || {self.name_fr}"
 
     class Meta:
         abstract = True
-        ordering = [Upper('name'), 'id']
+        ordering = [Upper('name_en'), 'id']
 
 
 #
@@ -138,7 +166,6 @@ class Document(models.Model):
     name = models.CharField(max_length=1000)
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
-    language = models.CharField(max_length=10, blank=True, null=True)
     inks = models.ManyToManyField(SlDocumentInk, blank=True, related_name=related_name, db_index=True)
     repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=related_name, db_index=True)
     languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=related_name, db_index=True)
@@ -224,7 +251,7 @@ class Document(models.Model):
     def difficulties(self):
         difficulties = []
         for image in self.documentimages.all():
-            difficulty = str(image.difficulty)
+            difficulty = image.difficulty.name
             if difficulty not in difficulties:
                 difficulties.append(difficulty)
         return "/".join(difficulties)
@@ -238,7 +265,7 @@ class Document(models.Model):
         details = f"<strong>Images:</strong> {self.count_documentimages}"
         details += f"<br><strong>Language:</strong> {self.m2m_as_text_languages}" if self.m2m_as_text_languages else ""
         details += f"<br><strong>Difficulty:</strong> {self.difficulties}" if self.difficulties else ""
-        details += f"<br><strong>Type:</strong> {self.type}" if self.type else ""
+        details += f"<br><strong>Type:</strong> {self.type.name}" if self.type else ""
         details += f"<br><strong>Ink:</strong> {self.m2m_as_text_inks}" if self.m2m_as_text_inks else ""
         details += f"<br><strong>Repository:</strong> {self.m2m_as_text_repositories}" if self.m2m_as_text_repositories else ""
         return textwrap.shorten(details, width=279, placeholder="...")

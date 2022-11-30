@@ -1,7 +1,7 @@
 from django.views.generic import (DetailView, ListView, RedirectView)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q, Count, Prefetch
-from django.db.models.functions import Coalesce
+from django.db.models.functions import Coalesce, Upper
 from django.urls import reverse
 from .. import models
 from . import common
@@ -93,13 +93,18 @@ class DocumentListView(ListView):
                 Q(time_minute__icontains=search) |
                 Q(time_second__icontains=search) |
                 # FK
-                Q(type__name__icontains=search) |
+                Q(type__name_en__icontains=search) |
+                Q(type__name_fr__icontains=search) |
                 # M2M
-                Q(inks__name__icontains=search) |
-                Q(languages__name__icontains=search) |
-                Q(repositories__name__icontains=search) |
+                Q(inks__name_en__icontains=search) |
+                Q(inks__name_fr__icontains=search) |
+                Q(languages__name_en__icontains=search) |
+                Q(languages__name_fr__icontains=search) |
+                Q(repositories__name_en__icontains=search) |
+                Q(repositories__name_fr__icontains=search) |
                 # Via related models
-                Q(documentimages__difficulty__name__icontains=search)
+                Q(documentimages__difficulty__name_en__icontains=search) |
+                Q(documentimages__difficulty__name_fr__icontains=search)
             )
         # Filter
         queryset = common.filter(self.request, queryset)
@@ -148,31 +153,32 @@ class DocumentListView(ListView):
         ]
 
         # Options: Filters
+        order_by_lang_field = Upper('name_' + self.request.LANGUAGE_CODE)
         context['options_filters'] = [
             {
                 'filter_id': f'{common.filter_pre_mm}languages',
                 'filter_name': 'Language',
-                'filter_options': models.SlDocumentLanguage.objects.all()
+                'filter_options': models.SlDocumentLanguage.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_fk}documentimages__difficulty',
                 'filter_name': 'Difficulty',
-                'filter_options': models.SlDocumentImageDifficulty.objects.all()
+                'filter_options': models.SlDocumentImageDifficulty.objects.all().order_by('id')
             },
             {
                 'filter_id': f'{common.filter_pre_fk}type',
                 'filter_name': 'Type',
-                'filter_options': models.SlDocumentType.objects.all()
+                'filter_options': models.SlDocumentType.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_mm}inks',
                 'filter_name': 'Ink',
-                'filter_options': models.SlDocumentInk.objects.all()
+                'filter_options': models.SlDocumentInk.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_mm}repositories',
                 'filter_name': 'Repository',
-                'filter_options': models.SlDocumentRepository.objects.all()
+                'filter_options': models.SlDocumentRepository.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_gt}year_min',

@@ -71,7 +71,6 @@ def filter(request, queryset):
 
     # Only loop through filter values in all GET request values (e.g. exclude search, sort, etc. values)
     for filter_key in [k for k in list(request.GET.keys()) if k.startswith(filter_pre)]:
-        print(f'\n\n{filter_key}\n\n')
         filter_value = request.GET.get(filter_key, '')
         if filter_value != '':
 
@@ -87,7 +86,6 @@ def filter(request, queryset):
 
             # Greater than or equal to
             elif filter_key.startswith(filter_pre_gt):
-                print('\n\222\n\n')
                 filter_field = filter_key.replace(filter_pre_gt, '')
                 queryset = queryset.filter(**{f'{filter_field}__gte': filter_value})
 
