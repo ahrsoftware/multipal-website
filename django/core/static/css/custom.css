@@ -20,6 +20,16 @@ html, body {
     color: white;
     margin: 0;
     font-weight: 300;
+    text-align: inherit;
+}
+
+p,
+div,
+span,
+ol,
+ul,
+li {
+    text-align: initial;
 }
 
 a {
