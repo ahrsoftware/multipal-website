@@ -90,17 +90,17 @@ def insert_data_select_list_models(apps, schema_editor):
 
     # SlDocumentLanguage
     for name in [
-        ["Arabic", "FR1"],
-        ["Aramaic", "FR2"],
-        ["Chinese", "FR3"],
-        ["Cop", "FR4"],
-        ["Egyptian", "FR5"],
-        ["Geʽez", "FR6"],
-        ["Greek", "FR7"],
-        ["Hebrew", "FR8"],
-        ["Latin", "FR9"],
-        ["Russian", "FR10"],
-        ["Sanskrit", "FR11"]
+        ["Arabic", "Arabic"],
+        ["Aramaic", "Aramaic"],
+        ["Chinese", "Chinese"],
+        ["Cop", "Cop"],
+        ["Egyptian", "Egyptian"],
+        ["Geʽez", "Geʽez"],
+        ["Greek", "Greek"],
+        ["Hebrew", "Hebrew"],
+        ["Latin", "Latin"],
+        ["Russian", "Russian"],
+        ["Sanskrit", "Sanskrit"]
     ]:
         models.SlDocumentLanguage.objects.create(name_en=name[0], name_fr=name[1])
 
@@ -295,8 +295,8 @@ def insert_data_select_list_models(apps, schema_editor):
             "Vienna, Austrian National Library"
         ],
         [
-            "Westminster Abbey Library and Archive, Londres, Grande Bretagne",
-            "Westminster Abbey Library and Archive, Londres, Grande Bretagne"
+            "Westminster Abbey Library and Archive, London, England",
+            "Westminster Abbey Library and Archive, Londres, Angleterre"
         ],
         [
             "cgb.fr",

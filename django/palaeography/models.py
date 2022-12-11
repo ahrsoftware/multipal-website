@@ -104,8 +104,8 @@ class SlAbstract(models.Model):
     See: https://docs.djangoproject.com/en/4.0/topics/db/models/#abstract-base-classes
     """
 
-    name_en = models.CharField(max_length=1000, unique=True, db_index=True)
-    name_fr = models.CharField(max_length=1000, unique=True, db_index=True)
+    name_en = models.CharField(max_length=1000, unique=True, db_index=True, verbose_name='Name (English)')
+    name_fr = models.CharField(max_length=1000, unique=True, db_index=True, verbose_name='Name (Français)')
 
     @property
     def html_details_list_document_text(self):
@@ -131,17 +131,33 @@ class SlAbstract(models.Model):
 class SlDocumentInk(SlAbstract):
     "The ink used within a document"
 
+    class Meta:
+        verbose_name = 'Ink'
+        verbose_name_plural = 'List: Inks'
+
 
 class SlDocumentLanguage(SlAbstract):
     "The language/script of a document"
+
+    class Meta:
+        verbose_name = 'Language'
+        verbose_name_plural = 'List: Languages'
 
 
 class SlDocumentRepository(SlAbstract):
     "The repository/location of the document. E.g. Cambridge University Library"
 
+    class Meta:
+        verbose_name = 'Repository'
+        verbose_name_plural = 'List: Repositories'
+
 
 class SlDocumentType(SlAbstract):
     "The type of document. E.g. book"
+
+    class Meta:
+        verbose_name = 'Document Type'
+        verbose_name_plural = 'List: Document Types'
 
 
 class SlDocumentImageDifficulty(SlAbstract):
@@ -149,6 +165,8 @@ class SlDocumentImageDifficulty(SlAbstract):
 
     class Meta:
         ordering = ['id']
+        verbose_name = 'Difficulty'
+        verbose_name_plural = 'List: Difficulties'
 
 
 #
@@ -179,11 +197,6 @@ class Document(models.Model):
     date_year = models.IntegerField(blank=True, null=True)
     date_month = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(12)])
     date_day = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(31)])
-
-    # Time
-    time_hour = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(24)])
-    time_minute = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(60)])
-    time_second = models.IntegerField(blank=True, null=True, validators=[MinValueValidator(1), MaxValueValidator(60)])
 
     # Admin
     admin_published = models.BooleanField(default=True, verbose_name='published')

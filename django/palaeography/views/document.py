@@ -89,9 +89,6 @@ class DocumentListView(ListView):
                 Q(date_year__icontains=search) |
                 Q(date_month__icontains=search) |
                 Q(date_day__icontains=search) |
-                Q(time_hour__icontains=search) |
-                Q(time_minute__icontains=search) |
-                Q(time_second__icontains=search) |
                 # FK
                 Q(type__name_en__icontains=search) |
                 Q(type__name_fr__icontains=search) |

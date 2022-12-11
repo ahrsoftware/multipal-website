@@ -118,19 +118,6 @@ class GenericSlAdminView(admin.ModelAdmin):
     list_display_links = ('id',)
     search_fields = ('name_en', 'name_fr',)
 
-    def get_model_perms(self, request):
-        """
-        Hide SL tables from admin side bar, but still CRUD via inline shortcuts on main models
-        Show SL tables for some users (as determined by USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD in local_settings.py)
-        """
-        if request.user.email in settings.USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD:
-            return admin.ModelAdmin.get_model_perms(self, request)
-        else:
-            return {}
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
     def has_delete_permission(self, request, obj=None):
         return False
 
