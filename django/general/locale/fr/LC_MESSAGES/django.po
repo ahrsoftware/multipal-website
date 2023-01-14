@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-02 22:17+0100\n"
+"POT-Creation-Date: 2023-01-14 14:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,14 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: general/templates/general/about.html:7
+msgid "About"
+msgstr ""
+
+#: general/templates/general/about.html:8
+msgid "about text..."
+msgstr ""
 
 #: general/templates/general/welcome.html:9
 msgid "welcome-intro-p1"
@@ -45,6 +53,46 @@ msgstr "Lire la suite"
 #: general/templates/general/welcome.html:65
 msgid "Palaeography"
 msgstr "Paléographie"
+
+#: general/templates/general/welcome.html:35
+msgid "1. Browse and choose a historical document"
+msgstr ""
+
+#: general/templates/general/welcome.html:37
+msgid ""
+"You can browse the tutorial according to the language / script you require, "
+"and by the date of the historical document. Select your category. A list of "
+"historical documents with a short identification will appear. Choose your "
+"document."
+msgstr ""
+
+#: general/templates/general/welcome.html:44
+msgid "2. Work your transcription"
+msgstr ""
+
+#: general/templates/general/welcome.html:46
+msgid ""
+"By clicking on the icon of the document of your choice, you access the "
+"exercise. The enlarged high-quality image of your chosen document appears on "
+"screen. Below, there are boxes one for each word in the text. By clicking on "
+"the box, the corresponding word is highlighted in the text. By clicking on "
+"the particular place on the image, the corresponding box is highlighted. You "
+"can now transcribe the text word by word or sign by sign, according to the "
+"language/script."
+msgstr ""
+
+#: general/templates/general/welcome.html:53
+msgid "3. Check your work"
+msgstr ""
+
+#: general/templates/general/welcome.html:55
+msgid ""
+"The box containing a correct transcription will turn green. If you made a "
+"mistake, the box will turn red. You can try again as many times as you wish. "
+"In case of a difficult reading or ambiguous abbreviation, try different "
+"possibilities. You can also consult a correct transcription, and read about "
+"the document by clicking the box."
+msgstr ""
 
 #: general/templates/general/welcome.html:62
 msgid "More help"

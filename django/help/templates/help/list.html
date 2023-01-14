@@ -1,15 +1,14 @@
 {% extends "base.html" %}
-{% load static %}
-{% load settings_value %}
+{% load static settings_value i18n %}
 
 {% block main %}
 
 <section>
     <div class="container">
-        <h2>Help</h2>
+        <h2>{% translate 'Help' %}</h2>
         <hr>
         <p>
-            To assist the users and students with learning the difficult skill of Hebrew palaeography, various useful links and guidelines can be accessed here. They include links to other databases of Hebrew manuscripts and catalogues, specially designed palaeographical guidelines and short films in which a contemporary scribe, Jen Taylor, experimentally reconstructs the way medieval scribes traced the Hebrew letters.
+            {% translate 'To assist the users and students with learning the difficult skill of Hebrew palaeography, various useful links and guidelines can be accessed here. They include links to other databases of Hebrew manuscripts and catalogues, specially designed palaeographical guidelines and short films in which a contemporary scribe, Jen Taylor, experimentally reconstructs the way medieval scribes traced the Hebrew letters.' %}
         </p>
     </div>
 </section>
@@ -30,7 +29,7 @@
         <div class="list-body-empty">
             <div class="list-body-empty-title">No help items</div>
             <div class="list-body-empty-details">
-                There are no help items to show yet. Please check back soon or <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">contact us</a> if you have a question.
+                {% translate 'There are no help items to show yet. Please check back soon or' %} <a href="mailto:{% settings_value 'ADMIN_EMAIL' %}">{% translate 'contact us' %}</a> {% translate 'if you have a question' %}.
             </div>
         </div>
     {% endfor %}

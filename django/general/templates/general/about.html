@@ -1,12 +1,11 @@
 {% extends "base.html" %}
-{% load static %}
-{% load settings_value %}
+{% load static settings_value i18n %}
 
 {% block main %}
 
 <section id="about" class="container">
-    <h2>About</h2>
-    <p>about text...</p>
+    <h2>{% translate 'About' %}</h2>
+    <p>{% translate 'about text...' %}</p>
 </section>
 
 {% endblock %}

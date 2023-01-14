@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
+{% load static i18n %}
 
 {% block main %}
 
@@ -11,7 +11,7 @@
         <div id="detail-images-controls-chooseimage" class="detail-controls-item">
             <select{% if object.count_documentimages < 2 %} style="display: none;"{% endif %}>
                 {% for document_image in object.documentimages.all %}
-                    <option value="{{ document_image.id }}">Image {{ forloop.counter }}</option>
+                    <option value="{{ document_image.id }}">{% translate 'Image' %} {{ forloop.counter }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -56,11 +56,11 @@
 
         <!-- Navigation -->
         <div id="detail-navigation">
-            <a href="{{ navigate_all_url }}"><i class="fas fa-th"></i> All</a>
-            <a href="{{ navigate_previous_url }}"><i class="fas fa-chevron-left"></i> Previous</a>
-            <a href="{{ navigate_next_url }}">Next <i class="fas fa-chevron-right"></i></a>
+            <a href="{{ navigate_all_url }}"><i class="fas fa-th"></i> {% translate 'All' %}</a>
+            <a href="{{ navigate_previous_url }}"><i class="fas fa-chevron-left"></i> {% translate 'Previous' %}</a>
+            <a href="{{ navigate_next_url }}">{% translate 'Next' %} <i class="fas fa-chevron-right"></i></a>
             {% if user.is_staff %}
-                <a id="detail-navigation-admindashboard" href="{{ admin_url }}"><i class="fas fa-cog"></i> View in Admin Dashboard</a>
+                <a id="detail-navigation-admindashboard" href="{{ admin_url }}"><i class="fas fa-cog"></i> {% translate 'View in Admin Dashboard' %}</a>
             {% endif %}
         </div>
 
@@ -70,11 +70,11 @@
         <!-- Core Info -->
         <div id="transcription-exercise-coreinfo">
             <div>
-                <label>Tutorial Author:</label>
+                <label>{% translate 'Tutorial Author' %}:</label>
                 <span>{{ object.meta_created_by }}</span>
             </div>
             <div>
-                <label>Difficulty:</label>
+                <label>{% translate 'Difficulty' %}:</label>
                 {% for document_image in object.documentimages.all %}
                     <span id="transcription-exercise-coreinfo-difficulty-{{ document_image.id }}" class="transcription-exercise-coreinfo-difficulty">
                         {{ document_image.difficulty.name }}
@@ -87,7 +87,7 @@
                 {% endfor %}
             </div>
             <div>
-                <label>Score:</label>
+                <label>{% translate 'Score' %}:</label>
                 <span id="transcription-exercise-coreinfo-scoresummary"></span>
             </div>
         </div>
@@ -102,92 +102,92 @@
         <!-- Transcription Controls -->
         <div id="transcription-exercise-controls" class="detail-controls">
             <!-- Reset Transcription -->
-            <div id="transcription-exercise-controls-reset" class="detail-controls-item" title="Reset Transcription"><i class="fas fa-redo-alt"></i></div>
+            <div id="transcription-exercise-controls-reset" class="detail-controls-item" title="{% translate 'Reset Transcription' %}"><i class="fas fa-redo-alt"></i></div>
             <!-- Information -->
-            <div id="transcription-exercise-controls-information" class="detail-controls-item" title="Information"><i class="fas fa-info-circle"></i></div>
+            <div id="transcription-exercise-controls-information" class="detail-controls-item" title="{% translate 'Information' %}"><i class="fas fa-info-circle"></i></div>
             <!-- Instructions -->
-            <div id="transcription-exercise-controls-instructions" class="detail-controls-item" title="Instructions"><i class="fas fa-question-circle"></i></div>
-            <!-- Scores -->
-            <div id="transcription-exercise-controls-scores" class="detail-controls-item" title="Score Details"><i class="fas fa-star"></i></div>
+            <div id="transcription-exercise-controls-instructions" class="detail-controls-item" title="{% translate 'Instructions' %}"><i class="fas fa-question-circle"></i></div>
+            <!-- Score Details -->
+            <div id="transcription-exercise-controls-scores" class="detail-controls-item" title="{% translate 'Score Details' %}"><i class="fas fa-star"></i></div>
             <!-- Full Solution Text -->
-            <div id="transcription-exercise-controls-fullsolution" class="detail-controls-item" title="Full Solution"><i class="fas fa-scroll"></i></div>
+            <div id="transcription-exercise-controls-fullsolution" class="detail-controls-item" title="{% translate 'Full Solution' %}"><i class="fas fa-scroll"></i></div>
             <!-- All Correct Answers -->
-            <div id="transcription-exercise-controls-correctall" class="detail-controls-item" title="All Correct Answers"><i class="fas fa-check-double"></i></div>
+            <div id="transcription-exercise-controls-correctall" class="detail-controls-item" title="{% translate 'All Correct Answers' %}"><i class="fas fa-check-double"></i></div>
             <!-- Current Correct Answer -->
-            <div id="transcription-exercise-controls-correctcurrent" class="detail-controls-item" title="Current Correct Answer"><i class="fas fa-check"></i></div>
+            <div id="transcription-exercise-controls-correctcurrent" class="detail-controls-item" title="{% translate 'Current Correct Answer' %}"><i class="fas fa-check"></i></div>
             <!-- Position Details -->
-            <div id="transcription-exercise-controls-positiondetails" class="detail-controls-item" title="Position Details"><i class="fas fa-list-ol"></i></div>
+            <div id="transcription-exercise-controls-positiondetails" class="detail-controls-item" title="{% translate 'Position Details' %}"><i class="fas fa-list-ol"></i></div>
             {% if user.is_authenticated %}
                 <!-- Add New Document Image Part -->
-                <div id="transcription-exercise-controls-newdocumentimagepart" class="detail-controls-item" title="Add New Part"><i class="fas fa-plus-square"></i></div>
+                <div id="transcription-exercise-controls-newdocumentimagepart" class="detail-controls-item" title="{% translate 'Add New Part' %}"><i class="fas fa-plus-square"></i></div>
                 <!-- Delete Document Image Part -->
-                <div id="transcription-exercise-controls-deletedocumentimagepart" class="detail-controls-item" title="Delete a Part"><i class="fas fa-trash"></i></div>
+                <div id="transcription-exercise-controls-deletedocumentimagepart" class="detail-controls-item" title="{% translate 'Delete a Part' %}"><i class="fas fa-trash"></i></div>
             {% endif %}
         </div>
 
         <!-- Information -->
         <div id="transcription-exercise-information" class="transcription-exercise-controlsdropdown">
             <div>
-                <label>Name:</label>
+                <label>{% translate 'Name' %}:</label>
                 <span>{{ object.name }}</span>
             </div>
             {% if object.m2m_as_text_repositories %}
                 <div>
-                    <label>Repository:</label>
+                    <label>{% translate 'Repository' %}:</label>
                     <span>{{ object.m2m_as_text_repositories }}</span>
                 </div>
             {% endif %}
             {% if object.shelfmark %}
                 <div>
-                    <label>Shelf Mark:</label>
+                    <label>{% translate 'Shelf Mark' %}:</label>
                     <span>{{ object.shelfmark }}</span>
                 </div>
             {% endif %}
             {% if object.type %}
                 <div>
-                    <label>Type:</label>
+                    <label>{% translate 'Type' %}:</label>
                     <span>{{ object.type.name }}</span>
                 </div>
             {% endif %}
             {% if object.m2m_as_text_languages %}
                 <div>
-                    <label>Language/Script:</label>
+                    <label>{% translate 'Language/Script' %}:</label>
                     <span>{{ object.m2m_as_text_languages }}</span>
                 </div>
             {% endif %}
             {% if object.m2m_as_text_inks %}
                 <div>
-                    <label>Ink:</label>
+                    <label>{% translate 'Ink' %}:</label>
                     <span>{{ object.m2m_as_text_inks }}</span>
                 </div>
             {% endif %}
             {% if object.partial_date_range %}
                 <div>
-                    <label>Date Range:</label>
+                    <label>{% translate 'Date Range' %}:</label>
                     <span>{{ object.partial_date_range }}</span>
                 </div>
             {% endif %}
             {% if object.date_full %}
                 <div>
-                    <label>Date:</label>
+                    <label>{% translate 'Date' %}:</label>
                     <span>{{ object.date_full }}</span>
                 </div>
             {% endif %}
             {% if object.meta_created_datetime %}
                 <div>
-                    <label>Tutorial Created:</label>
+                    <label>{% translate 'Tutorial Created' %}:</label>
                     <span>{{ object.meta_created_datetime }}</span>
                 </div>
             {% endif %}
             {% if object.meta_lastupdated_datetime %}
                 <div>
-                    <label>Tutorial Last Updated:</label>
+                    <label>{% translate 'Tutorial Last Updated' %}:</label>
                     <span>{{ object.meta_lastupdated_datetime }}</span>
                 </div>
             {% endif %}
             {% if object.information %}
                 <div>
-                    <label>Information:</label>
+                    <label>{% translate 'Information' %}:</label>
                     <span>{{ object.information | safe | linebreaks }}</span>
                 </div>
             {% endif %}
@@ -195,7 +195,7 @@
 
         <!-- Instructions -->
         <div id="transcription-exercise-instructions" class="transcription-exercise-controlsdropdown">
-            <label>Instructions</label>
+            <label>{% translate 'Instructions' %}</label>
             {% for document_image in object.documentimages.all %}
                 <div id="transcription-exercise-instructions-instruction-{{ document_image.id }}" class="transcription-exercise-instructions-instruction" dir="auto">
                     {{ document_image.instructions | safe | linebreaks }}
@@ -205,19 +205,19 @@
 
         <!-- Scores -->
         <div id="transcription-exercise-scores" class="transcription-exercise-controlsdropdown">
-            <label>Score <span id="transcription-exercise-scores-percentage"></span></label>
-            <div>Total available: <span id="transcription-exercise-scores-available"></span></div>
-            <div>Total unanswered: <span id="transcription-exercise-scores-unanswered"></span></div>
-            <div>Total answered: <span id="transcription-exercise-scores-answered"></span></div>
-            <div>Total wrong: <span id="transcription-exercise-scores-wrong"></span></div>
-            <div>Total correct: <span id="transcription-exercise-scores-correct"></span></div>
+            <label>{% translate 'Score' %} <span id="transcription-exercise-scores-percentage"></span></label>
+            <div>{% translate 'Total available' %}: <span id="transcription-exercise-scores-available"></span></div>
+            <div>{% translate 'Total unanswered' %}: <span id="transcription-exercise-scores-unanswered"></span></div>
+            <div>{% translate 'Total answered' %}: <span id="transcription-exercise-scores-answered"></span></div>
+            <div>{% translate 'Total wrong' %}: <span id="transcription-exercise-scores-wrong"></span></div>
+            <div>{% translate 'Total correct' %}: <span id="transcription-exercise-scores-correct"></span></div>
         </div>
 
         <!-- Solutions -->
         <div id="transcription-exercise-fullsolution" class="transcription-exercise-controlsdropdown">
             {% for document_image in object.documentimages.all %}
                 <div id="transcription-exercise-fullsolution-instance-{{ document_image.id }}" class="transcription-exercise-fullsolution-instance{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
-                    <label>Full Solution</label>
+                    <label>{% translate 'Full Solution' %}</label>
                     <div>
                         {{ document_image.correct_transcription | safe | linebreaksbr }}
                     </div>
@@ -230,13 +230,13 @@
 
             <!-- Step 1 -->
             <div class="newdocumentimagepart-step" data-step="1">
-                <div class="newdocumentimagepart-step-title">Step 1: Draw new part</div>
+                <div class="newdocumentimagepart-step-title">{% translate 'Step 1: Draw new part' %}</div>
                 <div>
                     <p>
-                        Draw a rectangle directly on the document image to show the part of the image to transcribe (e.g. draw a rectangle around a character or word).
+                        {% translate 'Draw a rectangle directly on the document image to show the part of the image to transcribe (e.g. draw a rectangle around a character or word).' %}
                     </p>
                     <p>
-                        To begin drawing click in the top left corner of the part and drag your cursor to the bottom right corner of the part. If you make a mistake simply start drawing the rectangle again (the old rectangle will be automatically deleted).
+                        {% translate 'To begin drawing click in the top left corner of the part and drag your cursor to the bottom right corner of the part. If you make a mistake simply start drawing the rectangle again (the old rectangle will be automatically deleted).' %}
                     </p>
                 </div>
             </div>
@@ -252,7 +252,7 @@
 
                 <!-- Step 2 -->
                 <div class="newdocumentimagepart-step" data-step="2">
-                    <div class="newdocumentimagepart-step-title">Step 2: Position new part</div>
+                    <div class="newdocumentimagepart-step-title">{% translate 'Step 2: Position new part' %}</div>
                     <!-- Required fields -->
                     {% for document_image in object.documentimages.all %}
                         {% if document_image.documentimagepart_set.all %}
@@ -272,7 +272,7 @@
                                 </select>
                             </div>
                             <div id="newdocumentimagepart-form-newline-{{ document_image.id }}" class="newdocumentimagepart-form-newline">
-                                <label for="newline-{{ document_image.id }}">Start a new line?</label>
+                                <label for="newline-{{ document_image.id }}">{% translate 'Start a new line' %}?</label>
                                 <input type="checkbox" id="newline-{{ document_image.id }}" name="newline">
                             </div>
                         {% endif %}
@@ -281,29 +281,29 @@
 
                 <!-- Step 3 -->
                 <div class="newdocumentimagepart-step" data-step="3">
-                    <div class="newdocumentimagepart-step-title">Step 3: Describe new part</div>
+                    <div class="newdocumentimagepart-step-title">{% translate 'Step 3: Describe new part' %}</div>
                     <!-- Required fields -->
                     <div>
-                        <label for="newdocumentimagepart-form-text">Correct solution text</label>
+                        <label for="newdocumentimagepart-form-text">{% translate 'Correct solution text' %}</label>
                         <input type="text" id="newdocumentimagepart-form-text" name="text" required>
                     </div>
                     <!-- Optional fields -->
                     <div class="optional">
-                        <p>The following are optional. They appear outside of the correct solution and are used to help the user complete the exercise.</p>
+                        <p>{% translate 'The following are optional. They appear outside of the correct solution and are used to help the user complete the exercise.' %}</p>
                         <div>
-                            <label for="newdocumentimagepart-form-textbeforepart">Text before input</label>
+                            <label for="newdocumentimagepart-form-textbeforepart">{% translate 'Text before input' %}</label>
                             <input type="text" id="newdocumentimagepart-form-textbeforepart" name="text_before_part">
                         </div><!--
                         --><div>
-                            <label for="newdocumentimagepart-form-textafterpart">Text after input</label>
+                            <label for="newdocumentimagepart-form-textafterpart">{% translate 'Text after input' %}</label>
                             <input type="text" id="newdocumentimagepart-form-textafterpart" name="text_after_part">
                         </div><!--
                         --><div>
-                            <label for="newdocumentimagepart-form-helptext">Help text</label>
+                            <label for="newdocumentimagepart-form-helptext">{% translate 'Help text' %}</label>
                             <input type="text" id="newdocumentimagepart-form-helptext" name="help_text">
                         </div><!--
                         --><div>
-                            <label for="newdocumentimagepart-form-cew">cew</label>
+                            <label for="newdocumentimagepart-form-cew">{% translate 'cew' %}</label>
                             <input type="text" id="newdocumentimagepart-form-cew" name="cew">
                         </div>
                     </div>
@@ -311,7 +311,7 @@
 
                 <!-- Submit -->
                 <div id="newdocumentimagepart-submit">
-                    <button type="submit"><i class="fas fa-plus-square"></i> Add New Part</button>
+                    <button type="submit"><i class="fas fa-plus-square"></i> {% translate 'Add New Part' %}</button>
                 </div>
             </form>
         </div>
@@ -325,7 +325,7 @@
                 {% for document_image in object.documentimages.all %}
                     {% if document_image.documentimagepart_set.all %}
                         <div id="deletedocumentimagepart-form-deleteimagepartid-{{ document_image.id }}" class="deletedocumentimagepart-form-deleteimagepartid">
-                            <label for="deletedocumentimagepartid-{{ document_image.id }}">Delete the following part:</label>
+                            <label for="deletedocumentimagepartid-{{ document_image.id }}">{% translate 'Delete the following part' %}:</label>
                             <select id="deletedocumentimagepartid-{{ document_image.id }}" name="delete_document_image_part_id">
                                 {% for image_part in document_image.documentimagepart_set.all %}
                                     <option value="{{ image_part.id }}"{% if forloop.last %} selected="selected"{% endif %}>
@@ -338,12 +338,12 @@
                 {% endfor %}
 
                 <p>
-                    Note: This action cannot be reversed. This part will be permanently deleted.
+                    {% translate 'Note: This action cannot be reversed. This part will be permanently deleted.' %}
                 </p>
 
                 <!-- Submit -->
                 <div id="deletedocumentimagepart-submit">
-                    <button type="submit"><i class="fas fa-exclamation-triangle"></i> Permanently Delete Selected Document Image Part</button>
+                    <button type="submit"><i class="fas fa-exclamation-triangle"></i> {% translate 'Permanently Delete Selected Document Image Part' %}</button>
                 </div>
             </form>
         </div>

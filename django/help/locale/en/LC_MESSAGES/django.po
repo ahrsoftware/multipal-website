@@ -1,0 +1,44 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-01-14 14:40+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: help/templates/help/list.html:8
+msgid "Help"
+msgstr ""
+
+#: help/templates/help/list.html:11
+msgid ""
+"To assist the users and students with learning the difficult skill of Hebrew "
+"palaeography, various useful links and guidelines can be accessed here. They "
+"include links to other databases of Hebrew manuscripts and catalogues, "
+"specially designed palaeographical guidelines and short films in which a "
+"contemporary scribe, Jen Taylor, experimentally reconstructs the way "
+"medieval scribes traced the Hebrew letters."
+msgstr ""
+
+#: help/templates/help/list.html:32
+msgid "There are no help items to show yet. Please check back soon or"
+msgstr ""
+
+#: help/templates/help/list.html:32
+msgid "contact us"
+msgstr ""
+
+#: help/templates/help/list.html:32
+msgid "if you have a question"
+msgstr ""
