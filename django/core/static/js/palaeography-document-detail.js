@@ -229,6 +229,7 @@ $(document).ready(function(){
             'background-position': '-' + $(this).attr('data-left') + unit + ' -' + $(this).attr('data-top') + unit,
             'width': imagePartWidth + unit,
             'height': imagePartHeight + unit,
+            // 'scale': '4',
             'display': 'block'
         });
 

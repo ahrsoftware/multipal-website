@@ -106,7 +106,7 @@ class DocumentListView(ListView):
         # Filter
         queryset = common.filter(self.request, queryset)
         # Sort
-        queryset = common.sort(self.request, queryset)
+        queryset = common.sort(self.request, queryset, 'name')
         # Remove any possible duplicates
         return queryset.distinct()
 

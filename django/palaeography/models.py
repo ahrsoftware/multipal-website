@@ -276,6 +276,7 @@ class Document(models.Model):
     @property
     def list_details(self):
         details = f"<strong>Images:</strong> {self.count_documentimages}"
+        details += f"<br><strong>Shelfmark:</strong> {self.shelfmark}" if self.shelfmark else ""
         details += f"<br><strong>Language:</strong> {self.m2m_as_text_languages}" if self.m2m_as_text_languages else ""
         details += f"<br><strong>Difficulty:</strong> {self.difficulties}" if self.difficulties else ""
         details += f"<br><strong>Type:</strong> {self.type.name}" if self.type else ""
