@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-{% load static %}
-{% load pagination_go_to_page %}
+{% load static pagination_go_to_page i18n %}
 
 {% block main %}
 
@@ -18,6 +17,7 @@ Sections of this template:
 
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
 
 <!-- List Options -->
 <section id="list-options">
@@ -29,7 +29,7 @@ Sections of this template:
             <div class="col-12">
                 <div class="input-group">
                     <!-- Search textbox -->
-                    <input type="text" class="form-control" name="search" title="search" id="list-options-search-input" placeholder="Search historical documents">
+                    <input type="text" class="form-control" name="search" title="search" id="list-options-search-input" placeholder="{% translate 'Search historical documents' %}">
                     <!-- Search button -->
                     <div class="input-group-append">
                         <button type="submit" value="Search" class="btn btn-primary" title="search-btn" id="list-options-search-button">
@@ -44,10 +44,10 @@ Sections of this template:
         <div id="list-options-filters">
             {% for f in options_filters %}
                 <div class="list-options-filters-filter">
-                    <label for="{{ f.filter_id }}">{{ f.filter_name }}</label>
+                    <label for="{{ f.filter_id }}">{% if LANGUAGE_CODE == 'en' %}{{ f.filter_name_en }}{% elif LANGUAGE_CODE == 'fr' %}{{ f.filter_name_fr }}{% endif %}</label>
                     <!-- Select List filter -->
                     {% if f.filter_options %}
-                        <select id="{{ f.filter_id }}" title="{{ f.filter_name }}" name="{{ f.filter_id }}">
+                        <select id="{{ f.filter_id }}" title="{% if LANGUAGE_CODE == 'en' %}{{ f.filter_name_en }}{% elif LANGUAGE_CODE == 'fr' %}{{ f.filter_name_fr }}{% endif %}" name="{{ f.filter_id }}">
                             {% include 'snippets/select-default.html' %}
                             {% for o in f.filter_options %}
                                 <option value="{{ o.id }}">{{ o.name }}</option>
@@ -63,7 +63,7 @@ Sections of this template:
 
         <!-- Sort -->
         <div id="list-options-sort">
-            <label>Sort</label>
+            <label>{% translate 'Sort' %}</label>
             <!-- Sort by -->
             <select id="list-options-sort-by" name="sort_by">
                 {% for option in options_sortby %}

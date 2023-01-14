@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-14 14:40+0000\n"
+"POT-Creation-Date: 2023-01-14 17:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -222,4 +222,12 @@ msgstr ""
 
 #: palaeography/templates/palaeography/detail.html:346
 msgid "Permanently Delete Selected Document Image Part"
+msgstr ""
+
+#: palaeography/templates/palaeography/list.html:32
+msgid "Search historical documents"
+msgstr ""
+
+#: palaeography/templates/palaeography/list.html:66
+msgid "Sort"
 msgstr ""

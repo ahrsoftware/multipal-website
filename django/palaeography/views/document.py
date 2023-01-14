@@ -154,38 +154,45 @@ class DocumentListView(ListView):
         context['options_filters'] = [
             {
                 'filter_id': f'{common.filter_pre_mm}languages',
-                'filter_name': 'Language',
+                'filter_name_en': 'Language',
+                'filter_name_fr': 'Language',
                 'filter_options': models.SlDocumentLanguage.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_fk}documentimages__difficulty',
-                'filter_name': 'Difficulty',
+                'filter_name_en': 'Difficulty',
+                'filter_name_fr': 'Difficulty',
                 'filter_options': models.SlDocumentImageDifficulty.objects.all().order_by('id')
             },
             {
                 'filter_id': f'{common.filter_pre_fk}type',
-                'filter_name': 'Type',
+                'filter_name_en': 'Type',
+                'filter_name_fr': 'Type',
                 'filter_options': models.SlDocumentType.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_mm}inks',
-                'filter_name': 'Ink',
+                'filter_name_en': 'Ink',
+                'filter_name_fr': 'Ink',
                 'filter_options': models.SlDocumentInk.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_mm}repositories',
-                'filter_name': 'Repository',
+                'filter_name_en': 'Repository',
+                'filter_name_fr': 'Repository',
                 'filter_options': models.SlDocumentRepository.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_gt}year_min',
-                'filter_name': 'Year (from)',
+                'filter_name_en': 'Year (from)',
+                'filter_name_fr': 'Year (from)',
                 'filter_number_min': -2000,
                 'filter_number_max': 2000
             },
             {
                 'filter_id': f'{common.filter_pre_lt}year_max',
-                'filter_name': 'Year (to)',
+                'filter_name_en': 'Year (to)',
+                'filter_name_fr': 'Year (to)',
                 'filter_number_min': -2000,
                 'filter_number_max': 2000
             },
