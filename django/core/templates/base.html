@@ -2,7 +2,9 @@
 
 {% load static settings_value i18n %}
 
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+
+<html lang="{{ LANGUAGE_CODE }}">
 
     <head>
         <title>MultiPal</title>

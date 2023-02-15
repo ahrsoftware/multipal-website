@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static i18n %}
+{% load static i18n l10n %}
 
 {% block main %}
 
@@ -42,7 +42,7 @@
                 <img src="{{ document_image.image.url }}" alt="{{ document_image.alternative_text }}">
                 <div class="detail-images-image-parts">
                     {% for image_part in document_image.documentimagepart_set.all %}
-                        <div id="detail-images-image-parts-part-{{ image_part.id }}" class="detail-images-image-parts-part" style="top: {{ image_part.image_cropped_top }}px; left: {{ image_part.image_cropped_left }}px; width: {{ image_part.image_cropped_width }}px; height: {{ image_part.image_cropped_height }}px;"></div>
+                        <div id="detail-images-image-parts-part-{{ image_part.id }}" class="detail-images-image-parts-part" style="top: {{ image_part.image_cropped_top|unlocalize }}px; left: {{ image_part.image_cropped_left|unlocalize }}px; width: {{ image_part.image_cropped_width|unlocalize }}px; height: {{ image_part.image_cropped_height|unlocalize }}px;"></div>
                     {% endfor %}
                 </div>
             </div>
@@ -377,7 +377,7 @@
                         <!-- Part - Count -->
                         <div class="transcription-exercise-line-part-count">{{ image_part.part_count_in_line }}</div>
                         <!-- Part - Input -->
-                        <input id="transcription-exercise-line-part-{{ image_part.id }}" class="transcription-exercise-line-part-input" type="text" size="{{ image_part.word_length }}" title="Transcribe this part of the image" data-correctanswer="{{ image_part.text }}"{% if image_part.help_text %} data-helptext="{{ image_part.help_text }}"{% endif %} data-left="{{ image_part.image_cropped_left }}" data-top="{{ image_part.image_cropped_top }}" data-width="{{ image_part.image_cropped_width }}" data-height="{{ image_part.image_cropped_height }}" data-position="{{ image_part.position }}">
+                        <input id="transcription-exercise-line-part-{{ image_part.id }}" class="transcription-exercise-line-part-input" type="text" size="{{ image_part.word_length }}" title="Transcribe this part of the image" data-correctanswer="{{ image_part.text }}"{% if image_part.help_text %} data-helptext="{{ image_part.help_text }}"{% endif %} data-left="{{ image_part.image_cropped_left|unlocalize }}" data-top="{{ image_part.image_cropped_top|unlocalize }}" data-width="{{ image_part.image_cropped_width|unlocalize }}" data-height="{{ image_part.image_cropped_height|unlocalize }}" data-position="{{ image_part.position }}">
                         <!-- Part - Answer -->
                         <div id="transcription-exercise-line-part-answer-{{ image_part.id }}" class="transcription-exercise-line-part-answer">{{ image_part.text }}</div>
                     </div>
