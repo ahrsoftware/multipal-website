@@ -95,7 +95,7 @@ def lang_field_value(obj, field='name'):
     except Exception:
         value_lang_default = "<no matching field name found>"
 
-    return value_lang_current if value_lang_current else value_lang_default 
+    return value_lang_current if value_lang_current else value_lang_default
 
 
 class SlAbstract(models.Model):

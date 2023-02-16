@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-14 17:09+0000\n"
+"POT-Creation-Date: 2023-02-16 20:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,154 +18,154 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: palaeography/templates/palaeography/detail.html:14
+#: palaeography/templates/palaeography/detail.html:13
 msgid "Image"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:59
+#: palaeography/templates/palaeography/detail.html:46
 msgid "All"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:60
+#: palaeography/templates/palaeography/detail.html:47
 msgid "Previous"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:61
+#: palaeography/templates/palaeography/detail.html:48
 msgid "Next"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:63
+#: palaeography/templates/palaeography/detail.html:50
 msgid "View in Admin Dashboard"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:73
+#: palaeography/templates/palaeography/detail.html:60
 msgid "Tutorial Author"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:77
+#: palaeography/templates/palaeography/detail.html:64
 msgid "Difficulty"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:90
-#: palaeography/templates/palaeography/detail.html:208
+#: palaeography/templates/palaeography/detail.html:77
+#: palaeography/templates/palaeography/detail.html:198
 msgid "Score"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:105
+#: palaeography/templates/palaeography/detail.html:92
 msgid "Reset Transcription"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:107
-#: palaeography/templates/palaeography/detail.html:190
+#: palaeography/templates/palaeography/detail.html:94
+#: palaeography/templates/palaeography/detail.html:178
 msgid "Information"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:109
-#: palaeography/templates/palaeography/detail.html:198
+#: palaeography/templates/palaeography/detail.html:96
+#: palaeography/templates/palaeography/detail.html:187
 msgid "Instructions"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:111
+#: palaeography/templates/palaeography/detail.html:98
 msgid "Score Details"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:113
-#: palaeography/templates/palaeography/detail.html:220
+#: palaeography/templates/palaeography/detail.html:100
+#: palaeography/templates/palaeography/detail.html:211
 msgid "Full Solution"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:115
+#: palaeography/templates/palaeography/detail.html:102
 msgid "All Correct Answers"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:117
+#: palaeography/templates/palaeography/detail.html:104
 msgid "Current Correct Answer"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:119
+#: palaeography/templates/palaeography/detail.html:106
 msgid "Position Details"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:122
-#: palaeography/templates/palaeography/detail.html:314
+#: palaeography/templates/palaeography/detail.html:109
+#: palaeography/templates/palaeography/detail.html:306
 msgid "Add New Part"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:124
+#: palaeography/templates/palaeography/detail.html:111
 msgid "Delete a Part"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:131
+#: palaeography/templates/palaeography/detail.html:119
 msgid "Name"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:136
+#: palaeography/templates/palaeography/detail.html:124
 msgid "Repository"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:142
+#: palaeography/templates/palaeography/detail.html:130
 msgid "Shelf Mark"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:148
+#: palaeography/templates/palaeography/detail.html:136
 msgid "Type"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:154
+#: palaeography/templates/palaeography/detail.html:142
 msgid "Language/Script"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:160
+#: palaeography/templates/palaeography/detail.html:148
 msgid "Ink"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:166
+#: palaeography/templates/palaeography/detail.html:154
 msgid "Date Range"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:172
+#: palaeography/templates/palaeography/detail.html:160
 msgid "Date"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:178
+#: palaeography/templates/palaeography/detail.html:166
 msgid "Tutorial Created"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:184
+#: palaeography/templates/palaeography/detail.html:172
 msgid "Tutorial Last Updated"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:209
+#: palaeography/templates/palaeography/detail.html:199
 msgid "Total available"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:210
+#: palaeography/templates/palaeography/detail.html:200
 msgid "Total unanswered"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:211
+#: palaeography/templates/palaeography/detail.html:201
 msgid "Total answered"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:212
+#: palaeography/templates/palaeography/detail.html:202
 msgid "Total wrong"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:213
+#: palaeography/templates/palaeography/detail.html:203
 msgid "Total correct"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:233
+#: palaeography/templates/palaeography/detail.html:225
 msgid "Step 1: Draw new part"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:236
+#: palaeography/templates/palaeography/detail.html:228
 msgid ""
 "Draw a rectangle directly on the document image to show the part of the "
 "image to transcribe (e.g. draw a rectangle around a character or word)."
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:239
+#: palaeography/templates/palaeography/detail.html:231
 msgid ""
 "To begin drawing click in the top left corner of the part and drag your "
 "cursor to the bottom right corner of the part. If you make a mistake simply "
@@ -173,54 +173,54 @@ msgid ""
 "deleted)."
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:255
+#: palaeography/templates/palaeography/detail.html:247
 msgid "Step 2: Position new part"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:275
+#: palaeography/templates/palaeography/detail.html:267
 msgid "Start a new line"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:284
+#: palaeography/templates/palaeography/detail.html:276
 msgid "Step 3: Describe new part"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:287
+#: palaeography/templates/palaeography/detail.html:279
 msgid "Correct solution text"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:292
+#: palaeography/templates/palaeography/detail.html:284
 msgid ""
 "The following are optional. They appear outside of the correct solution and "
 "are used to help the user complete the exercise."
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:294
+#: palaeography/templates/palaeography/detail.html:286
 msgid "Text before input"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:298
+#: palaeography/templates/palaeography/detail.html:290
 msgid "Text after input"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:302
+#: palaeography/templates/palaeography/detail.html:294
 msgid "Help text"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:306
+#: palaeography/templates/palaeography/detail.html:298
 msgid "cew"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:328
+#: palaeography/templates/palaeography/detail.html:321
 msgid "Delete the following part"
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:341
+#: palaeography/templates/palaeography/detail.html:334
 msgid ""
 "Note: This action cannot be reversed. This part will be permanently deleted."
 msgstr ""
 
-#: palaeography/templates/palaeography/detail.html:346
+#: palaeography/templates/palaeography/detail.html:339
 msgid "Permanently Delete Selected Document Image Part"
 msgstr ""
 
@@ -230,4 +230,8 @@ msgstr ""
 
 #: palaeography/templates/palaeography/list.html:66
 msgid "Sort"
+msgstr ""
+
+#: palaeography/templates/palaeography/snippets/transcription-exercise-controlsdropdown-close.html:4
+msgid "Close"
 msgstr ""
