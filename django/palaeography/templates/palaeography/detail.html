@@ -6,7 +6,6 @@
 <div id="detail-images">
     <!-- Image Controls -->
     <div id="detail-images-controls" class="detail-controls">
-
         <!-- Choose Image -->
         <div id="detail-images-controls-chooseimage" class="detail-controls-item">
             <select{% if object.count_documentimages < 2 %} style="display: none;"{% endif %}>
@@ -23,18 +22,6 @@
         </div>
         <!-- Reveal All Parts -->
         <div id="detail-images-controls-revealallparts" class="detail-controls-item" title="Reveal All Parts on Image"><i class="fas fa-border-none"></i></div>
-        
-        <!-- Zoom -->
-        <div id="detail-images-controls-zoom">
-            <!-- Zoom: Out -->
-            <div id="detail-images-controls-zoom-out" class="detail-controls-item" title="Zoom Out"><i class="fas fa-search-minus"></i></div>
-            <!-- Zoom: Slider -->
-            <div id="detail-images-controls-zoom-range" class="detail-controls-item" title="Zoom">
-                <input type="range" id="detail-images-controls-zoom-range-slider" title="detail-images-controls-zoom-range-slider" min="10" max="1000" value="100">
-            </div>
-            <!-- Zoom: In -->
-            <div id="detail-images-controls-zoom-in" class="detail-controls-item" title="Zoom In"><i class="fas fa-search-plus"></i></div>
-        </div>
     </div>
     <div id="detail-images-container">
         {% for document_image in object.documentimages.all %}
@@ -127,6 +114,7 @@
 
         <!-- Information -->
         <div id="transcription-exercise-information" class="transcription-exercise-controlsdropdown">
+            {% include "palaeography/snippets/transcription-exercise-controlsdropdown-close.html" %}
             <div>
                 <label>{% translate 'Name' %}:</label>
                 <span>{{ object.name }}</span>
@@ -195,6 +183,7 @@
 
         <!-- Instructions -->
         <div id="transcription-exercise-instructions" class="transcription-exercise-controlsdropdown">
+            {% include "palaeography/snippets/transcription-exercise-controlsdropdown-close.html" %}
             <label>{% translate 'Instructions' %}</label>
             {% for document_image in object.documentimages.all %}
                 <div id="transcription-exercise-instructions-instruction-{{ document_image.id }}" class="transcription-exercise-instructions-instruction" dir="auto">
@@ -205,6 +194,7 @@
 
         <!-- Scores -->
         <div id="transcription-exercise-scores" class="transcription-exercise-controlsdropdown">
+            {% include "palaeography/snippets/transcription-exercise-controlsdropdown-close.html" %}
             <label>{% translate 'Score' %} <span id="transcription-exercise-scores-percentage"></span></label>
             <div>{% translate 'Total available' %}: <span id="transcription-exercise-scores-available"></span></div>
             <div>{% translate 'Total unanswered' %}: <span id="transcription-exercise-scores-unanswered"></span></div>
@@ -213,8 +203,9 @@
             <div>{% translate 'Total correct' %}: <span id="transcription-exercise-scores-correct"></span></div>
         </div>
 
-        <!-- Solutions -->
+        <!-- Full Solution -->
         <div id="transcription-exercise-fullsolution" class="transcription-exercise-controlsdropdown">
+            {% include "palaeography/snippets/transcription-exercise-controlsdropdown-close.html" %}
             {% for document_image in object.documentimages.all %}
                 <div id="transcription-exercise-fullsolution-instance-{{ document_image.id }}" class="transcription-exercise-fullsolution-instance{% if document_image.right_to_left %} dir-rtl{% else %} dir-ltr{% endif %}" dir="{% if document_image.right_to_left %}rtl{% else %}ltr{% endif %}">
                     <label>{% translate 'Full Solution' %}</label>
@@ -227,6 +218,7 @@
 
         <!-- Add New Document Image Part -->
         <div id="transcription-exercise-newdocumentimagepart" class="transcription-exercise-controlsdropdown">
+            {% include "palaeography/snippets/transcription-exercise-controlsdropdown-close.html" %}
 
             <!-- Step 1 -->
             <div class="newdocumentimagepart-step" data-step="1">
@@ -318,6 +310,7 @@
 
         <!-- Delete a Document Image Part -->
         <div id="transcription-exercise-deletedocumentimagepart" class="transcription-exercise-controlsdropdown">
+            {% include "palaeography/snippets/transcription-exercise-controlsdropdown-close.html" %}
             <form id="transcription-exercise-deletedocumentimagepart-form" enctype="multipart/form-data" method="POST" action="{% url 'palaeography:document-imagepart-delete' %}">
                 {% csrf_token %}
                 <input type="hidden" name="document_id" value="{{ object.id }}">
@@ -399,7 +392,6 @@
                 <div id="transcription-exercise-part-popup">
                     <div id="transcription-exercise-part-popup-position"></div>
                     <div id="transcription-exercise-part-popup-helptext" dir="auto"></div>
-                    <div id="transcription-exercise-part-popup-image"></div>
                 </div>
             </div></div>
         {% endfor %}
@@ -408,6 +400,13 @@
 </div>
 
 <!-- JS -->
-<script src="{% static 'js/palaeography-document-detail.js' %}"></script>
+<!-- Panzoom -->
+<!-- https://www.jqueryscript.net/zoom/jQuery-Plugin-For-Panning-Zooming-Any-Elements-panzoom.html -->
+<!-- https://github.com/timmywil/panzoom -->
+<script src="{% static 'js/panzoom.min.js' %}"></script>
+<!-- Custom JS -->
+<script>
+    {% include "palaeography/js/palaeography-document-detail.js" %}
+</script>
 
 {% endblock %}

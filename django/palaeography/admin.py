@@ -3,7 +3,6 @@ from django.db.models import ManyToManyField
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.utils import timezone
-from django.conf import settings
 from . import models
 from .apps import app_name
 

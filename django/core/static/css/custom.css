@@ -158,10 +158,6 @@ em {
     display: none;
 }
 
-.draggable {
-    cursor: move;
-}
-
 .drawable {
     cursor: crosshair;
 }
@@ -777,108 +773,6 @@ main {
     margin: 0.4em 0.8em;
 }
 
-#detail-images-controls-zoom {
-    display: inline-block;
-    margin-left: 3em;
-}
-
-#detail-images-controls-zoom-range {
-    padding: 0.5em 0.78em 0.78em 0.78em;
-    vertical-align: top;
-}
-
-#detail-images-controls-zoom-range input[type=range] {
-    -webkit-appearance: none;
-    width: 10em;
-    background: none;
-    display: inline-block;
-    vertical-align: middle;
-    cursor: pointer;
-}
-
-#detail-images-controls-zoom-range input[type=range]:focus {
-    outline: none;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-webkit-slider-runnable-track {
-    width: 100%;
-    height: 0.3em;
-    background: white;
-    border-radius: 1.3px;
-    border: 0.2px solid white;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-webkit-slider-thumb {
-    border: 1px solid white;
-    height: 1.5em;
-    width: 13px;
-    border-radius: 3px;
-    background: white;
-    -webkit-appearance: none;
-    margin-top: -10px;
-}
-
-#detail-images-controls-zoom-range input[type=range]:focus::-webkit-slider-runnable-track {
-    background: black;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-moz-range-track {
-    width: 100%;
-    height: 0.3em;
-    background: white;
-    border-radius: 1.3px;
-    border: 0.2px solid white;
-    padding: 0 0.15em;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-moz-range-thumb {
-    border: 1px solid white;
-    height: 1.5em;
-    width: 13px;
-    border-radius: 3px;
-    background: white;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-ms-track {
-    width: 100%;
-    height: 0.3em;
-    cursor: pointer;
-    background: transparent;
-    border-color: transparent;
-    border-width: 16px 0;
-    color: transparent;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-ms-fill-lower {
-    background: white;
-    border: 0.2px solid white;
-    border-radius: 2.6px;
-    box-shadow: 1px 1px 1px #000000, 0px 0px 1px #0d0d0d;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-ms-fill-upper {
-    background: white;
-    border: 0.2px solid white;
-    border-radius: 2.6px;
-}
-
-#detail-images-controls-zoom-range input[type=range]::-ms-thumb {
-    border: 1px solid white;
-    height: 2em;
-    width: 16px;
-    border-radius: 3px;
-    background: white;
-    cursor: pointer;
-}
-
-#detail-images-controls-zoom-range input[type=range]:focus::-ms-fill-lower {
-    background: white;
-}
-
-#detail-images-controls-zoom-range input[type=range]:focus::-ms-fill-upper {
-    background: white;
-}
-
 #detail-images-container {
     overflow: auto;
     height: calc(100vh - 8em);
@@ -888,7 +782,7 @@ main {
 .detail-images-image {
     position: relative;
     display: none;
-    width: 1000px;  /* THIS MUST STAY AS 1000px, OR ALL EXISTING ANNOTATIONS WILL MOVE ON PAGE AS THEY'RE BASED ON WIDTH of 1000px */
+    width: 0;
 }
 
 .detail-images-image.active {
@@ -1022,6 +916,37 @@ a#detail-navigation-admindashboard {
     padding: 1em;
     font-size: 1em;
     line-height: 1.7em;
+}
+
+.transcription-exercise-controlsdropdown-close-container {
+    text-align: right;
+}
+
+.transcription-exercise-controlsdropdown-close {
+    width: fit-content;
+    display: inline-block;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 0.1em 0.8em;
+    border-radius: 0.3em;
+    margin-bottom: 0.2em;
+}
+
+.transcription-exercise-controlsdropdown-close:hover {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.transcription-exercise-controlsdropdown-close i {
+    font-size: 1.3em;
+    margin-right: 0.1rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.transcription-exercise-controlsdropdown-close span {
+    font-size: 1em;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .transcription-exercise-controlsdropdown label {
@@ -1256,6 +1181,9 @@ a#detail-navigation-admindashboard {
     box-shadow: rgba(0, 0, 0, 0.27) 0px 3px 6px, rgba(0, 0, 0, 0.37) 0px 3px 6px;
     font-size: 0.9rem;
     padding: 0.5em;
+    max-width: 17em;
+    max-height: 17em;
+    overflow: auto;
 }
 
 #transcription-exercise-part-popup-position {
@@ -1271,10 +1199,6 @@ a#detail-navigation-admindashboard {
 #transcription-exercise-part-popup-helptext {
     width: 100%;
     white-space: pre-wrap;
-}
-
-#transcription-exercise-part-popup-image {
-    margin-top: 0.3em;
 }
 
 #transcription-exercise-information div {

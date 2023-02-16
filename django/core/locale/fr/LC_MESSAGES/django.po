@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-14 17:09+0000\n"
+"POT-Creation-Date: 2023-02-16 20:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,47 +21,47 @@ msgstr "English"
 msgid "French"
 msgstr "Français"
 
-#: core/templates/base.html:58
+#: core/templates/base.html:60
 msgid "tagline"
 msgstr "Tutoriels de Paléographie"
 
-#: core/templates/base.html:71
+#: core/templates/base.html:73
 msgid "Welcome"
 msgstr "Bienvenue"
 
-#: core/templates/base.html:77
+#: core/templates/base.html:79
 msgid "Palaeography"
 msgstr "Paléographie"
 
-#: core/templates/base.html:83
+#: core/templates/base.html:85
 msgid "About"
 msgstr "Informations"
 
-#: core/templates/base.html:89
+#: core/templates/base.html:91
 msgid "Help"
 msgstr "Aider"
 
-#: core/templates/base.html:129
+#: core/templates/base.html:131
 msgid "Contact us"
 msgstr "Contactez-nous"
 
-#: core/templates/base.html:132
+#: core/templates/base.html:134
 msgid "Website developed by"
 msgstr "Site développé par"
 
-#: core/templates/base.html:135
+#: core/templates/base.html:137
 msgid "Cookies"
 msgstr ""
 
-#: core/templates/base.html:137
+#: core/templates/base.html:139
 msgid "Accessibility"
 msgstr "Accessibilité"
 
-#: core/templates/base.html:139
+#: core/templates/base.html:141
 msgid "Account"
 msgstr ""
 
-#: core/templates/base.html:143
+#: core/templates/base.html:145
 msgid "Admin"
 msgstr "Administrateur"
 
