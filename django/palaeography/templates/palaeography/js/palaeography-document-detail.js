@@ -1,5 +1,39 @@
 $(document).ready(function(){
 
+    // Panzoom
+    var panzoom;
+    var panzoomParent;
+    var panzoomElement;
+    var panzoomImageId;
+    var panzoomOptions = {
+        cursor: 'move',
+        maxScale: 13,
+        minScale: 0.13,
+        disablePan: false,
+        disableZoom: false,
+        step: 0.13,
+        handleStartEvent: function(e) {
+            // The following 2 lines were default but stopped drawing new parts from working
+            // e.preventDefault();
+            // e.stopPropagation();
+        }
+    };
+    // Calculate the start scale (e.g. so image width matches container width by default)
+    function setPanzoomStartScale(){
+        var imageWidth = $('#detail-images-image-' + panzoomImageId).find('img').width();
+        var imageContainerWidth = $('#detail-images-container').width();
+        var startScale = (imageContainerWidth / imageWidth);
+        panzoomOptions.startScale = startScale;
+    }
+    // Activate Panzoom on the current panzoomImageId image
+    function setPanzoomOnImage(){
+        if (panzoom !== undefined) panzoom.destroy();
+        panzoomElement = document.getElementById('detail-images-image-' + panzoomImageId);
+        panzoom = Panzoom(panzoomElement, panzoomOptions);
+        panzoomParent = panzoomElement.parentElement
+        panzoomParent.addEventListener('wheel', panzoom.zoomWithWheel);
+    }
+
     // Functions for simplifying interacting with URL parameters
     function getUrlParameter(parameter) {
         return new URLSearchParams(window.location.search).get(parameter);
@@ -38,6 +72,12 @@ $(document).ready(function(){
         $(button).toggleClass('active');
         $('#transcription-exercise-' + thisId).toggle();
     }
+    // Controls dropdown close button
+    $('.transcription-exercise-controlsdropdown-close').on('click', function(){
+        // Get the final word in id of this section, e.g. get 'information' in id="...-...-information"
+        var thisId = $(this).closest('.transcription-exercise-controlsdropdown').attr('id').split('-').slice(-1)[0];
+        $('#transcription-exercise-controls-' + thisId).trigger('click');
+    });
     // Information
     $('#transcription-exercise-controls-information').on('click', function(){ controlsDropdownContentToggle(this); });
     // Instructions
@@ -128,7 +168,7 @@ $(document).ready(function(){
         var count_unanswered = count_available - count_answered;
         var percentage = Math.round((count_correct / count_available) * 100);
         if (isNaN(percentage)) percentage = 0;  // prevent it from showing NaN as the score
-        
+
         // Set text
         // Core info
         $('#transcription-exercise-coreinfo-scoresummary').text(count_correct + '/' + count_available + ' (' + percentage + '%)');
@@ -193,7 +233,7 @@ $(document).ready(function(){
     function setDocumentImagePartPopupStyle(inputElement){
         var inputElement = $('#transcription-exercise-line-part-' + lastActiveDocumentImagePartId);
         var unit = 'px';
-        $('#transcription-exercise-part-popup').show().width($(inputElement).attr('data-width') + unit);
+        $('#transcription-exercise-part-popup').show();
         var popupWidth = $('#transcription-exercise-part-popup').outerWidth();
         var popupHeight = $('#transcription-exercise-part-popup').outerHeight();
         var inputElementPosition = $(inputElement).position();
@@ -211,26 +251,11 @@ $(document).ready(function(){
             setDocumentImagePartPopupStyle();
         }
     });
-    // When focusing on a part, load the popup with that part's content and style/position it for the part
+    // When focusing on a part, load the popup with that part's content, style, position
     $('.transcription-exercise-line-part-input').on('focus', function(){
-
-        var unit = 'px';
 
         // Set the position details (i.e. line count and part count in line)
         $('#transcription-exercise-part-popup-position').text($(this).attr('data-position'));
-
-        // Set the image in the preview as the current image part's cropped image
-        var img = $('.detail-images-image.active').first().find('img');
-        var imagePartWidth = $(this).attr('data-width');
-        var imagePartHeight = $(this).attr('data-height');
-        $('#transcription-exercise-part-popup-image').css({
-            'background-repeat': 'no-repeat',
-            'background-image': 'url("' + img.attr('src') + '")',
-            'background-position': '-' + $(this).attr('data-left') + unit + ' -' + $(this).attr('data-top') + unit,
-            'width': imagePartWidth + unit,
-            'height': imagePartHeight + unit,
-            'display': 'block'
-        });
 
         // Set the help text for this document image part in the popup
         var helptext = $(this).attr('data-helptext');
@@ -240,6 +265,8 @@ $(document).ready(function(){
         // Set the style of the popup
         setDocumentImagePartPopupStyle(this);
     });
+
+    // Document Image Controls
 
     // Choose image select list (set default value, change event, trigger on load)
     $('#detail-images-controls-chooseimage select').val(
@@ -253,6 +280,7 @@ $(document).ready(function(){
         $('.transcription-exercise-controlsdropdown').hide();
 
         var imageId = $(this).find(":selected").val();
+        panzoomImageId = imageId;
         // Update URL
         setUrlParameter('image', imageId);
         // Remove 'active' from existing image (and related content)
@@ -262,58 +290,20 @@ $(document).ready(function(){
         // Set the 'Download image' link location
         var imageUrl = $('#detail-images-image-' + imageId).find('img').attr('src');
         $('#detail-images-controls-downloadimage a').attr('href', imageUrl);
+        // Set Panzoom
+        setPanzoomStartScale();
+        setPanzoomOnImage();
     }).trigger('change');  // Show the first image by default on page load
-
-
-    // Image Controls
 
     // Reveal All Parts
     $('#detail-images-controls-revealallparts').on('click', function(){
         $('.detail-images-image-parts-part').toggleClass('revealall');
     });
 
-    // Zoom
-    function zoomInOrOut(zoomOut=false){
-        let slider = $('#detail-images-controls-zoom-range-slider');
-        let currentVal = slider.val();
-        let changeVal = (zoomOut ? 0.7 : 1.3);
-        slider.val(currentVal * changeVal).trigger('input');
-    }
-    // Zoom: Out
-    $('#detail-images-controls-zoom-out').on('click', function(){
-        zoomInOrOut(true);
-    });
-    // Zoom: In
-    $('#detail-images-controls-zoom-in').on('click', function(){
-        zoomInOrOut();
-    });
-    // Zoom: Slider
-    function zoomImage(zoomLevel){
-        $('.detail-images-image').css({'transform': 'scale(' + zoomLevel + ', ' + zoomLevel + ')', 'transform-origin': '0% 0%'});
-    }
-    // Set zoom via slider
-    $('#detail-images-controls-zoom-range-slider').on('input', function(){
-        let zoomLevel = $(this).val() / 100;
-        zoomImage(zoomLevel);
-    }).on('change', function(){$(this).blur();});  // Stops the tooltip from remaining visible when focus stays on range slider
-    // Set zoom/scale for 100% width of the image in the container
-    function zoomFullWidth(){
-        var imageWidth = $('.detail-images-image.active').first().find('img').width();
-        var imageContainerWidth = $('#detail-images-container').width();
-        var scale = (imageContainerWidth / imageWidth) * 100;
-        $('#detail-images-controls-zoom-range-slider').val(scale).trigger('input');
-    }
     // Reset image viewer to default
     $('#detail-images-controls-reset').on('click', function(){
-        zoomFullWidth();
-        $('#detail-images-container').scrollTop(0).scrollLeft(0);
-    });
-
-    // Reset the image viewer when the first active image is loaded
-    $('.detail-images-image.active').first().find('img').on('load', function(){
-        $('#detail-images-controls-reset').trigger('click');
-    }).each(function() {
-        if(this.complete) $(this).trigger('load');
+        setPanzoomStartScale();
+        panzoom.reset();
     });
 
     //
@@ -331,12 +321,21 @@ $(document).ready(function(){
             $(this).removeClass('active');
             canDrawNewDocumentImagePart = false;
             $('.detail-images-image').removeClass('drawable');
+            // Change panzoom options
+            panzoomOptions.disablePan = false;
+            panzoomOptions.cursor = 'move';
+            panzoom.setOptions(panzoomOptions);
         }
         // If can draw state is deactive, activate it
         else {
             $(this).addClass('active');
             canDrawNewDocumentImagePart = true;
             $('.detail-images-image').addClass('drawable');
+            // Change panzoom options
+            panzoomOptions.disablePan = true;
+            panzoomOptions.cursor = 'crosshair';
+            panzoom.setOptions(panzoomOptions);
+            // Show/hide steps information
             $('.newdocumentimagepart-step, #newdocumentimagepart-submit').hide();
             $('.newdocumentimagepart-step[data-step="1"]').show();
         }
@@ -351,9 +350,8 @@ $(document).ready(function(){
             // Reset position values
             newDocumentImagePartPosition = {left: 0, top: 0, width: 0, height: 0}
             // Set new position values
-            let zoomLevel = $('#detail-images-controls-zoom-range-slider').val()/100;
-            newDocumentImagePartPosition.left = (e.pageX - $(this).offset().left) / zoomLevel;
-            newDocumentImagePartPosition.top = (e.pageY - $(this).offset().top) / zoomLevel;
+            newDocumentImagePartPosition.left = (e.pageX - $(this).offset().left) / panzoom.getScale();
+            newDocumentImagePartPosition.top = (e.pageY - $(this).offset().top) / panzoom.getScale();
 
             // Create and append the new rectangle
             let newDocumentImagePartHtml = `<div class="detail-images-image-parts-part new" style="height: 2px; width: 2px; left: ` + newDocumentImagePartPosition.left + `px; top: ` + newDocumentImagePartPosition.top + `px;"></div>`;
@@ -366,9 +364,8 @@ $(document).ready(function(){
     // Drawing size of rectangle
     $('.detail-images-image').on('mousemove', function(e){
         if (isDrawingNewDocumentImagePart){
-            let zoomLevel = $('#detail-images-controls-zoom-range-slider').val()/100;
-            newDocumentImagePartPosition.width = ((e.pageX - $(this).offset().left) / zoomLevel) - newDocumentImagePartPosition.left;
-            newDocumentImagePartPosition.height = ((e.pageY - $(this).offset().top) / zoomLevel) - newDocumentImagePartPosition.top;
+            newDocumentImagePartPosition.width = ((e.pageX - $(this).offset().left) / panzoom.getScale()) - newDocumentImagePartPosition.left;
+            newDocumentImagePartPosition.height = ((e.pageY - $(this).offset().top) / panzoom.getScale()) - newDocumentImagePartPosition.top;
 
             $('.detail-images-image-parts-part.new').first().css({'height': newDocumentImagePartPosition.height + 'px', 'width': newDocumentImagePartPosition.width + 'px'})
         }
