@@ -154,6 +154,9 @@ class DocumentAdminView(GenericAdminView):
         queryset = queryset.select_related('type', 'meta_created_by', 'meta_lastupdated_by')
         return queryset
 
+    def has_delete_permission(self, request, obj=None):
+        return True
+
 
 # Register admin views
 

