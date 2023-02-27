@@ -114,4 +114,10 @@
         vertical-align: middle;
     }
 
+    /* ---------- Footer ---------- */
+
+    footer img {
+        margin: 1em 2.7em;
+    }
+
 }
