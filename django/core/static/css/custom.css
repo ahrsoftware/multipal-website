@@ -1280,8 +1280,10 @@ footer {
 }
 
 footer img {
-    width: 23em;
-    max-width: 90%;
+    height: 5em;
+    max-width: 95%;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 #footer-content-text {

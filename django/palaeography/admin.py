@@ -94,9 +94,6 @@ class GenericAdminView(admin.ModelAdmin):
             obj.meta_lastupdated_datetime = timezone.now()
         obj.save()
 
-    def has_delete_permission(self, request, obj=None):
-        return False
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Set all many to many fields to display the filter_horizontal widget
