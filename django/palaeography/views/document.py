@@ -159,6 +159,12 @@ class DocumentListView(ListView):
                 'filter_options': models.SlDocumentLanguage.objects.all().order_by(order_by_lang_field)
             },
             {
+                'filter_id': f'{common.filter_pre_mm}scripts',
+                'filter_name_en': 'Script',
+                'filter_name_fr': 'Script',
+                'filter_options': models.SlDocumentScript.objects.all().order_by(order_by_lang_field)
+            },
+            {
                 'filter_id': f'{common.filter_pre_fk}documentimages__difficulty',
                 'filter_name_en': 'Difficulty',
                 'filter_name_fr': 'Difficulty',
@@ -175,6 +181,12 @@ class DocumentListView(ListView):
                 'filter_name_en': 'Ink',
                 'filter_name_fr': 'Ink',
                 'filter_options': models.SlDocumentInk.objects.all().order_by(order_by_lang_field)
+            },
+            {
+                'filter_id': f'{common.filter_pre_mm}materials',
+                'filter_name_en': 'Material',
+                'filter_name_fr': 'Material',
+                'filter_options': models.SlDocumentMaterial.objects.all().order_by(order_by_lang_field)
             },
             {
                 'filter_id': f'{common.filter_pre_mm}repositories',

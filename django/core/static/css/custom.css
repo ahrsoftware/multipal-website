@@ -352,6 +352,33 @@ form.full-form button[type=submit].button-danger {
 
 /* ---------- Navigation ---------- */
 
+.rotate {
+    transform-origin: 50% 50%;
+    width: fit-content;
+    height: fit-content;
+    background: red;
+    border: 1px solid red;
+}
+
+.rotate-0 {
+    transform: rotate(0deg);
+}
+
+.rotate-90 {
+    transform-origin: 50% 50%;
+    transform: rotate(90deg);
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+.rotate-270 {
+    transform: rotate(270deg);
+}
+
+/* ---------- Navigation ---------- */
+
 nav.navbar {
     background: white;
     vertical-align: middle;
@@ -734,6 +761,7 @@ main {
     background: #4f667d;
     color: #FFF;
     padding: 0 0.5em;
+    user-select: none;
 }
 
 .detail-controls-item {
@@ -773,6 +801,10 @@ main {
     margin: 0.4em 0.8em;
 }
 
+#detail-images-controls-rotate.disabled {
+    opacity: 0.5;
+}
+
 #detail-images-container {
     overflow: auto;
     height: calc(100vh - 8em);
@@ -789,7 +821,7 @@ main {
     display: block;
 }
 
-.detail-images-image img {
+.detail-images-image-rotatelayer {
     position: absolute;
     top: 0;
     left: 0;

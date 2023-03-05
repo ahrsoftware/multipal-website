@@ -15,24 +15,28 @@
             </select>
         </div>
         <!-- Reset Viewer -->
-        <div id="detail-images-controls-reset" class="detail-controls-item" title="Reset Image"><i class="fas fa-redo-alt"></i></div>
+        <div id="detail-images-controls-reset" class="detail-controls-item" title="Reset Image"><i class="fas fa-sync-alt"></i></div>
         <!-- Download Image -->
         <div id="detail-images-controls-downloadimage" class="detail-controls-item" title="Download Image">
             <a href="{{ object.default_image.image.url }}" title="download image" download><i class="fas fa-download"></i></a>
         </div>
         <!-- Reveal All Parts -->
         <div id="detail-images-controls-revealallparts" class="detail-controls-item" title="Reveal All Parts on Image"><i class="fas fa-border-none"></i></div>
+        <!-- Rotate Image -->
+        <div id="detail-images-controls-rotate" class="detail-controls-item" title="Rotate Image 90&deg;"><i class="fas fa-redo-alt"></i></div>
     </div>
     <div id="detail-images-container">
         {% for document_image in object.documentimages.all %}
             <div id="detail-images-image-{{ document_image.id }}" class="detail-images-image">
-                <img src="{{ document_image.image.url }}" alt="{{ document_image.alternative_text }}">
-                <div class="detail-images-image-parts">
-                    {% for image_part in document_image.documentimagepart_set.all %}
-                        <div id="detail-images-image-parts-part-{{ image_part.id }}" class="detail-images-image-parts-part" style="top: {{ image_part.image_cropped_top|unlocalize }}px; left: {{ image_part.image_cropped_left|unlocalize }}px; width: {{ image_part.image_cropped_width|unlocalize }}px; height: {{ image_part.image_cropped_height|unlocalize }}px;"></div>
-                    {% endfor %}
+                <div class="detail-images-image-rotatelayer">
+                    <img src="{{ document_image.image.url }}" alt="{{ document_image.alternative_text }}">
+                    <div class="detail-images-image-parts">
+                        {% for image_part in document_image.documentimagepart_set.all %}
+                            <div id="detail-images-image-parts-part-{{ image_part.id }}" class="detail-images-image-parts-part" style="top: {{ image_part.image_cropped_top|unlocalize }}px; left: {{ image_part.image_cropped_left|unlocalize }}px; width: {{ image_part.image_cropped_width|unlocalize }}px; height: {{ image_part.image_cropped_height|unlocalize }}px;"></div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
+             </div>
         {% endfor %}
     </div>
 </div>
@@ -89,7 +93,7 @@
         <!-- Transcription Controls -->
         <div id="transcription-exercise-controls" class="detail-controls">
             <!-- Reset Transcription -->
-            <div id="transcription-exercise-controls-reset" class="detail-controls-item" title="{% translate 'Reset Transcription' %}"><i class="fas fa-redo-alt"></i></div>
+            <div id="transcription-exercise-controls-reset" class="detail-controls-item" title="{% translate 'Reset Transcription' %}"><i class="fas fa-sync-alt"></i></div>
             <!-- Information -->
             <div id="transcription-exercise-controls-information" class="detail-controls-item" title="{% translate 'Information' %}"><i class="fas fa-info-circle"></i></div>
             <!-- Instructions -->
@@ -139,14 +143,26 @@
             {% endif %}
             {% if object.m2m_as_text_languages %}
                 <div>
-                    <label>{% translate 'Language/Script' %}:</label>
+                    <label>{% translate 'Language' %}:</label>
                     <span>{{ object.m2m_as_text_languages }}</span>
+                </div>
+            {% endif %}
+            {% if object.m2m_as_text_scripts %}
+                <div>
+                    <label>{% translate 'Script' %}:</label>
+                    <span>{{ object.m2m_as_text_scripts }}</span>
                 </div>
             {% endif %}
             {% if object.m2m_as_text_inks %}
                 <div>
                     <label>{% translate 'Ink' %}:</label>
                     <span>{{ object.m2m_as_text_inks }}</span>
+                </div>
+            {% endif %}
+            {% if object.m2m_as_text_materials %}
+                <div>
+                    <label>{% translate 'Material' %}:</label>
+                    <span>{{ object.m2m_as_text_materials }}</span>
                 </div>
             {% endif %}
             {% if object.partial_date_range %}
