@@ -137,11 +137,19 @@ class SlDocumentInk(SlAbstract):
 
 
 class SlDocumentLanguage(SlAbstract):
-    "The language/script of a document"
+    "The language of a document"
 
     class Meta:
         verbose_name = 'Language'
         verbose_name_plural = 'List: Languages'
+
+
+class SlDocumentMaterial(SlAbstract):
+    "The material used to make a document. E.g. Paper/Metal/Wood"
+
+    class Meta:
+        verbose_name = 'Material'
+        verbose_name_plural = 'List: Materials'
 
 
 class SlDocumentRepository(SlAbstract):
@@ -150,6 +158,14 @@ class SlDocumentRepository(SlAbstract):
     class Meta:
         verbose_name = 'Repository'
         verbose_name_plural = 'List: Repositories'
+
+
+class SlDocumentScript(SlAbstract):
+    "The script used within a document. E.g. Arabic/Latin/Hebrew"
+
+    class Meta:
+        verbose_name = 'Script'
+        verbose_name_plural = 'List: Scripts'
 
 
 class SlDocumentType(SlAbstract):
@@ -185,8 +201,10 @@ class Document(models.Model):
     shelfmark = models.CharField(max_length=1000, blank=True, null=True)
     type = models.ForeignKey(SlDocumentType, on_delete=models.SET_NULL, blank=True, null=True)
     inks = models.ManyToManyField(SlDocumentInk, blank=True, related_name=related_name, db_index=True)
+    materials = models.ManyToManyField(SlDocumentMaterial, blank=True, related_name=related_name, db_index=True)
     repositories = models.ManyToManyField(SlDocumentRepository, blank=True, related_name=related_name, db_index=True)
     languages = models.ManyToManyField(SlDocumentLanguage, blank=True, related_name=related_name, db_index=True)
+    scripts = models.ManyToManyField(SlDocumentScript, blank=True, related_name=related_name, db_index=True)
     information = models.TextField(blank=True, null=True)
 
     # Partial Date Range
@@ -257,8 +275,16 @@ class Document(models.Model):
         return m2m_as_text(self.languages)
 
     @property
+    def m2m_as_text_materials(self):
+        return m2m_as_text(self.materials)
+
+    @property
     def m2m_as_text_repositories(self):
         return m2m_as_text(self.repositories)
+
+    @property
+    def m2m_as_text_scripts(self):
+        return m2m_as_text(self.scripts)
 
     @property
     def difficulties(self):

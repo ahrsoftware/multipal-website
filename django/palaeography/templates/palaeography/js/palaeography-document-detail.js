@@ -1,5 +1,32 @@
 $(document).ready(function(){
 
+    // Rotation (used below for rotating the document image)
+    // Degrees by which document images can be rotated
+    const ROTATIONS = [0, 90, 180, 270];
+    // Reset the rotation (i.e. remove all rotation classes) of the specified DOM object
+    function rotationReset(objectToRotate){
+        for (rotationIndex in ROTATIONS){
+            rotationClass = `rotate-${ROTATIONS[rotationIndex]}`;
+            objectToRotate.removeClass(rotationClass);
+        }
+    }
+    // Set the rotation (i.e. add the correct rotation class) of the specified DOM object
+    function rotationSet(objectToRotate){
+        for (rotationIndex in ROTATIONS){
+            rotationClass = `rotate-${ROTATIONS[rotationIndex]}`;
+            // Choose next rotation (loop back to start if reached end) 
+            newRotationIndex = (parseInt(rotationIndex) + 1 < ROTATIONS.length ? parseInt(rotationIndex) + 1 : 0);
+            newRotationClass = `rotate-${ROTATIONS[newRotationIndex]}`;
+            // Apply new rotation
+            if (objectToRotate.hasClass(rotationClass)){
+                objectToRotate.removeClass(rotationClass).addClass(newRotationClass);
+                break;
+            }
+            // If reached end of loop and hasn't yet found rotation, then is at 0 and must rotate to 90 
+            else if (parseInt(rotationIndex) + 1 === ROTATIONS.length) objectToRotate.addClass('rotate-90');
+        }
+    }
+
     // Panzoom
     var panzoom;
     var panzoomParent;
@@ -24,6 +51,8 @@ $(document).ready(function(){
         var imageContainerWidth = $('#detail-images-container').width();
         var startScale = (imageContainerWidth / imageWidth);
         panzoomOptions.startScale = startScale;
+        // Reset the rotation
+        rotationReset($('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'));
     }
     // Activate Panzoom on the current panzoomImageId image
     function setPanzoomOnImage(){
@@ -295,7 +324,17 @@ $(document).ready(function(){
         setPanzoomOnImage();
     }).trigger('change');  // Show the first image by default on page load
 
-    // Reveal All Parts
+    // Images can cause load delay (especially on live server),
+    // meaning Panzoom settings have been added before it's loaded
+    // and images appeared much wider than expected.
+    // The following block applies Panzoom again once images are all loaded,
+    // to ensure they're presented correctly
+    $(window).on("load", function(){
+        setPanzoomStartScale();
+        setPanzoomOnImage();
+    });
+
+    // Reveal all parts
     $('#detail-images-controls-revealallparts').on('click', function(){
         $('.detail-images-image-parts-part').toggleClass('revealall');
     });
@@ -304,6 +343,11 @@ $(document).ready(function(){
     $('#detail-images-controls-reset').on('click', function(){
         setPanzoomStartScale();
         panzoom.reset();
+    });
+
+    // Rotate image
+    $('#detail-images-controls-rotate').on('click', function(){
+        rotationSet($('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'));
     });
 
     //
@@ -325,6 +369,8 @@ $(document).ready(function(){
             panzoomOptions.disablePan = false;
             panzoomOptions.cursor = 'move';
             panzoom.setOptions(panzoomOptions);
+            // Enable rotation
+            $('#detail-images-controls-rotate').show();
         }
         // If can draw state is deactive, activate it
         else {
@@ -338,6 +384,9 @@ $(document).ready(function(){
             // Show/hide steps information
             $('.newdocumentimagepart-step, #newdocumentimagepart-submit').hide();
             $('.newdocumentimagepart-step[data-step="1"]').show();
+            // Reset rotation and disable rotation
+            rotationReset($('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'));
+            $('#detail-images-controls-rotate').hide();
         }
     });
     // Start drawing rectangle
@@ -355,7 +404,7 @@ $(document).ready(function(){
 
             // Create and append the new rectangle
             let newDocumentImagePartHtml = `<div class="detail-images-image-parts-part new" style="height: 2px; width: 2px; left: ` + newDocumentImagePartPosition.left + `px; top: ` + newDocumentImagePartPosition.top + `px;"></div>`;
-            $(this).append(newDocumentImagePartHtml);
+            $(this).find('.detail-images-image-parts').first().append(newDocumentImagePartHtml);
 
             // Activate drawing boolean
             isDrawingNewDocumentImagePart = true;
