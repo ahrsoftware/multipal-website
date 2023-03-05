@@ -352,20 +352,11 @@ form.full-form button[type=submit].button-danger {
 
 /* ---------- Navigation ---------- */
 
-.rotate {
-    transform-origin: 50% 50%;
-    width: fit-content;
-    height: fit-content;
-    background: red;
-    border: 1px solid red;
-}
-
 .rotate-0 {
     transform: rotate(0deg);
 }
 
 .rotate-90 {
-    transform-origin: 50% 50%;
     transform: rotate(90deg);
 }
 
