@@ -372,13 +372,12 @@ For more tips and assistance please visit the <a href="/help/">Help section</a>.
     def correct_transcription(self):
         transcription_parts = []
         for document_image_part in self.documentimagepart_set.all():
-            # Add line break, if needed
             linebreak = '<br>' if document_image_part.is_first_in_line and not document_image_part.is_first_in_image else ''
-            # Before
             text_before_part = document_image_part.text_before_part if document_image_part.text_before_part else ''
+            text = document_image_part.text if document_image_part.text else ''
             text_after_part = document_image_part.text_after_part if document_image_part.text_after_part else ''
             # Add full string to transcription_parts list
-            transcription_parts.append(linebreak + text_before_part + document_image_part.text + text_after_part)
+            transcription_parts.append(f'{linebreak}{text_before_part}{text}{text_after_part}')
         return ' '.join(transcription_parts)
 
     @property
@@ -472,7 +471,7 @@ class DocumentImagePart(models.Model):
 
     @property
     def word_length(self):
-        return len(self.text)
+        return len(self.text) if self.text else 0
 
     @property
     def is_first_in_image(self):
