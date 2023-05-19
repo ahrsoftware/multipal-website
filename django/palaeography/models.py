@@ -290,9 +290,10 @@ class Document(models.Model):
     def difficulties(self):
         difficulties = []
         for image in self.documentimages.all():
-            difficulty = image.difficulty.name
-            if difficulty not in difficulties:
-                difficulties.append(difficulty)
+            if image.difficulty:
+                difficulty = image.difficulty.name
+                if difficulty not in difficulties:
+                    difficulties.append(difficulty)
         return "/".join(difficulties)
 
     @property
