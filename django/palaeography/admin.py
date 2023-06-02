@@ -3,6 +3,7 @@ from django.db.models import ManyToManyField
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from django.utils import timezone
+from django.conf import settings
 from . import models
 from .apps import app_name
 
@@ -38,24 +39,6 @@ def fk_link(object, fk_field):
         return mark_safe(f'<a href="{url}">{fk}</a>')
     except AttributeError:
         return "-"  # If FK value is null
-
-
-def get_model_perms_dict(self, request):
-    """
-    This is the default get_model_perms permissions dictionary
-
-    The method `get_model_perms(): return {}` is used to hide select list models from admin side bar
-
-    However, some SL models need to be shown, so returning the following line to these ModelAdmins:
-    `get_model_perms(): return get_model_perms_dict(self, request)`
-    (which uses this function) will show these select list models in the sidebar
-    """
-    return {
-        'add': self.has_add_permission(request),
-        'change': self.has_change_permission(request),
-        'delete': self.has_delete_permission(request),
-        'view': self.has_view_permission(request)
-    }
 
 
 def get_manytomany_fields(model, exclude=[]):
@@ -114,8 +97,13 @@ class GenericSlAdminView(admin.ModelAdmin):
     list_display_links = ('id',)
     search_fields = ('name_en', 'name_fr',)
 
+    def has_change_permission(self, request, obj=None):
+        # Returns True (and allows deletions) if this specific user is permitted, as defined in local_settings.py
+        return request.user.email in settings.USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD
+
     def has_delete_permission(self, request, obj=None):
-        return False
+        # Returns True (and allows deletions) if this specific user is permitted, as defined in local_settings.py
+        return request.user.email in settings.USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD
 
 
 # Inlines
