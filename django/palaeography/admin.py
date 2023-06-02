@@ -98,7 +98,7 @@ class GenericSlAdminView(admin.ModelAdmin):
     search_fields = ('name_en', 'name_fr',)
 
     def has_change_permission(self, request, obj=None):
-        # Returns True (and allows deletions) if this specific user is permitted, as defined in local_settings.py
+        # Returns True (and allows changes) if this specific user is permitted, as defined in local_settings.py
         return request.user.email in settings.USERS_CAN_MANAGE_SELECT_LISTS_IN_DASHBOARD
 
     def has_delete_permission(self, request, obj=None):
