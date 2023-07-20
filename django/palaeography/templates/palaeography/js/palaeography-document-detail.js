@@ -11,19 +11,36 @@ $(document).ready(function(){
         }
     }
     // Set the rotation (i.e. add the correct rotation class) of the specified DOM object
-    function rotationSet(objectToRotate){
-        for (rotationIndex in ROTATIONS){
-            rotationClass = `rotate-${ROTATIONS[rotationIndex]}`;
-            // Choose next rotation (loop back to start if reached end) 
-            newRotationIndex = (parseInt(rotationIndex) + 1 < ROTATIONS.length ? parseInt(rotationIndex) + 1 : 0);
-            newRotationClass = `rotate-${ROTATIONS[newRotationIndex]}`;
+    function rotationSet(objectToRotate, clockwise=false){
+        for (let rotationIndex in ROTATIONS){
+            let rotationClass = `rotate-${ROTATIONS[rotationIndex]}`;
+
+            // Choose next rotation (clockwise vs anticlockwise
+            let newRotationIndex = 0;
+            // Clockwise
+            if (clockwise){
+                // Loop back to start if reached end
+                newRotationIndex = (parseInt(rotationIndex) + 1 < ROTATIONS.length ? parseInt(rotationIndex) + 1 : 0);
+            }
+            // Anticlockwise
+            else {
+                // Loop back to end if reached start
+                newRotationIndex = (parseInt(rotationIndex) > 0 ? parseInt(rotationIndex) - 1 : ROTATIONS.length - 1);
+            }
+            let newRotationClass = `rotate-${ROTATIONS[newRotationIndex]}`;
+
             // Apply new rotation
             if (objectToRotate.hasClass(rotationClass)){
                 objectToRotate.removeClass(rotationClass).addClass(newRotationClass);
                 break;
             }
-            // If reached end of loop and hasn't yet found rotation, then is at 0 and must rotate to 90 
-            else if (parseInt(rotationIndex) + 1 === ROTATIONS.length) objectToRotate.addClass('rotate-90');
+            // If reached end of loop and hasn't found rotation, then apply default rotation (e.g. 90 clockwise, 270 anticlockwise)
+            else if (parseInt(rotationIndex) + 1 === ROTATIONS.length){
+                // Clockwise default (2nd rotation, e.g. 90)
+                if (clockwise) objectToRotate.addClass(`rotate-${ROTATIONS[1]}`);
+                // Anticlockwise default (last rotation, e.g. 270)
+                else objectToRotate.addClass(`rotate-${ROTATIONS[ROTATIONS.length - 1]}`);
+            }
         }
     }
 
@@ -345,9 +362,20 @@ $(document).ready(function(){
         panzoom.reset();
     });
 
-    // Rotate image
-    $('#detail-images-controls-rotate').on('click', function(){
-        rotationSet($('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'));
+    // Rotate image (anticlockwise)
+    $('#detail-images-controls-rotate-anticlockwise').on('click', function(){
+        rotationSet(
+            objectToRotate=$('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'),
+            clockwise=false
+        );
+    });
+
+    // Rotate image (clockwise)
+    $('#detail-images-controls-rotate-clockwise').on('click', function(){
+        rotationSet(
+            objectToRotate=$('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'),
+            clockwise=true
+        );
     });
 
     //
@@ -370,7 +398,7 @@ $(document).ready(function(){
             panzoomOptions.cursor = 'move';
             panzoom.setOptions(panzoomOptions);
             // Enable rotation
-            $('#detail-images-controls-rotate').show();
+            $('#detail-images-controls-rotate-clockwise, #detail-images-controls-rotate-anticlockwise').show();
         }
         // If can draw state is deactive, activate it
         else {
@@ -386,7 +414,7 @@ $(document).ready(function(){
             $('.newdocumentimagepart-step[data-step="1"]').show();
             // Reset rotation and disable rotation
             rotationReset($('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'));
-            $('#detail-images-controls-rotate').hide();
+            $('#detail-images-controls-rotate, #detail-images-controls-rotate-anticlockwise').hide();
         }
     });
     // Start drawing rectangle

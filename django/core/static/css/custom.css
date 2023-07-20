@@ -792,7 +792,8 @@ main {
     margin: 0.4em 0.8em;
 }
 
-#detail-images-controls-rotate.disabled {
+#detail-images-controls-rotate-clockwise.disabled,
+#detail-images-controls-rotate-anticlockwise.disabled {
     opacity: 0.5;
 }
 
