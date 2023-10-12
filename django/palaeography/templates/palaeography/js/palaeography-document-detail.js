@@ -414,7 +414,7 @@ $(document).ready(function(){
             $('.newdocumentimagepart-step[data-step="1"]').show();
             // Reset rotation and disable rotation
             rotationReset($('#detail-images-image-' + panzoomImageId + ' .detail-images-image-rotatelayer'));
-            $('#detail-images-controls-rotate, #detail-images-controls-rotate-anticlockwise').hide();
+            $('#detail-images-controls-rotate-clockwise, #detail-images-controls-rotate-anticlockwise').hide();
         }
     });
     // Start drawing rectangle
