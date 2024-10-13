@@ -20,14 +20,11 @@ RECAPTCHA_PRIVATE_KEY = ''
 # Set to True if in development, or False is in production
 DEBUG = True/False
 
-# Set static file storage
-if DEBUG is True:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
-else:
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
 # Set to ['*'] if in development, or specific IP addresses and domains if in production
 ALLOWED_HOSTS = ['*']/['multipal.fr']
+
+# Used for Django Debug Toolbar (delete/comment out to hide DTT on page)
+INTERNAL_IPS = ["127.0.0.1"]
 
 # Databases
 DATABASES = {
