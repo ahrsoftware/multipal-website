@@ -1,6 +1,6 @@
 import os
 import sys
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -10,7 +10,6 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, 'core/templates')
 # Application definition
 
 INSTALLED_APPS = [
-    'django_light',  # must be before django.contrib.admin
     # Default Django
     'django.contrib.admin',
     'django.contrib.auth',
@@ -21,10 +20,10 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sitemaps',
     # 3rd Party
-    # captchanotimeout is a custom app to override "captcha" to prevent 2 minute timeouts
+    # captchanotimeout is a custom app to override "django_recaptcha" to prevent 2 minute timeouts
     # See: https://github.com/praekelt/django-recaptcha/issues/183
     'captchanotimeout',
-    'captcha',
+    'django_recaptcha',
     'embed_video',
     'debug_toolbar',
     # Custom
@@ -44,10 +43,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-INTERNAL_IPS = [
-    "127.0.0.1"
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -109,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = 'en'
 TIME_ZONE = 'Europe/London'
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 LANGUAGES = (
@@ -168,3 +162,14 @@ except ImportError:
 # Ensure required content from local_settings.py are supplied
 if(SECRET_KEY is None):  # NOQA
     sys.exit('Missing SECRET_KEY in local_settings.py')
+
+# Storages
+# Default STORAGES from Django documentation
+# See: https://docs.djangoproject.com/en/4.2/ref/settings/#std-setting-STORAGES
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
+}
+# Use ManifestStaticFilesStorage when not in debug mode
+if not DEBUG:  # NOQA
+    STORAGES['staticfiles'] = {"BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage"}

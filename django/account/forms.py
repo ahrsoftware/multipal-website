@@ -2,7 +2,8 @@ from django.conf import settings
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 from django import forms
 from .models import User
-from captcha.fields import ReCaptchaField, ReCaptchaV3
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV3
 
 
 class PublicUserCreationForm(UserCreationForm):
